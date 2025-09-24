@@ -480,19 +480,19 @@ fetch('https://altfundsglobal.app.n8n.cloud/webhook/upload-and-process-files', {
   body: formData
 })
 .then(response => {
-  // Проверяем, является ли ответ redirect
+  // Checking if response is a redirect
   if (response.redirected && response.url) {
-    // Если есть redirect, переходим по новому URL
+    // If exists redirect, ust it as a new URL
     window.location.href = response.url;
     return null;
   }
   
-  // Проверяем статус ответа
+  // Check response status
   if (!response.ok) {
     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
   }
   
-  // Проверяем тип контента
+  // Checking content type
   const contentType = response.headers.get('content-type') || '';
   if (contentType.includes('application/json')) {
     return response.json();
@@ -504,14 +504,14 @@ fetch('https://altfundsglobal.app.n8n.cloud/webhook/upload-and-process-files', {
   }
 })
 .then(data => {
-  // Если data null (был redirect), не обрабатываем дальше
+  // If data null (redirect happened), we do not process data
   if (data === null) return;
   
   if (data && data.success !== false) {
     uploadStatus.textContent = 'Documents uploaded successfully! Redirecting to payment...';
     uploadStatus.className = 'upload-status success';
     
-    // Если есть redirect_url в ответе, используем его
+    // If exists redirect_url in the answer - use it
     if (data.redirect_url) {
       setTimeout(() => {
         window.location.href = data.redirect_url;
