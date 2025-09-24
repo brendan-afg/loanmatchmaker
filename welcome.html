@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Where Accredited Investors Find the Right Lenders</title>
+  <meta name="color-scheme" content="light">
+  <style>
+    :root{
+      --primary:#2EA3F2;
+      --primary-600:#1f83c5;
+      --primary-100:#e8f5ff;
+      --secondary:#A7144C;
+      --text:#333333;
+      --text-muted:#666666;
+      --bg:#ffffff;
+      --card:#ffffff;
+      --border:#bbbbbb;
+      --border-soft:#eeeeee;
+      --shadow:0 8px 24px rgba(0,0,0,.08);
+      --radius:12px;
+      --radius-sm:10px;
+      --note:#0b2942;
+    }
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font:16px/1.55 "Open Sans",system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Noto Sans",sans-serif;
+    }
+    .container{
+      max-width:980px;
+      margin:0 auto;
+      padding:24px;
+    }
+    .card{
+      background:var(--card);
+      border:1px solid var(--border-soft);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    header{
+      padding:20px 22px;
+      border-bottom:1px solid var(--border-soft);
+    }
+    header h1{
+      margin:0;
+      color:var(--primary);
+      font-size:26px;
+      line-height:1.25;
+    }
+    @media (min-width:720px){
+      header h1{ font-size:30px; }
+    }
+    .content{
+      padding:20px 22px 26px;
+    }
+    .lead{
+      font-size:18px;
+      margin:0 0 14px;
+      color:var(--text);
+    }
+    .muted{
+      color:var(--text-muted);
+    }
+    .section{
+      margin:18px 0 8px;
+      font-weight:700;
+      color:var(--text);
+    }
+    .list{
+      margin:8px 0 16px 0;
+      padding-left:0;
+      list-style:none;
+    }
+    .list li{
+      margin:6px 0;
+      padding-left:28px;
+      position:relative;
+      line-height:1.5;
+    }
+    .list li::before{
+      content: "•";
+      color:var(--primary);
+      position:absolute;
+      left:10px;
+    }
+    .numlist{
+      margin:8px 0 16px 0;
+      padding-left:28px;
+    }
+    .numlist li{ margin:8px 0; }
+    .subnumlist{
+      margin:6px 0 6px 0;
+      padding-left:32px;
+      list-style:decimal;
+    }
+    .badge{
+      display:inline-block;
+      font-size:12px;
+      font-weight:700;
+      color:#fff;
+      background:var(--secondary);
+      padding:2px 8px;
+      border-radius:999px;
+      vertical-align:middle;
+    }
+    .banner{
+      border-left:4px solid var(--secondary);
+      background:#f3f9ff;
+      padding:14px 16px;
+      border-radius:8px;
+      margin:18px 0 22px;
+      color:var(--note);
+    }
+    .cta{
+      display:inline-block;
+      padding:12px 22px;
+      border-radius:8px;
+      font-weight:600;
+      text-decoration:none;
+      border:2px solid var(--primary);
+      color:#fff;
+      background:var(--primary);
+      transition:background .2s, border-color .2s, transform .06s;
+    }
+    .cta:hover{
+      background:var(--primary-600);
+      border-color:var(--primary-600);
+    }
+    .cta:active{ transform:translateY(1px); }
+
+    .grid{
+      display:grid;
+      gap:16px;
+    }
+    @media (min-width: 780px){
+      .grid-2{ grid-template-columns:1fr 1fr; }
+    }
+    .card-lite{
+      border:1px dashed var(--border);
+      border-radius:10px;
+      padding:14px;
+      background:#fff;
+    }
+    .small{ font-size:14px; }
+
+    .hr{
+      border:none;
+      border-top:1px solid var(--border-soft);
+      margin:18px 0;
+    }
+    .faq-question {
+      margin:18px 0 8px;
+      font-weight:700;
+      color:var(--text);
+      font-size:18px;
+    }
+    .faq-answer {
+      margin:0 0 14px;
+      color:var(--text-muted);
+    }
+    .secondary-cta {
+      display:inline-block;
+      padding:12px 22px;
+      border-radius:8px;
+      font-weight:600;
+      text-decoration:none;
+      border:2px solid var(--primary);
+      color:var(--primary);
+      background:transparent;
+      transition:background .2s, border-color .2s, transform .06s;
+      margin-left:10px;
+    }
+    .secondary-cta:hover {
+      background:var(--primary-100);
+    }
+    .secondary-cta:active{ transform:translateY(1px); }
+    .cta-container {
+      margin-top: 20px;
+    }
+    .cta-note {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 8px;
+      line-height: 1.4;
+    }
+    .policy-box {
+      background: #f8f9fa;
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-sm);
+      padding: 18px;
+      margin: 20px 0;
+    }
+    .policy-box h3 {
+      margin: 0 0 12px 0;
+      font-size: 18px;
+      color: var(--text);
+    }
+    .policy-box ul {
+      margin: 0;
+      padding-left: 0;
+      list-style: none;
+    }
+    .policy-box li {
+      margin: 8px 0;
+      padding-left: 24px;
+      position: relative;
+      color: var(--text-muted);
+      font-size: 15px;
+    }
+    .policy-box li::before {
+      content: "→";
+      position: absolute;
+      left: 4px;
+      color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <header>
+        <a href="https://altfundsglobal.com/" aria-label="Alt Funds Global Homepage">
+          <img src="https://maxv-tor.github.io/afg-mvp/afg-logo-secondary-reverse-m.png" alt="Alt Funds Global Logo" style="max-width: 200px; height: auto;">
+        </a>
+        <h1>Where Accredited Investors Find the Right Lenders</h1>
+      </header>
+
+      <div class="content">
+        <p class="lead">
+          Secure. Transparent. No wasted time. No bank runaround.
+        </p>
+
+        <p>
+          If you're an accredited investor, you've seen it all before:
+        </p>
+
+        <ul class="list">
+          <li>Banks that can't move fast enough.</li>
+          <li>"Relationship managers" who don't know your name.</li>
+          <li>Endless paperwork with no real outcome.</li>
+        </ul>
+
+        <p>
+          This database was built for you - the investor who's done playing by their rules.
+        </p>
+
+        <h2 class="section">What Makes This Different?</h2>
+<br><center><img src="https://maxv-tor.github.io/afg-mvp/you-lender-matches-for-welcome-page-2.jpg"style="width:80%; height:auto;"></center><br>
+        <ul class="list">
+          <li>One application. No more filling out forms for every lender.</li>
+          <li>Secure document upload. Every file goes into your private folder with a full audit trail.</li>
+          <li>Upfront payment. If your file doesn't qualify, you won't be matched and we'll notify you with reasons.</li>
+          <li>Transparent lender matches. You'll see not only who fits, but why.</li>
+          <li>AI-powered precision. Matches scored across industry, credit, collateral, loan size, and geography.</li>
+        </ul>
+
+        <div class="policy-box">
+          <h3>Payment & Eligibility Policy</h3>
+          <ul>
+            <li><strong>Payment timing:</strong> Payment is collected at submission.</li>
+            <li><strong>Qualification check:</strong> Files are screened across credit, collateral, industry, amount, term, geography, specialization.</li>
+            <li><strong>No qualify → no match:</strong> If you're below lender thresholds (e.g., low credit and no required collateral), you'll receive a no-match result with reasons.</li>
+            <li><strong>Refunds/Credits:</strong> Platform credits are issued for qualified no-match results after manual review within 5 business days.</li>
+          </ul>
+        </div>
+
+        <hr class="hr">
+
+        <h2 class="section">Frequently Asked Questions & Answers</h2>
+
+        <h3 class="faq-question">Do I pay upfront?</h3>
+        <p class="faq-answer">
+          Yes. Payment is collected at submission. If the file doesn't qualify, platform credits are issued per our policy after manual review.
+        </p>
+
+        <h3 class="faq-question">What happens if I (or my client) don't qualify?</h3>
+        <p class="faq-answer">
+          You'll get a no-match result with specific reasons (e.g., below credit thresholds and no collateral where required). Platform credits are applied per our policy after manual review within 5 business days.
+        </p>
+
+        <h3 class="faq-question">How do I know I'll be matched with the right lender?</h3>
+        <p class="faq-answer">
+          Because this isn't a "lead list." Our matching engine analyzes seven real-world criteria lenders use to approve capital: industry, loan amount, term, credit, collateral, geography, and specialization. Every match comes with a written explanation. You see the reasoning, not just a name.
+        </p>
+
+        <h3 class="faq-question">Is my information safe?</h3>
+        <p class="faq-answer">
+          Yes. Every agreement is locked with a cryptographic fingerprint (SHA-256). Your documents are stored in a private, sanitized Google Drive folder that only you control. Payments run through Stripe. Every step leaves a trail - compliance-ready from day one.
+        </p>
+
+        <h3 class="faq-question">Is this just another expensive tool?</h3>
+        <p class="faq-answer">
+          No. In fact, it saves you money. Instead of taking a 2.5% commission on finding you a lender, we charge a small nominal fee to instantly find you a lender that matches your requirements (information is based on the quality of the paperwork you provide and ai's ability to connect).
+        </p>
+
+        <h3 class="faq-question">Will I get stuck in a black box?</h3>
+        <p class="faq-answer">
+          Never. Transparency is the point. You'll see your top matches, why they fit, and how your profile scored. It's the opposite of the bank "black box" experience.
+        </p>
+
+        <h3 class="faq-question">What kind of investors use this?</h3>
+        <ul class="list">
+          <li>Real estate developers closing time-sensitive deals</li>
+          <li>Family offices diversifying into private credit</li>
+          <li>Healthcare and manufacturing companies scaling up</li>
+          <li>Renewable energy projects leveraging tax credits</li>
+          <li>High-net-worth investors seeking structured finance</li>
+        </ul>
+
+        <hr class="hr">
+
+        <h2 class="section">For Brokers</h2>
+        <p>
+          Upfront payment with eligibility safeguards: submit client files, see transparent reasons for matches/declines, and receive platform credits if a file doesn't qualify after manual review.
+        </p>
+
+        <hr class="hr">
+
+        <h2 class="section">Take Back Control of Your Deal Flow</h2>
+
+        <p>
+          Banks aren't built for speed. This is.
+        </p>
+
+        <div class="cta-container">
+          <a class="cta" href="https://brendan-afg.github.io/afg-mvp/index.html">Start My Application</a>
+          <p class="cta-note">Payment is collected at submission. If your file doesn't meet lender thresholds, you'll receive a full refund.</p>
+        </div>
+
+        <hr class="hr">
+
+        <p class="small muted" style="text-align: center; margin-top: 20px;">
+          &copy; 2025 Alt Funds Global. All rights reserved.
+        </p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
