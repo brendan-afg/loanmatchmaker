@@ -1,0 +1,756 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Funding Application -- 6-Step Wizard</title>
+  <meta name="color-scheme" content="light">
+  <style>
+    :root{
+      --primary:#2EA3F2;
+      --primary-600:#1f83c5;
+      --primary-100:#e8f5ff;
+      --secondary:#A7144C;
+      --text:#333333;
+      --text-muted:#666666;
+      --bg:#ffffff;
+      --card:#ffffff;
+      --border:#bbbbbb;
+      --border-soft:#eeeeee;
+      --shadow:0 8px 24px rgba(0,0,0,.08);
+      --radius:12px;
+      --radius-sm:10px;
+      --danger:#d92d20;
+      --success:#16a34a;
+      --focus: var(--primary);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 "Open Sans",system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Noto Sans",sans-serif}
+    .container{max-width:980px;margin:0 auto;padding:24px}
+    .card{background:var(--card);border:1px solid var(--border-soft);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+    header{padding:18px 20px;border-bottom:1px solid var(--border-soft);display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+    header h1{margin:0;font-size:20px;font-weight:700}
+    header p{margin:0;color:var(--text-muted);font-size:14px}
+    .steps{display:flex;gap:8px;align-items:center;margin-left:auto;flex-wrap:wrap}
+    .step-dot{width:10px;height:10px;border-radius:50%;background:#d1e9ff;opacity:.8}
+    .step-dot.active{background:var(--primary)}
+    .step-dot.done{background:#10b981}
+    form{display:block}
+    .step{display:none;padding:20px}
+    .step.active{display:block}
+    .step h2{margin:0 0 6px;font-size:18px}
+    .step .desc{margin:0 0 16px;color:var(--text-muted);font-size:14px}
+    .grid{display:grid;gap:14px}
+    .grid-2{grid-template-columns:1fr}
+    @media (min-width: 720px){ .grid-2{grid-template-columns:repeat(2,1fr)} }
+    label{display:block;font-weight:600;margin-bottom:6px}
+    .hint{color:var(--text-muted);font-size:13px}
+    input[type="text"], input[type="email"], input[type="tel"], textarea, select{
+      width:100%;padding:12px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);
+      background:#fff;color:var(--text);outline:none;transition:border-color .2s, box-shadow .2s
+    }
+    input:focus, textarea:focus, select:focus{
+      border-color:var(--focus); box-shadow:0 0 0 3px var(--primary-100)
+    }
+    textarea{min-height:110px;resize:vertical}
+    input[type="checkbox"]{transform:scale(1.1);margin-right:10px}
+    .error{display:none;color:var(--danger);font-size:13px;margin-top:6px}
+    .error.show{display:block}
+    .actions{display:flex;gap:10px;justify-content:space-between;align-items:center;padding:16px 20px;border-top:1px solid var(--border-soft);background:#fafafa}
+    .actions .left,.actions .right{display:flex;gap:10px;align-items:center}
+    .btn{
+      appearance:none;border:2px solid var(--primary);background:transparent;color:var(--primary);
+      padding:10px 16px;border-radius:8px;font-weight:600;cursor:pointer;transition:all .2s
+    }
+    .btn:hover{background:rgba(0,0,0,.05);border-color:transparent;padding:10px 22px 10px 12px}
+    .btn:disabled{opacity:.6;cursor:not-allowed}
+    .btn.secondary{border-color:var(--secondary);color:var(--secondary)}
+    .btn.secondary:hover{background:rgba(167,20,76,.06);border-color:transparent}
+    .btn.primary{background:transparent;border-color:var(--primary);color:var(--primary)}
+    .btn.primary.filled{background:var(--primary);color:#fff;border-color:var(--primary)}
+    .btn.primary.filled:hover{background:var(--primary-600)}
+    .btn.success{background:var(--success);color:#fff;border-color:var(--success)}
+    .btn.success:hover{background:#15803d}
+    .agreement{
+      padding:12px;border:1px solid var(--border);border-radius:10px;background:#fff;max-height:230px;overflow:auto
+    }
+    .banner{
+      padding:10px 12px;border-left:4px solid var(--primary);background:#f3f9ff;border-radius:8px;margin-bottom:12px;color:#0b2942
+    }
+    .req{color:var(--secondary);margin-left:4px}
+    .progress{height:4px;background:#eef2f7;position:relative}
+    .bar{height:100%;width:0;background:linear-gradient(90deg, var(--primary), #67c8ff);transition:width .25s}
+    .range-row{display:flex;align-items:center;gap:12px}
+    .range-row input[type="range"]{flex:1}
+    .range-row output{min-width:24px;text-align:center;font-weight:600}
+    /* ADDED: Styles for verification field */
+    #verificationSection { display: none; margin-top: 16px; padding: 12px; border: 1px solid var(--border-soft); border-radius: var(--radius-sm); background: #f9f9f9; }
+    #verificationSection.active { display: block; }
+    #verificationCode { width: 100%; max-width: 200px; }
+    #verifyBtn { margin-top: 8px; }
+    #verificationError { color: var(--danger); font-size: 13px; margin-top: 6px; display: none; }
+    #verificationError.show { display: block; }
+    #verificationInfo { color: var(--text-muted); font-size: 14px; margin-bottom: 12px; }
+    /* ADDED: Loading spinner styles */
+    .loading-spinner { display: none; align-items: center; gap: 8px; color: var(--text-muted); font-size: 14px; margin-top: 12px; }
+    .loading-spinner.show { display: flex; }
+    .spinner { width: 16px; height: 16px; border: 2px solid var(--border-soft); border-top: 2px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    /* ADDED: Disabled step dot styles */
+    .step-dot.disabled { opacity: 0.3; cursor: not-allowed !important; }
+    /* ADDED: Footer styles */
+    .footer {
+      text-align: center;
+      padding: 20px;
+      margin-top: 24px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+    .footer a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    .footer a:hover {
+      color: var(--primary-600);
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card" id="app">
+<header style="display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; border-bottom: 1px solid var(--border-soft); flex-wrap: wrap;">
+  <div style="display: flex; align-items: center; gap: 16px;">
+    <a href="https://altfundsglobal.com/" aria-label="Alt Funds Global Homepage">
+      <img src="https://brendan-afg.github.io/loanmatchmaker/afg-logo-secondary-reverse-m.png" alt="Alt Funds Global Logo" style="max-width: 200px; height: auto;">
+    </a>
+    <div>
+      <h1>Funding Application</h1>
+      <p>Complete the 6-step form. You can review before submitting.</p>
+    </div>
+  </div>
+  <div class="steps" aria-label="Steps">
+    <span class="step-dot" data-step="0"></span>
+    <span class="step-dot" data-step="1"></span>
+    <span class="step-dot" data-step="2"></span>
+    <span class="step-dot" data-step="3"></span>
+    <span class="step-dot" data-step="4"></span>
+    <span class="step-dot" data-step="5"></span>
+  </div>
+</header>
+      <div class="progress" aria-hidden="true"><div class="bar" id="progressBar"></div></div>
+
+      <!-- TODO: set your real webhook URL -->
+      <form id="wizardForm" method="post" enctype="application/x-www-form-urlencoded" novalidate
+            action="https://altfundsglobal.app.n8n.cloud/webhook/application-form-external-">
+
+        <!-- Step 1: Contact Information -->
+        <section class="step active" data-step="0">
+          <h2>Step 1 -- Contact Information</h2>
+          <p class="desc">Tell us how we can reach you.</p>
+          <div class="grid grid-2">
+            <div>
+              <label for="full_name">Full Name<span class="req">*</span></label>
+              <input type="text" id="full_name" name="full_name" autocomplete="name" required />
+              <div class="error" data-error-for="full_name">Please enter your full name.</div>
+            </div>
+            <div>
+              <label for="email">Email<span class="req">*</span></label>
+              <input type="email" id="email" name="email" autocomplete="email" required />
+              <div class="error" data-error-for="email">Please enter a valid email address.</div>
+            </div>
+            <div>
+              <label for="phone">Phone</label>
+              <input type="tel" id="phone" name="phone" autocomplete="tel" />
+              <div class="hint">Optional</div>
+            </div>
+            <div>
+              <label for="company">Company</label>
+              <input type="text" id="company" name="company" autocomplete="organization" />
+              <div class="hint">Optional</div>
+            </div>
+            <div>
+              <label for="industry">Industry Sector<span class="req">*</span></label>
+              <select id="industry" name="industry" required>
+                  <option value="">Select</option>
+                  <option>Agriculture</option>
+                  <option>Construction</option>
+                  <option>Education</option>
+                  <option>Energy</option>
+                  <option>Finance &amp; Banking</option>
+                  <option>Government &amp; Public Sector</option>
+                  <option>Healthcare</option>
+                  <option>Hospitality &amp; Travel</option>
+                  <option>Logistics &amp; Warehousing</option>
+                  <option>Manufacturing</option>
+                  <option>Media &amp; Entertainment</option>
+                  <option>Nonprofit</option>
+                  <option>Pharmaceuticals &amp; Biotechnology</option>
+                  <option>Professional Services</option>
+                  <option>Real Estate</option>
+                  <option>Restaurant</option>
+                  <option>Retail</option>
+                  <option>Technology</option>
+                  <option>Telecommunications</option>
+                  <option>Transportation</option>
+                  <option>Other</option>
+              </select>
+              <div class="error" data-error-for="industry">Please select an industry.</div>
+            </div>
+          </div>
+          <!-- ADDED: Loading spinner -->
+          <div id="loadingSpinner" class="loading-spinner">
+            <div class="spinner"></div>
+            <span>Sending verification code to your email...</span>
+          </div>
+          <!-- ADDED: Verification section inside Step 1 -->
+          <div id="verificationSection">
+            <p id="verificationInfo">For your security and to complete the application form, we've just sent a 6‑digit verification code to your email address - simply enter it below to confirm ownership of your email, keep your information safe, and ensure smooth communication going forward.</p>
+            <label for="verificationCode">Enter Verification Code (check your email)</label>
+            <input type="text" id="verificationCode" maxlength="6" placeholder="6-digit code" />
+            <button type="button" id="verifyBtn" class="btn success">Verify</button>
+            <div id="verificationError"></div>
+          </div>
+        </section>
+
+        <!-- Step 2: Funding Needs -->
+        <section class="step" data-step="1">
+          <h2>Step 2 -- Funding Needs</h2>
+          <p class="desc">Your expected amount and purpose.</p>
+          <div class="grid grid-2">
+            <div>
+              <label for="funding_amount">Expected Funding Amount</label>
+              <input type="text" id="funding_amount" name="funding_amount" placeholder="e.g., $500,000" />
+            </div>
+            <div>
+              <label for="loan_term">Desired Loan Term<span class="req">*</span></label>
+              <select id="loan_term" name="loan_term" required>
+                <option value="">Select</option>
+                <option>Short-term (less than 2 years)</option>
+                <option>Medium-term (2-5 years)</option>
+                <option>Long-term (5+ years)</option>
+              </select>
+              <div class="error" data-error-for="loan_term">Please select a loan term.</div>
+            </div>
+            <div class="grid-item" style="grid-column:1/-1">
+              <label for="funding_purpose_select">Funding Purpose<span class="req">*</span></label>
+              <select id="funding_purpose_select" name="funding_purpose" required>
+                <option value="">Select</option>
+                <option>Business Expansion</option>
+                <option>Equipment Purchase</option>
+                <option>Inventory Purchase</option>
+                <option>Working Capital</option>
+                <option>Debt Consolidation</option>
+                <option>Real Estate Purchase</option>
+                <option>Startup Costs</option>
+                <option>Other</option>
+              </select>
+              <div class="error" data-error-for="funding_purpose">Please select a funding purpose.</div>
+            </div>
+            <div class="grid-item" style="grid-column:1/-1">
+              <label for="project_description">Project Brief</label>
+              <textarea id="project_description" name="project_description" placeholder="A short overview of your project"></textarea>
+            </div>
+          </div>
+        </section>
+
+        <!-- Step 3: Business & Financials -->
+        <section class="step" data-step="2">
+          <h2>Step 3 -- Business & Financials</h2>
+          <p class="desc">High-level business and credit profile.</p>
+          <div class="grid grid-2">
+            <div>
+              <label for="years_in_business">Years in Business</label>
+              <input type="text" id="years_in_business" name="years_in_business" placeholder="e.g., 3" />
+            </div>
+            <div>
+              <label for="annual_revenue">Annual Revenue</label>
+              <input type="text" id="annual_revenue" name="annual_revenue" placeholder="e.g., $2,000,000" />
+            </div>
+            <div>
+              <label for="credit_score_range">Credit Score Range</label>
+              <select id="credit_score_range" name="credit_score_range">
+                <option value="">Select</option>
+                <option>Excellent (720+)</option>
+                <option>Good (680-719)</option>
+                <option>Fair (620-679)</option>
+                <option>Below Fair (619 or less)</option>
+              </select>
+            </div>
+            <div>
+              <label for="bank_relationship">Existing Relationship with Bank</label>
+              <select id="bank_relationship" name="bank_relationship">
+                <option value="">Select</option>
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </div>
+            
+<div class="grid-item" style="grid-column:1/-1">
+  <label for="local_lender_pref">Preference for Local Lender</label>
+  <div class="range-row">
+    <span style="font-size:13px;color:#666">1</span>
+    <input type="range" id="local_lender_pref" name="local_lender_pref" min="1" max="5" step="1" value="3" />
+    <span style="font-size:13px;color:#666">5</span>
+    <output id="local_lender_pref_out" style="display: none;">3</output>
+  </div>
+  <div class="range-options" style="margin-top: 10px; font-size: 14px;">
+    <div class="option" data-value="1" style="display: none; color: #444;">
+      <strong>1:</strong> I don't mind working with lenders all over the world
+    </div>
+    <div class="option" data-value="2" style="display: none; color: #444;">
+      <strong>2:</strong> Local lenders are good but I don't mind global lenders
+    </div>
+    <div class="option" data-value="3" style="display: block; color: #444;">
+      <strong>3:</strong> Any lender that suits my needs
+    </div>
+    <div class="option" data-value="4" style="display: none; color: #444;">
+      <strong>4:</strong> I prefer local lenders vs global
+    </div>
+    <div class="option" data-value="5" style="display: none; color: #444;">
+      <strong>5:</strong> I only want to work with local lenders
+    </div>
+  </div>
+</div>
+
+            
+          </div>
+        </section>
+
+<!-- Step 4: Project Location -->
+<section class="step" data-step="3">
+  <h2>Step 4 -- Project Location</h2>
+  <p class="desc">Where the project will take place.</p>
+  <div class="grid grid-2">
+    <div class="grid-item" style="grid-column:1/-1">
+      <label for="project_address">Project Address</label>
+      <input type="text" id="project_address" name="project_address" autocomplete="street-address" />
+    </div>
+    <div>
+      <label for="city">City</label>
+      <input type="text" id="city" name="city" autocomplete="address-level2" />
+    </div>
+    <div>
+      <label for="state">State/Region</label>
+      <input type="text" id="state" name="state" autocomplete="address-level1" />
+    </div>
+    <div>
+      <label for="zip">ZIP/Postal Code</label>
+      <input type="text" id="zip" name="zip" autocomplete="postal-code" />
+    </div>
+    <div>
+      <label for="country">Country<span class="req">*</span></label>
+      <select id="country" name="country" autocomplete="country-name" required>
+        <option value="">Select Country</option>
+        <option value="Canada">Canada</option>
+        <option value="United States">United States</option>
+        <option value="United Kingdom">United Kingdom</option>
+        <option value="Australia">Australia</option>
+        <option value="Germany">Germany</option>
+        <option value="France">France</option>
+        <option value="Switzerland">Switzerland</option>
+        <option value="Netherlands">Netherlands</option>
+        <option value="Belgium">Belgium</option>
+        <option value="Austria">Austria</option>
+        <option value="Sweden">Sweden</option>
+        <option value="Norway">Norway</option>
+        <option value="Denmark">Denmark</option>
+        <option value="Finland">Finland</option>
+        <option value="Ireland">Ireland</option>
+        <option value="Italy">Italy</option>
+        <option value="Spain">Spain</option>
+        <option value="Portugal">Portugal</option>
+        <option value="Japan">Japan</option>
+        <option value="Singapore">Singapore</option>
+        <option value="Hong Kong">Hong Kong</option>
+        <option value="New Zealand">New Zealand</option>
+        <option value="South Africa">South Africa</option>
+        <option value="Mexico">Mexico</option>
+        <option value="Brazil">Brazil</option>
+        <option value="India">India</option>
+        <option value="China">China</option>
+        <option value="South Korea">South Korea</option>
+        <option value="Israel">Israel</option>
+        <option value="United Arab Emirates">United Arab Emirates</option>
+        <option value="Other">Other</option>
+      </select>
+      <div class="error" data-error-for="country">Please select a country.</div>
+    </div>
+  </div>
+</section>
+        <!-- Step 5: Preferences & Collateral -->
+        <section class="step" data-step="4">
+          <h2>Step 5 -- Preferences & Collateral</h2>
+          <p class="desc">Your preferences and available collateral, if any.</p>
+          <div class="grid grid-2">
+            <div>
+              <label for="collateral_available">Collateral Available</label>
+              <select id="collateral_available" name="collateral_available">
+                <option value="">Select</option>
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </div>
+            <div class="grid-item" style="grid-column:1/-1">
+              <label for="collateral_description">Collateral Description</label>
+              <textarea id="collateral_description" name="collateral_description" placeholder="Describe type and estimated value"></textarea>
+            </div>
+            <div class="grid-item" style="grid-column:1/-1">
+              <label for="local_importance">Local Community Importance</label>
+              <textarea id="local_importance" name="local_importance" placeholder="Explain the project's local impact"></textarea>
+            </div>
+          </div>
+        </section>
+
+        <!-- Step 6: Agreement & Submit -->
+        <section class="step" data-step="5">
+          <h2>Step 6 -- Agreement</h2>
+          <p class="desc">Please read and accept to proceed.</p>
+
+          <div class="banner">By submitting this form, you will receive a personal link via email to upload documents later.</div>
+
+          <div class="agreement" id="agreementBox" tabindex="0" aria-label="User Agreement">
+            <div id="agreementContent">Loading the agreement…</div>
+          </div>
+
+          <div style="margin-top:12px;display:flex;align-items:flex-start;gap:10px">
+            <input type="checkbox" id="user_agreement_accepted" name="user_agreement_accepted" value="true" required />
+            <label for="user_agreement_accepted" style="font-weight:600">I have read and accept the User Agreement<span class="req">*</span></label>
+          </div>
+          <div class="error" data-error-for="user_agreement_accepted">You must accept the agreement to continue.</div>
+
+          <!-- Hidden fields to pass agreement meta to backend -->
+          <input type="hidden" name="agreement_doc_id" value="1P-sfYszzij1blpUVjb5fITVrunWW73la" />
+          <input type="hidden" name="agreement_export_url" value="https://docs.google.com/document/d/1P-sfYszzij1blpUVjb5fITVrunWW73la/export?format=html" />
+        </section>
+
+        <div class="actions">
+          <div class="left">
+            <button type="button" class="btn secondary" id="prevBtn" style="visibility:hidden">Back</button>
+          </div>
+          <div class="right">
+            <button type="button" class="btn primary" id="saveBtn" title="Save progress locally">Save Progress</button>
+            <button type="button" class="btn primary" id="nextBtn">Next</button>
+            <button type="submit" class="btn primary filled" id="submitBtn" style="display:none">Submit</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    
+    <!-- ADDED: Footer -->
+    <footer class="footer">
+      <p>Need help?<br>
+      Contact our <a href="mailto:hello@altfundsglobal.com">support team</a> if you have any questions about your application.</p>
+    </footer>
+  </div>
+
+  <script>
+    (function(){
+      const TOTAL_STEPS = 6;
+      const form = document.getElementById('wizardForm');
+      const steps = Array.from(document.querySelectorAll('.step'));
+      const dots = Array.from(document.querySelectorAll('.step-dot'));
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const submitBtn = document.getElementById('submitBtn');
+      const saveBtn = document.getElementById('saveBtn');
+      const progressBar = document.getElementById('progressBar');
+      const verificationSection = document.getElementById('verificationSection');
+      const loadingSpinner = document.getElementById('loadingSpinner'); // ADDED
+
+      const STORAGE_KEY = 'afg_funding_app_v1';
+      let current = 0;
+      // ADDED: Verification state
+      let isVerified = false;
+      let verificationRequested = false; // New flag to track if code was already requested
+
+      function updateUI(){
+        steps.forEach((s, i) => s.classList.toggle('active', i === current));
+        dots.forEach((d, i) => {
+          d.classList.toggle('active', i === current);
+          d.classList.toggle('done', i < current);
+          // ADDED: Disable dots on step 0 if not verified
+          d.classList.toggle('disabled', current === 0 && !isVerified && i > 0);
+        });
+
+        prevBtn.style.visibility = current === 0 ? 'hidden' : 'visible';
+
+        const isLast = current === TOTAL_STEPS - 1;
+        nextBtn.style.display = isLast ? 'none' : 'inline-block';
+                // Disable Next button on step 0 if verification requested but not verified
+                if (current === 0 && verificationRequested && !isVerified) {
+                nextBtn.disabled = true;
+                } else {
+                        nextBtn.disabled = false;
+                        }
+        submitBtn.style.display = isLast ? 'inline-block' : 'none';
+
+        const pct = Math.round((current) / (TOTAL_STEPS - 1) * 100);
+        progressBar.style.width = pct + '%';
+
+        // Ensure verification section is hidden unless requested
+        verificationSection.classList.toggle('active', current === 0 && verificationRequested && !isVerified);
+      }
+
+      function showError(name, show){
+        const el = document.querySelector(`.error[data-error-for="${name}"]`);
+        if (el) el.classList.toggle('show', !!show);
+      }
+
+      function validateStep(idx){
+        let ok = true;
+        if (idx === 0) {
+          const full_name = form.full_name.value.trim();
+          const email = form.email.value.trim();
+          const industry = form.industry.value;
+          if (!full_name) { showError('full_name', true); ok = false; } else showError('full_name', false);
+          if (!/^\S+@\S+\.\S+$/.test(email)) { showError('email', true); ok = false; } else showError('email', false);
+          if (!industry) { showError('industry', true); ok = false; } else showError('industry', false);
+        }
+        if (idx === 1) {
+          const loanTerm = form.loan_term.value;
+          const purpose = form.funding_purpose.value;
+          if (!loanTerm) { showError('loan_term', true); ok = false; } else showError('loan_term', false);
+          if (!purpose) { showError('funding_purpose', true); ok = false; } else showError('funding_purpose', false);
+        }
+         if (idx === 3) {
+         const country = form.country.value;
+         if (!country) { showError('country', true); ok = false; } else showError('country', false);
+       }
+        if (idx === 5) {
+          const accepted = form.user_agreement_accepted.checked;
+          if (!accepted) { showError('user_agreement_accepted', true); ok = false; }
+          else showError('user_agreement_accepted', false);
+        }
+        return ok;
+      }
+
+      function go(dir){
+        if (dir > 0 && !validateStep(current)) return;
+        current = Math.min(Math.max(0, current + dir), TOTAL_STEPS - 1);
+        updateUI();
+        persist();
+      }
+
+      function persist(){
+        const data = Object.fromEntries(new FormData(form).entries());
+        data.user_agreement_accepted = !!form.user_agreement_accepted?.checked;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({ step: current, data, isVerified, verificationRequested }));
+      }
+
+      function restore(){
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        try{
+          const { step, data, isVerified: storedVerified, verificationRequested: storedRequested } = JSON.parse(raw);
+          if (data && typeof data === 'object') {
+            Object.entries(data).forEach(([k,v])=>{
+              const field = form.elements[k];
+              if (!field) return;
+              if (field.type === 'checkbox') field.checked = !!v;
+              else field.value = v;
+            });
+          }
+          if (Number.isInteger(step)) current = Math.max(0, Math.min(TOTAL_STEPS-1, step));
+          isVerified = !!storedVerified;
+          verificationRequested = !!storedRequested;
+        }catch(e){}
+      }
+
+      let t;
+      form.addEventListener('input', () => {
+        clearTimeout(t);
+        t = setTimeout(persist, 200);
+      });
+
+      prevBtn.addEventListener('click', () => go(-1));
+
+      // CHANGED: Next button logic with verification
+      nextBtn.addEventListener('click', async () => {
+        if (!validateStep(current)) return;
+        if (current === 0 && !isVerified) {
+          if (!verificationRequested) {
+            // Send to verification webhook only once
+            const data = {
+              full_name: form.full_name.value.trim(),
+              email: form.email.value.trim(),
+              phone: form.phone.value.trim(),
+              company: form.company.value.trim(),
+              industry: form.industry.value
+            };
+
+            try {
+              nextBtn.disabled = true;
+              loadingSpinner.classList.add('show'); // ADDED: Show spinner
+              const res = await fetch('https://altfundsglobal.app.n8n.cloud/webhook/verify-email-start', { // TODO: Replace with your real verification start webhook URL
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+              });
+              if (!res.ok) throw new Error('Failed to send verification');
+              const json = await res.json();
+              if (json.status !== 'email_sent') throw new Error('Unexpected response');
+
+              // Mark as requested and show verification field
+              verificationRequested = true;
+              persist();
+              updateUI();
+              nextBtn.disabled = true;
+              loadingSpinner.classList.remove('show'); // ADDED: Hide spinner
+            } catch (e) {
+              showVerificationError('Failed to send verification code. Try again.');
+              nextBtn.disabled = true; // Keep disabled until verification
+              loadingSpinner.classList.remove('show'); // ADDED: Hide spinner
+            }
+          } else {
+            // If already requested but not verified, show error and stay
+            showVerificationError('Please enter the verification code to proceed.');
+          }
+          return; // Don't proceed to next step yet
+        }
+        go(1);
+      });
+
+      // ADDED: Verify button logic
+      const verifyBtn = document.getElementById('verifyBtn');
+      verifyBtn.addEventListener('click', async () => {
+        const code = document.getElementById('verificationCode').value.trim();
+        if (code.length !== 6 || !/^\d{6}$/.test(code)) {
+          showVerificationError('Enter a valid 6-digit code.');
+          return;
+        }
+
+        const data = {
+          email: form.email.value.trim(),
+          entered_code: code // Send as string
+        };
+
+        try {
+          verifyBtn.disabled = true;
+          const res = await fetch('https://altfundsglobal.app.n8n.cloud/webhook/verify-email-check', { // TODO: Replace with your real verification check webhook URL
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+          });
+          if (!res.ok) throw new Error('Verification failed');
+          const json = await res.json();
+          if (json.status !== 'verified') throw new Error(json.error || 'Invalid code');
+
+          // Success: Hide verification, set verified, proceed
+          verificationSection.classList.remove('active');
+          isVerified = true;
+          persist();
+          go(1); // Proceed to next step
+        } catch (e) {
+          showVerificationError(e.message || 'Invalid code. Try again.');
+        } finally {
+          verifyBtn.disabled = false;
+        }
+      });
+
+      // ADDED: Function to show verification error
+      function showVerificationError(msg) {
+        const errEl = document.getElementById('verificationError');
+        errEl.textContent = msg;
+        errEl.classList.add('show');
+        setTimeout(() => errEl.classList.remove('show'), 5000);
+      }
+
+      saveBtn.addEventListener('click', () => {
+        persist();
+        saveBtn.textContent = 'Saved';
+        saveBtn.disabled = true;
+        setTimeout(()=>{ saveBtn.textContent = 'Save Progress'; saveBtn.disabled = false; }, 1200);
+      });
+
+      // CHANGED: Submit handler with verification check
+      form.addEventListener('submit', (e) => {
+        if (!isVerified || !validateStep(0) || !validateStep(1) || !validateStep(5)) {
+          e.preventDefault();
+          if (!isVerified) {
+            current = 0;
+            showVerificationError('Please verify your email first.');
+          } else if (!validateStep(0)) current = 0;
+          else if (!validateStep(1)) current = 1;
+          else current = 5;
+          updateUI();
+          return;
+        }
+        localStorage.removeItem(STORAGE_KEY);
+      });
+
+      dots.forEach((dot, i)=>{
+        dot.style.cursor = 'pointer';
+        dot.title = `Go to step ${i+1}`;
+        dot.addEventListener('click', () => {
+          // ADDED: Prevent navigation if on step 0 and not verified
+          if (current === 0 && !isVerified && i > 0) {
+            return;
+          }
+          if (i <= current || validateStep(current)) {
+            current = i;
+            updateUI();
+          }
+        });
+      });
+
+      restore();
+      updateUI();
+
+      // Load Google Docs Agreement into Step 6
+      const DOC_ID = '1P-sfYszzij1blpUVjb5fITVrunWW73la';
+      const EXPORT_HTML = `https://docs.google.com/document/d/${DOC_ID}/export?format=html`;
+
+      async function loadAgreement() {
+        const el = document.getElementById('agreementContent');
+        try {
+          const res = await fetch(EXPORT_HTML, { credentials: 'omit', mode: 'cors' });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          let html = await res.text();
+          html = html.replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '');
+          el.innerHTML = html;
+        } catch (e) {
+          console.error(e);
+          el.innerHTML = '<div style="color:#d92d20">Failed to load the agreement. Ensure the document is shared as "Anyone with the link -- Viewer".</div>';
+        }
+      }
+      loadAgreement();
+
+      // Range output sync
+      const range = document.getElementById('local_lender_pref');
+      const out = document.getElementById('local_lender_pref_out');
+      if (range && out) {
+        const sync = () => out.value = range.value;
+        range.addEventListener('input', sync);
+        sync();
+      }
+      // Update lender preference options
+const lenderOptions = document.querySelectorAll('.range-options .option');
+if (range && lenderOptions.length > 0) {
+  function updateLenderOption() {
+    const value = range.value;
+    
+    // Hide all options
+    lenderOptions.forEach(option => {
+      option.style.display = 'none';
+    });
+    
+    // Show selected option
+    const selectedOption = document.querySelector(`.range-options .option[data-value="${value}"]`);
+    if (selectedOption) {
+      selectedOption.style.display = 'block';
+    }
+  }
+  
+  // Update on slider change
+  range.addEventListener('input', updateLenderOption);
+  
+  // Initialize
+  updateLenderOption();
+}
+    })();
+  </script>
+</body>
+</html>

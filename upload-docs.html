@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Upload Documents - Funding Application</title>
+  <meta name="color-scheme" content="light">
+  <style>
+    :root{
+      --primary:#2EA3F2;
+      --primary-600:#1f83c5;
+      --primary-100:#e8f5ff;
+      --secondary:#A7144C;
+      --text:#333333;
+      --text-muted:#666666;
+      --bg:#ffffff;
+      --card:#ffffff;
+      --border:#bbbbbb;
+      --border-soft:#eeeeee;
+      --shadow:0 8px 24px rgba(0,0,0,.08);
+      --radius:12px;
+      --radius-sm:10px;
+      --danger:#d92d20;
+      --success:#16a34a;
+      --focus: var(--primary);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 "Open Sans",system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Noto Sans",sans-serif}
+    .container{max-width:980px;margin:0 auto;padding:24px}
+    .card{background:var(--card);border:1px solid var(--border-soft);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+    header{padding:18px 20px;border-bottom:1px solid var(--border-soft);display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+    header h1{margin:0;font-size:20px;font-weight:700}
+    header p{margin:0;color:var(--text-muted);font-size:14px}
+    .steps{display:flex;gap:8px;align-items:center;margin-left:auto;flex-wrap:wrap}
+    .step-dot{width:10px;height:10px;border-radius:50%;background:#d1e9ff;opacity:.8}
+    .step-dot.active{background:var(--primary)}
+    .step-dot.done{background:#10b981}
+    form{display:block}
+    .step{display:block;padding:20px}
+    .step h2{margin:0 0 6px;font-size:18px}
+    .step .desc{margin:0 0 16px;color:var(--text-muted);font-size:14px}
+    .grid{display:grid;gap:14px}
+    .grid-2{grid-template-columns:1fr}
+    @media (min-width: 720px){ .grid-2{grid-template-columns:repeat(2,1fr)} }
+    label{display:block;font-weight:600;margin-bottom:6px}
+    .hint{color:var(--text-muted);font-size:13px}
+    input[type="text"], input[type="email"], input[type="tel"], textarea, select{
+      width:100%;padding:12px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);
+      background:#fff;color:var(--text);outline:none;transition:border-color .2s, box-shadow .2s
+    }
+    input:focus, textarea:focus, select:focus{
+      border-color:var(--focus); box-shadow:0 0 0 3px var(--primary-100)
+    }
+    textarea{min-height:110px;resize:vertical}
+    input[type="checkbox"]{transform:scale(1.1);margin-right:10px}
+    .error{display:none;color:var(--danger);font-size:13px;margin-top:6px}
+    .error.show{display:block}
+    .actions{display:flex;gap:10px;justify-content:space-between;align-items:center;padding:16px 20px;border-top:1px solid var(--border-soft);background:#fafafa}
+    .actions .left,.actions .right{display:flex;gap:10px;align-items:center}
+    .btn{
+      appearance:none;border:2px solid var(--primary);background:transparent;color:var(--primary);
+      padding:10px 16px;border-radius:8px;font-weight:600;cursor:pointer;transition:all .2s
+    }
+    .btn:hover{background:rgba(0,0,0,.05);border-color:transparent;padding:10px 22px 10px 12px}
+    .btn:disabled{opacity:.6;cursor:not-allowed}
+    .btn.secondary{border-color:var(--secondary);color:var(--secondary)}
+    .btn.secondary:hover{background:rgba(167,20,76,.06);border-color:transparent}
+    .btn.primary{background:transparent;border-color:var(--primary);color:var(--primary)}
+    .btn.primary.filled{background:var(--primary);color:#fff;border-color:var(--primary)}
+    .btn.primary.filled:hover{background:var(--primary-600)}
+    .agreement{
+      padding:12px;border:1px solid var(--border);border-radius:10px;background:#fff;max-height:230px;overflow:auto
+    }
+    .banner{
+      padding:10px 12px;border-left:4px solid var(--primary);background:#f3f9ff;border-radius:8px;margin-bottom:12px;color:#0b2942
+    }
+    .req{color:var(--secondary);margin-left:4px}
+    .progress{height:4px;background:#eef2f7;position:relative}
+    .bar{height:100%;width:0;background:linear-gradient(90deg, var(--primary), #67c8ff);transition:width .25s}
+    .range-row{display:flex;align-items:center;gap:12px}
+    .range-row input[type="range"]{flex:1}
+    .range-row output{min-width:24px;text-align:center;font-weight:600}
+    .document-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+    .document-table th { text-align: left; padding: 10px; border-bottom: 2px solid var(--border); }
+    .document-table td { padding: 10px; border-bottom: 1px solid var(--border-soft); }
+    .document-table input[type="text"] { margin: 0; }
+    .document-table .remove-btn { 
+      background: none; 
+      border: none; 
+      color: var(--danger); 
+      cursor: pointer; 
+      font-weight: bold;
+      padding: 5px;
+    }
+    .add-more { margin: 15px 0; }
+    .file-input-wrapper { position: relative; overflow: hidden; display: inline-block; }
+    .file-input-wrapper input[type=file] { 
+      position: absolute; left: 0; top: 0; opacity: 0; 
+      width: 100%; height: 100%; cursor: pointer;
+    }
+    .file-input-button {
+      display: inline-block;
+      padding: 8px 12px;
+      background: var(--primary-100);
+      color: var(--primary);
+      border-radius: var(--radius-sm);
+      border: 1px dashed var(--primary);
+      cursor: pointer;
+    }
+    .file-name { margin-left: 10px; font-size: 14px; }
+    .upload-status {
+      padding: 15px;
+      border-radius: var(--radius);
+      margin: 15px 0;
+      display: none;
+    }
+    .upload-status.success {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #15803d;
+      display: block;
+    }
+    .upload-status.error {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #b91c1c;
+      display: block;
+    }
+
+    /* ADDED: fullscreen loading overlay with rolling wheel */
+    .loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(1px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      pointer-events: none; /* allow clicks when hidden; will be overridden when active */
+    }
+    .loading-overlay.active {
+      display: flex;
+      pointer-events: all; /* block clicks while loading */
+    }
+    .spinner {
+      width: 44px;
+      height: 44px;
+      border: 4px solid #cfe9ff;
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Added style for the success callout */
+    .success-callout {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      border: 2px solid var(--primary);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin: 20px 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .success-callout-icon {
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
+      background: var(--primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .success-callout-text {
+      flex: 1;
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    .success-callout-text strong {
+      color: var(--primary);
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <header>
+        <a href="https://altfundsglobal.com/" aria-label="Alt Funds Global Homepage">
+  <img src="https://brendan-afg.github.io/loanmatchmaker/afg-logo-secondary-reverse-m.png" alt="Alt Funds Global Logo" style="max-width: 200px; height: auto;">
+</a>
+        <div>
+          <h1>Upload Supporting Documents</h1>
+          <p>Please upload the required documents to complete your application.</p>
+        </div>
+      </header>
+
+      <div class="step active">
+        <div class="banner">
+          Your application has been received. To continue processing your request, please upload the required documents below.
+        </div>
+
+        <form id="documentUploadForm" method="post" enctype="multipart/form-data" 
+              action="https://altfundsglobal.app.n8n.cloud/webhook/upload-and-process-files">
+          <input type="hidden" id="client_email" name="client_email" value="">
+          <input type="hidden" id="submission_id" name="submission_id" value="">
+          
+          <div class="grid grid-2">
+            <div>
+              <label for="full_name">Full Name<span class="req">*</span></label>
+              <input type="text" id="full_name" name="full_name" autocomplete="name" required />
+              <div class="error" data-error-for="full_name">Please enter your full name.</div>
+            </div>
+            <div>
+              <label for="email">Email<span class="req">*</span></label>
+              <input type="email" id="email" name="email" autocomplete="email" required />
+              <div class="error" data-error-for="email">Please enter a valid email address.</div>
+            </div>
+          </div>
+
+          <h3 style="margin-top: 30px;">Documents to Upload</h3>
+<p class="desc">
+  Please upload the following documents to ensure a complete submission. 
+  You may add additional files if necessary:
+</p>
+
+<ul class="desc">
+  <li>Business Plan</li>
+  <li>Collateral Documentation</li>
+  <li>Valuations</li>
+  <li>Signed Contracts</li>
+  <li>Corporate Information</li>
+  <li>Investor Contracts (any agreements signed with investors)</li>
+  <li>Resume</li>
+  <li>Audited Tax Statements for the Past 3 Years</li>
+</ul>
+
+          <!-- Added success callout with the client's phrase -->
+          <div class="success-callout">
+            <div class="success-callout-icon">✓</div>
+            <div class="success-callout-text">
+              People who provide <strong>ALL</strong> of the following documentation have a <strong>2.3x higher likelihood</strong> of matching to a lender
+            </div>
+          </div>
+
+          <table class="document-table" id="documentsTable">
+            <thead>
+              <tr>
+                <th width="40%">Document Description</th>
+                <th width="50%">File</th>
+                <th width="10%"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="document-row">
+                <td>
+                  <input type="text" name="file_description[]" placeholder="e.g., Passport Scan" maxlength="30" required />
+                </td>
+                <td>
+                  <div class="file-input-wrapper">
+                    <div class="file-input-button">Choose File</div>
+                    <input type="file" name="document_file[]" required />
+                    <span class="file-name"></span>
+                  </div>
+                </td>
+                <td>
+                  <button type="button" class="remove-btn" style="visibility: hidden;">×</button>
+                </td>
+              </tr>
+              <tr class="document-row">
+                <td>
+                  <input type="text" name="file_description[]" placeholder="e.g., Driver's License" maxlength="30" required />
+                </td>
+                <td>
+                  <div class="file-input-wrapper">
+                    <div class="file-input-button">Choose File</div>
+                    <input type="file" name="document_file[]" required />
+                    <span class="file-name"></span>
+                  </div>
+                </td>
+                <td>
+                  <button type="button" class="remove-btn" style="visibility: hidden;">×</button>
+                </td>
+              </tr>
+              <tr class="document-row">
+                <td>
+                  <input type="text" name="file_description[]" placeholder="e.g., Business Plan" maxlength="30" required />
+                </td>
+                <td>
+                  <div class="file-input-wrapper">
+                    <div class="file-input-button">Choose File</div>
+                    <input type="file" name="document_file[]" required />
+                    <span class="file-name"></span>
+                  </div>
+                </td>
+                <td>
+                  <button type="button" class="remove-btn" style="visibility: hidden;">×</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="add-more">
+            <button type="button" class="btn secondary" id="addMoreBtn">+ Add More Documents</button>
+          </div>
+
+          <div id="uploadStatus" class="upload-status"></div>
+
+          <div class="actions">
+            <div class="left">
+              <a href="application.html" class="btn secondary">Back to Application</a>
+            </div>
+            <div class="right">
+              <button type="submit" class="btn primary filled" id="submitBtn">Upload Documents</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADDED: loading overlay -->
+  <div id="loadingOverlay" class="loading-overlay" aria-hidden="true" aria-live="polite" aria-label="Uploading">
+    <div class="spinner" role="status"></div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('documentUploadForm');
+      const addMoreBtn = document.getElementById('addMoreBtn');
+      const documentsTable = document.getElementById('documentsTable');
+      const uploadStatus = document.getElementById('uploadStatus');
+      const submitBtn = document.getElementById('submitBtn');
+      const emailInput = document.getElementById('email');
+      const clientEmailInput = document.getElementById('client_email');
+      const loadingOverlay = document.getElementById('loadingOverlay');
+
+      // Read URL params ONCE, then use
+      const urlParams = new URLSearchParams(window.location.search);
+
+      // Prefill submission_id and email from URL
+      const submissionIdParam = urlParams.get('submission_id');
+      if (submissionIdParam) {
+        document.getElementById('submission_id').value = submissionIdParam;
+      }
+
+      const emailParam = urlParams.get('email');
+      if (emailParam) {
+        emailInput.value = emailParam;
+        clientEmailInput.value = emailParam;
+      }
+
+      // Optionally prefill full_name if present
+      const fullNameParam = urlParams.get('full_name');
+      if (fullNameParam) {
+        const fullNameInput = document.getElementById('full_name');
+        fullNameInput.value = fullNameParam;
+      }
+
+      // Keep client_email in sync if user edits email
+      emailInput.addEventListener('input', () => {
+        clientEmailInput.value = emailInput.value;
+      });
+
+      // Helper: attach change handler to a file input to show filename
+      function attachFileNameHandler(input) {
+        input.addEventListener('change', function() {
+          const fileName = this.files && this.files[0] ? this.files[0].name : '';
+          const nameEl = this.parentNode.querySelector('.file-name');
+          if (nameEl) nameEl.textContent = fileName;
+        });
+      }
+
+      // Initial file inputs
+      document.querySelectorAll('input[type="file"]').forEach(attachFileNameHandler);
+
+      // Add more documents
+      addMoreBtn.addEventListener('click', function() {
+        const tbody = documentsTable.querySelector('tbody');
+        const templateRow = documentsTable.querySelector('.document-row');
+        const newRow = templateRow.cloneNode(true);
+
+        // Clear inputs
+        newRow.querySelector('input[type="text"]').value = '';
+        const fileInput = newRow.querySelector('input[type="file"]');
+        fileInput.value = '';
+        newRow.querySelector('.file-name').textContent = '';
+
+        // Show remove button and wire handler
+        const removeBtn = newRow.querySelector('.remove-btn');
+        removeBtn.style.visibility = 'visible';
+        removeBtn.addEventListener('click', function() {
+          if (documentsTable.querySelectorAll('.document-row').length > 1) {
+            this.closest('.document-row').remove();
+          }
+        });
+
+        // Attach filename handler to the cloned input
+        attachFileNameHandler(fileInput);
+
+        tbody.appendChild(newRow);
+      });
+
+      // Enable remove on initial rows if desired
+      document.querySelectorAll('.remove-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          if (documentsTable.querySelectorAll('.document-row').length > 1) {
+            this.closest('.document-row').remove();
+          }
+        });
+      });
+
+      // Validation helper
+      function validateForm() {
+        let isValid = true;
+        const email = emailInput.value.trim();
+        const fullName = document.getElementById('full_name').value.trim();
+
+        if (!fullName) {
+          document.querySelector('[data-error-for="full_name"]').classList.add('show');
+          isValid = false;
+        } else {
+          document.querySelector('[data-error-for="full_name"]').classList.remove('show');
+        }
+
+        if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
+          document.querySelector('[data-error-for="email"]').classList.add('show');
+          isValid = false;
+        } else {
+          document.querySelector('[data-error-for="email"]').classList.remove('show');
+        }
+
+        const hasFiles = Array.from(document.querySelectorAll('input[type="file"]'))
+          .some(input => input.files && input.files.length > 0);
+        if (!hasFiles) {
+          uploadStatus.textContent = 'Please upload at least one document.';
+          uploadStatus.className = 'upload-status error';
+          isValid = false;
+        } else {
+          uploadStatus.className = 'upload-status';
+          uploadStatus.textContent = '';
+        }
+
+        return isValid;
+      }
+
+      // Helpers to show/hide loading overlay
+      function showLoading() {
+        loadingOverlay.classList.add('active');
+        loadingOverlay.setAttribute('aria-hidden', 'false');
+      }
+      function hideLoading() {
+        loadingOverlay.classList.remove('active');
+        loadingOverlay.setAttribute('aria-hidden', 'true');
+      }
+
+      // Submit handler (real submission to n8n)
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        if (!validateForm()) return;
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Uploading...';
+        showLoading();
+
+        const formData = new FormData(form);
+
+fetch('https://altfundsglobal.app.n8n.cloud/webhook/upload-and-process-files', {
+  method: 'POST',
+  body: formData
+})
+.then(response => {
+  // Проверяем, является ли ответ redirect
+  if (response.redirected && response.url) {
+    // Если есть redirect, переходим по новому URL
+    window.location.href = response.url;
+    return null;
+  }
+  
+  // Проверяем статус ответа
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+  }
+  
+  // Проверяем тип контента
+  const contentType = response.headers.get('content-type') || '';
+  if (contentType.includes('application/json')) {
+    return response.json();
+  } else {
+    return response.text().then(text => ({
+      success: true,
+      message: text || 'Upload completed successfully'
+    }));
+  }
+})
+.then(data => {
+  // Если data null (был redirect), не обрабатываем дальше
+  if (data === null) return;
+  
+  if (data && data.success !== false) {
+    uploadStatus.textContent = 'Documents uploaded successfully! Redirecting to payment...';
+    uploadStatus.className = 'upload-status success';
+    
+    // Если есть redirect_url в ответе, используем его
+    if (data.redirect_url) {
+      setTimeout(() => {
+        window.location.href = data.redirect_url;
+      }, 1500);
+    }
+  } else {
+    const errorMsg = (data && data.message) ? data.message : 'Upload failed';
+    uploadStatus.textContent = 'Error: ' + errorMsg;
+    uploadStatus.className = 'upload-status error';
+  }
+})        
+  
+  .finally(() => {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Upload Documents';
+          hideLoading();
+        });
+      });
+    });
+  </script>
+</body>
+</html>
