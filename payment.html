@@ -4,612 +4,358 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Complete Your Application - Payment Required</title>
-
     <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: linear-gradient(135deg, #AED6F1 0%, #D6EAF8 100%);
-        min-height: 100vh;
-        padding: 20px;
-        color: #2c3e50;
-    }
-
-    .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
-    }
-
-    header {
-        background-color: #1a56db;
-        color: white;
-        padding: 25px;
-        text-align: center;
-    }
-
-    .logo img {
-        max-width: 180px;
-        height: auto;
-    }
-
-    .main-content {
-        padding: 40px;
-    }
-
-    h1 {
-        font-size: 28px;
-        font-weight: 600;
-        color: #1a56db;
-        margin-bottom: 12px;
-        text-align: center;
-    }
-
-    .subtitle {
-        font-size: 15px;
-        color: #6b7280;
-        text-align: center;
-        margin-bottom: 30px;
-    }
-
-    .secure-payment-notice {
-        background-color: #e0f2fe;
-        padding: 18px 25px;
-        margin-bottom: 30px;
-        border-radius: 8px;
-        border-left: 4px solid #1a56db;
-        color: #0c4a6e;
-    }
-
-    .secure-payment-notice strong {
-        color: #1a56db;
-        display: block;
-        margin-bottom: 5px;
-    }
-
-    /* Error message styles */
-    .error-message {
-        background-color: #fee;
-        color: #c00;
-        padding: 15px 20px;
-        margin-bottom: 20px;
-        border-radius: 8px;
-        border-left: 4px solid #c00;
-        display: none;
-    }
-
-    /* New styles for two-column layout */
-    .content-wrapper {
-        display: flex;
-        gap: 40px;
-        align-items: flex-start;
-    }
-
-    .left-column {
-        flex: 1;
-    }
-
-    .right-column {
-        flex: 1;
-        background: #f9fafb;
-        border-radius: 12px;
-        padding: 30px;
-        border: 1px solid #e5e7eb;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    }
-
-    .price {
-        font-size: 48px;
-        font-weight: bold;
-        color: #1a56db;
-        text-align: center;
-        margin: 30px 0;
-    }
-
-    .benefits {
-        background: #f9fafb;
-        border-radius: 10px;
-        padding: 25px;
-        border: 1px solid #e5e7eb;
-    }
-
-    .benefit-item {
-        padding: 12px 0;
-        display: flex;
-        align-items: center;
-        border-bottom: 1px solid #e5e7eb;
-    }
-
-    .benefit-item:last-child {
-        border-bottom: none;
-    }
-
-    .benefit-icon {
-        color: #10b981;
-        margin-right: 12px;
-        font-size: 18px;
-        font-weight: bold;
-    }
-
-    .benefit-item span:last-child {
-        color: #374151;
-        font-size: 15px;
-    }
-
-    h2 {
-        font-size: 22px;
-        font-weight: 600;
-        color: #1a56db;
-        margin-bottom: 25px;
-        padding-bottom: 12px;
-        border-bottom: 2px solid #e5e7eb;
-    }
-
-    .form-group {
-        margin-bottom: 20px;
-    }
-
-    .form-group label {
-        display: block;
-        margin-bottom: 8px;
-        font-weight: 600;
-        color: #374151;
-        font-size: 14px;
-    }
-
-    .form-group input {
-        width: 100%;
-        padding: 12px 15px;
-        border: 2px solid #e5e7eb;
-        border-radius: 8px;
-        font-size: 16px;
-        transition: all 0.3s ease;
-        background: white;
-    }
-
-    .form-group input:focus {
-        outline: none;
-        border-color: #1a56db;
-        background: white;
-        box-shadow: 0 0 0 4px rgba(26, 86, 219, 0.1);
-    }
-
-    .form-group input[readonly] {
-        background: #f3f4f6;
-        color: #6b7280;
-        cursor: not-allowed;
-    }
-
-    #loading-message {
-        text-align: center;
-        color: #1a56db;
-        font-style: italic;
-        margin: 20px 0;
-        padding: 15px;
-        background: #f0f9ff;
-        border-radius: 6px;
-    }
-
-    .btn {
-        width: 100%;
-        padding: 16px 24px;
-        border: none;
-        border-radius: 8px;
-        font-size: 16px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        text-align: center;
-        margin-bottom: 12px;
-    }
-
-    .btn-primary {
-        background-color: #1a56db;
-        color: white;
-        box-shadow: 0 4px 6px rgba(26, 86, 219, 0.25);
-    }
-
-    .btn-primary:hover:not(:disabled) {
-        background-color: #1e40af;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 12px rgba(26, 86, 219, 0.35);
-    }
-
-    .btn-secondary {
-        background-color: #f3f4f6;
-        color: #374151;
-        border: 2px solid #e5e7eb;
-    }
-
-    .btn-secondary:hover {
-        background-color: #e5e7eb;
-        border-color: #d1d5db;
-    }
-
-    .btn:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-    }
-
-    .btn:active:not(:disabled) {
-        transform: scale(0.98);
-    }
-
-    .support {
-        text-align: center;
-        margin-top: 35px;
-        padding-top: 30px;
-        border-top: 1px solid #e5e7eb;
-        color: #6b7280;
-        font-size: 14px;
-    }
-
-    .support p {
-        line-height: 1.6;
-    }
-
-    /* Responsive design */
-    @media (max-width: 968px) {
-        .content-wrapper {
-            flex-direction: column;
-            gap: 30px;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        
-        .container {
-            max-width: 900px;
-        }
-    }
 
-    @media (max-width: 768px) {
         body {
-            padding: 10px;
-        }
-
-        .main-content {
-            padding: 25px;
-        }
-
-        h1 {
-            font-size: 24px;
-        }
-
-        .price {
-            font-size: 40px;
-        }
-
-        .benefits {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 20px;
         }
 
-        .benefit-item {
-            padding: 10px 0;
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
         }
 
-        .benefit-item span:last-child {
+        h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
             font-size: 14px;
         }
 
-        .right-column {
-            padding: 20px;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .main-content {
-            padding: 20px;
+        .security-note {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-bottom: 30px;
+            border-radius: 5px;
         }
 
-        h1 {
-            font-size: 22px;
+        .security-note strong {
+            color: #667eea;
+        }
+
+        .price-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
         }
 
         .price {
-            font-size: 36px;
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 20px;
         }
 
-        .logo img {
-            max-width: 150px;
+        .features {
+            text-align: left;
+            margin-top: 20px;
         }
 
-        .right-column {
+        .feature {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .feature::before {
+            content: '✓';
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #555;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
             padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
         }
-    }
 
-    /* Animations */
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(10px);
+        .success-message {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
         }
-        to {
-            opacity: 1;
-            transform: translateY(0);
+
+        .support {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid #e0e0e0;
+            color: #666;
+            font-size: 14px;
         }
-    }
 
-    .container {
-        animation: fadeIn 0.5s ease;
-    }
+        .support a {
+            color: #667eea;
+            text-decoration: none;
+        }
 
-    @keyframes spin {
-        to { transform: rotate(360deg); }
-    }
-
-    .spinner {
-        display: inline-block;
-        width: 16px;
-        height: 16px;
-        border: 2px solid #1a56db;
-        border-radius: 50%;
-        border-top-color: transparent;
-        animation: spin 0.8s linear infinite;
-        margin-right: 8px;
-    }
+        .support a:hover {
+            text-decoration: underline;
+        }
     </style>
-
 </head>
 <body>
     <div class="container">
-        <header>
-            <div class="logo">
-                <a href="https://altfundsglobal.com/" aria-label="Alt Funds Global Homepage">
-                    <img src="https://altfundsglobal.com/wp-content/uploads/2024/01/afg-logo-secondary-reverse2.png" alt="Alt Funds Global Logo" style="max-width: 200px; height: auto;">
-                </a>
-            </div>
-        </header>
-        
-        <main class="main-content">
-            <h1>Complete Your Application</h1>
-            <p class="subtitle">A small processing fee is required to proceed with your funding application review</p>
-        
-            <div class="secure-payment-notice">
-                <strong>Secure Payment:</strong>
-                Your payment is processed securely through Stripe. We never store your payment information.
-            </div>
+        <h1>Complete Your Application</h1>
+        <p class="subtitle">A small processing fee is required to proceed with your funding application review</p>
 
-            <div class="content-wrapper">
-                <!-- Left column with price and benefits -->
-                <div class="left-column">
-                    <div class="price">CHF 2000</div>
-                    
-                    <div class="benefits">
-                        <div class="benefit-item">
-                            <span class="benefit-icon">✓</span>
-                            <span>One-time application processing fee</span>
-                        </div>
-                        <div class="benefit-item">
-                            <span class="benefit-icon">✓</span>
-                            <span>Complete application review by our team</span>
-                        </div>
-                        <div class="benefit-item">
-                            <span class="benefit-icon">✓</span>
-                            <span>Matching with relevant lenders</span>
-                        </div>
-                        <div class="benefit-item">
-                            <span class="benefit-icon">✓</span>
-                            <span>Priority processing (48-72 hours)</span>
-                        </div>
-                        <div class="benefit-item">
-                            <span class="benefit-icon">✓</span>
-                            <span>Direct communication with matched lenders</span>
-                        </div>
-                        <div class="benefit-item">
-                            <span class="benefit-icon">✓</span>
-                            <span>No hidden fees or ongoing charges</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Right column with form -->
-                <div class="right-column">
-                    <h2>Enter Your Information</h2>
-                    
-                    <div id="error-message" class="error-message"></div>
-                    
-                    <form id="payment-form">
-                        <div class="form-group">
-                            <label for="submission-id">Submission ID (copied from your application form):</label>
-                            <input type="text" id="input-submission" placeholder="Submission ID" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="email">Email Address (copied from your application form):</label>
-                            <input type="email" id="input-email" placeholder="Email Address" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="name">Full Name (copied from your application form):</label>
-                            <input type="text" id="input-fullname" placeholder="Full Name" required>
-                        </div>
-                        
-                        <div id="loading-message" style="display: none;">
-                            <span class="spinner"></span>Creating secure payment session...
-                        </div>
-                        
-                        <button type="submit" id="payment-button" class="btn btn-primary">Proceed to Secure Payment</button>
-                        <button type="button" class="btn btn-secondary" onclick="window.history.back()">Go Back</button>
-                    </form>
-                </div>
+        <div class="security-note">
+            <strong>🔒 Secure Payment:</strong> Your payment is processed securely through Stripe. We never store your payment information.
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+        <div class="success-message" id="successMessage"></div>
+
+        <div class="price-box">
+            <div class="price">CHF 2000</div>
+            <div class="features">
+                <div class="feature">One-time application processing fee</div>
+                <div class="feature">Complete application review by our team</div>
+                <div class="feature">Matching with relevant lenders</div>
+                <div class="feature">Priority processing (48-72 hours)</div>
+                <div class="feature">Direct communication with matched lenders</div>
+                <div class="feature">No hidden fees or ongoing charges</div>
             </div>
-            
-            <div class="support">
-                <p>Questions?<br>
-                Contact our support team for assistance with your application.</p>
-            </div>
-        </main>
+        </div>
+
+        <div class="form-section">
+            <h3>Enter Your Information</h3>
+            <form id="paymentForm">
+                <div class="form-group">
+                    <label for="submission_id">Submission ID (copied from your application form):</label>
+                    <input type="text" id="submission_id" name="submission_id" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address (copied from your application form):</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="full_name">Full Name (copied from your application form):</label>
+                    <input type="text" id="full_name" name="full_name" required>
+                </div>
+            </form>
+        </div>
+
+        <div class="button-group">
+            <button type="button" class="btn btn-secondary" onclick="window.history.back()">Go Back</button>
+            <button type="button" class="btn btn-primary" id="submitBtn" onclick="processPayment()">
+                <span id="btnText">Proceed to Secure Payment</span>
+                <span class="loading" id="btnLoading" style="display: none;"></span>
+            </button>
+        </div>
+
+        <div class="support">
+            <strong>Questions?</strong><br>
+            Contact our support team for assistance with your application.
+        </div>
     </div>
 
-<script>
-// Get parameters from URL
-const urlParams = new URLSearchParams(window.location.search);
-const submissionIdParam = urlParams.get('submission_id');
-const emailParam = urlParams.get('email');
-const fullNameParam = urlParams.get('full_name');
-
-// Decode email (remove %40 and replace with @)
-const decodedEmail = emailParam ? decodeURIComponent(emailParam) : '';
-
-// Wait for page load
-document.addEventListener('DOMContentLoaded', function() {
-    // Fill input fields from URL parameters
-    if (submissionIdParam) {
-        const inputSubmission = document.getElementById('input-submission');
-        if (inputSubmission) inputSubmission.value = submissionIdParam;
-    }
-    
-    if (decodedEmail) {
-        const inputEmail = document.getElementById('input-email');
-        if (inputEmail) inputEmail.value = decodedEmail;
-    }
-    
-    if (fullNameParam) {
-        const inputFullname = document.getElementById('input-fullname');
-        if (inputFullname) inputFullname.value = fullNameParam;
-    }
-});
-
-// Payment form handling
-document.addEventListener('DOMContentLoaded', function() {
-    const paymentForm = document.getElementById('payment-form');
-    const paymentButton = document.getElementById('payment-button');
-    const loadingMessage = document.getElementById('loading-message');
-    const errorMessage = document.getElementById('error-message');
-    
-    // Form elements
-    const inputSubmission = document.getElementById('input-submission');
-    const inputEmail = document.getElementById('input-email');
-    const inputFullname = document.getElementById('input-fullname');
-    
-    // Variables to store form values
-    let submissionId, clientEmail, fullName;
-    
-    // Show/hide loading state
-    function showLoading(show) {
-        if (show) {
-            loadingMessage.style.display = 'block';
-            paymentButton.disabled = true;
-            paymentButton.textContent = 'Processing...';
-        } else {
-            loadingMessage.style.display = 'none';
-            paymentButton.disabled = false;
-            paymentButton.textContent = 'Proceed to Secure Payment';
-        }
-    }
-    
-    // Show error message
-    function showError(message) {
-        errorMessage.textContent = message;
-        errorMessage.style.display = 'block';
-        // Scroll to error message
-        errorMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-    
-    // Hide error message
-    function hideError() {
-        errorMessage.style.display = 'none';
-    }
-    
-    // Validate inputs
-    function validateInputs() {
-        submissionId = inputSubmission.value.trim();
-        clientEmail = inputEmail.value.trim();
-        fullName = inputFullname.value.trim();
-        
-        if (!submissionId) {
-            showError('Please enter your Submission ID');
-            inputSubmission.focus();
-            return false;
-        }
-        
-        if (!clientEmail) {
-            showError('Please enter your email address');
-            inputEmail.focus();
-            return false;
-        }
-        
-        // Basic email validation
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(clientEmail)) {
-            showError('Please enter a valid email address');
-            inputEmail.focus();
-            return false;
-        }
-        
-        if (!fullName) {
-            showError('Please enter your full name');
-            inputFullname.focus();
-            return false;
-        }
-        
-        return true;
-    }
-    
-    // Create payment session
-    async function createPaymentSession() {
-        if (!validateInputs()) return;
-
-        hideError();
-        showLoading(true);
-
-        try {
-            // Save data to storage before creating session
-            localStorage.setItem('submission_id', submissionId);
-            localStorage.setItem('email', clientEmail);
-            localStorage.setItem('full_name', fullName);
-            sessionStorage.setItem('submission_id', submissionId);
-            sessionStorage.setItem('email', clientEmail);
-            sessionStorage.setItem('full_name', fullName);
-
-            const response = await fetch('https://altfundsglobal.app.n8n.cloud/webhook/create-payment-session', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    submission_id: submissionId,
-                    client_email: clientEmail,
-                    full_name: fullName
-                })
-            });
-
-            const result = await response.json();
-
-            if (!response.ok) {
-                throw new Error(result.error || `HTTP ${response.status}`);
+    <script>
+        async function processPayment() {
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            const btnLoading = document.getElementById('btnLoading');
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+            
+            // Get form values
+            const submission_id = document.getElementById('submission_id').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const full_name = document.getElementById('full_name').value.trim();
+            
+            // Clear previous messages
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+            
+            // Validate
+            if (!submission_id || !email || !full_name) {
+                errorMessage.textContent = 'Please fill in all required fields';
+                errorMessage.style.display = 'block';
+                return;
             }
-
-            if (result.success && result.checkout_url) {
-                // Redirect to Stripe Checkout
-                window.location.href = result.checkout_url;
-            } else {
-                throw new Error(result.error || 'Failed to create payment session');
+            
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                errorMessage.textContent = 'Please enter a valid email address';
+                errorMessage.style.display = 'block';
+                return;
             }
-
-        } catch (error) {
-            console.error('Payment session error:', error);
-            showError(error.message || 'Failed to create payment session. Please try again.');
-        } finally {
-            showLoading(false);
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            btnText.textContent = 'Creating secure payment session...';
+            btnLoading.style.display = 'inline-block';
+            
+            try {
+                // Make request to n8n webhook
+                const response = await fetch('https://altfundsglobal.app.n8n.cloud/webhook/create-payment-session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        submission_id: submission_id,
+                        client_email: email,
+                        full_name: full_name
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success && data.checkout_url) {
+                    successMessage.textContent = 'Redirecting to secure payment...';
+                    successMessage.style.display = 'block';
+                    
+                    // Redirect to Stripe checkout
+                    setTimeout(() => {
+                        window.location.href = data.checkout_url;
+                    }, 1000);
+                } else {
+                    throw new Error(data.error || 'Failed to create payment session');
+                }
+            } catch (error) {
+                console.error('Payment error:', error);
+                errorMessage.textContent = error.message || 'Failed to create payment session. Please try again.';
+                errorMessage.style.display = 'block';
+                
+                // Reset button
+                submitBtn.disabled = false;
+                btnText.textContent = 'Proceed to Secure Payment';
+                btnLoading.style.display = 'none';
+            }
         }
-    }
-    
-    // Handle form submission
-    if (paymentForm) {
-        paymentForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            await createPaymentSession();
+        
+        // Allow Enter key to submit
+        document.getElementById('paymentForm').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                processPayment();
+            }
         });
-    }
-});
-</script>
+    </script>
 </body>
 </html>
