@@ -293,7 +293,22 @@
     </tr>
     <tr class="document-row">
       <td>
-        <input type="text" name="file_description[]" placeholder="e.g., Your Collateral Information" maxlength="30"/>
+        <input type="text" name="file_description[]" placeholder="e.g., Your Collateral Information" maxlength="30" required />
+      </td>
+      <td>
+        <div class="file-input-wrapper">
+          <div class="file-input-button">Choose File</div>
+          <input type="file" name="document_file[]" required />
+          <span class="file-name"></span>
+        </div>
+      </td>
+      <td>
+        <button type="button" class="remove-btn" style="visibility: hidden;">×</button>
+      </td>
+    </tr>
+    <tr class="document-row">
+      <td>
+        <input type="text" name="file_description[]" placeholder="e.g., Your Resume (required)" maxlength="30" required />
       </td>
       <td>
         <div class="file-input-wrapper">
@@ -323,22 +338,7 @@
     </tr>
     <tr class="document-row">
       <td>
-        <input type="text" name="file_description[]" placeholder="e.g., Your Resume" maxlength="30" />
-      </td>
-      <td>
-        <div class="file-input-wrapper">
-          <div class="file-input-button">Choose File</div>
-          <input type="file" name="document_file[]" />
-          <span class="file-name"></span>
-        </div>
-      </td>
-      <td>
-        <button type="button" class="remove-btn" style="visibility: hidden;">×</button>
-      </td>
-    </tr>
-    <tr class="document-row">
-      <td>
-        <input type="text" name="file_description[]" placeholder="e.g., Other - anything else" maxlength="30" />
+        <input type="text" name="file_description[]" placeholder="e.g., Other - anything else you think we should know" maxlength="30" />
       </td>
       <td>
         <div class="file-input-wrapper">
@@ -353,7 +353,6 @@
     </tr>
   </tbody>
 </table>
-
           <div class="add-more">
             <button type="button" class="btn secondary" id="addMoreBtn">+ Add More Documents</button>
           </div>
