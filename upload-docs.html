@@ -234,14 +234,14 @@
 </p>
 
 <ul class="desc">
-  <li>Business Plan</li>
-  <li>Collateral Documentation</li>
-  <li>Valuations</li>
-  <li>Signed Contracts</li>
-  <li>Corporate Information</li>
+  <li>Scan of Your Government ID – Passport</li>
+  <li>Scan of Your Driving License</li>
+  <li>Your Business Plan</li>
+  <li>Your Collateral Information</li>
+  <li>Executive Summary</li>
+  <li>Your resume</li>
   <li>Investor Contracts (any agreements signed with investors)</li>
-  <li>Resume</li>
-  <li>Audited Tax Statements for the Past 3 Years</li>
+  <li>Audited Tax Statements for the Past 2 Years</li>
 </ul>
 
           <!-- Added success callout with the client's phrase -->
@@ -252,62 +252,107 @@
             </div>
           </div>
 
-          <table class="document-table" id="documentsTable">
-            <thead>
-              <tr>
-                <th width="40%">Document Description</th>
-                <th width="50%">File</th>
-                <th width="10%"></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="document-row">
-                <td>
-                  <input type="text" name="file_description[]" placeholder="e.g., Passport Scan" maxlength="30" required />
-                </td>
-                <td>
-                  <div class="file-input-wrapper">
-                    <div class="file-input-button">Choose File</div>
-                    <input type="file" name="document_file[]" required />
-                    <span class="file-name"></span>
-                  </div>
-                </td>
-                <td>
-                  <button type="button" class="remove-btn" style="visibility: hidden;">×</button>
-                </td>
-              </tr>
-              <tr class="document-row">
-                <td>
-                  <input type="text" name="file_description[]" placeholder="e.g., Driver's License" maxlength="30" required />
-                </td>
-                <td>
-                  <div class="file-input-wrapper">
-                    <div class="file-input-button">Choose File</div>
-                    <input type="file" name="document_file[]" required />
-                    <span class="file-name"></span>
-                  </div>
-                </td>
-                <td>
-                  <button type="button" class="remove-btn" style="visibility: hidden;">×</button>
-                </td>
-              </tr>
-              <tr class="document-row">
-                <td>
-                  <input type="text" name="file_description[]" placeholder="e.g., Business Plan" maxlength="30" required />
-                </td>
-                <td>
-                  <div class="file-input-wrapper">
-                    <div class="file-input-button">Choose File</div>
-                    <input type="file" name="document_file[]" required />
-                    <span class="file-name"></span>
-                  </div>
-                </td>
-                <td>
-                  <button type="button" class="remove-btn" style="visibility: hidden;">×</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+<table class="document-table" id="documentsTable">
+  <thead>
+    <tr>
+      <th width="40%">Document Description</th>
+      <th width="50%">File</th>
+      <th width="10%"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="document-row">
+      <td>
+        <input type="text" name="file_description[]" placeholder="e.g., Your Government ID - Passport Scan" maxlength="30" required />
+      </td>
+      <td>
+        <div class="file-input-wrapper">
+          <div class="file-input-button">Choose File</div>
+          <input type="file" name="document_file[]" required />
+          <span class="file-name"></span>
+        </div>
+      </td>
+      <td>
+        <button type="button" class="remove-btn" style="visibility: hidden;">×</button>
+      </td>
+    </tr>
+    <tr class="document-row">
+      <td>
+        <input type="text" name="file_description[]" placeholder="e.g., Your Business Plan" maxlength="30" required />
+      </td>
+      <td>
+        <div class="file-input-wrapper">
+          <div class="file-input-button">Choose File</div>
+          <input type="file" name="document_file[]" required />
+          <span class="file-name"></span>
+        </div>
+      </td>
+      <td>
+        <button type="button" class="remove-btn" style="visibility: hidden;">×</button>
+      </td>
+    </tr>
+    <tr class="document-row">
+      <td>
+        <input type="text" name="file_description[]" placeholder="e.g., Your Collateral Information" maxlength="30" required />
+      </td>
+      <td>
+        <div class="file-input-wrapper">
+          <div class="file-input-button">Choose File</div>
+          <input type="file" name="document_file[]" required />
+          <span class="file-name"></span>
+        </div>
+      </td>
+      <td>
+        <button type="button" class="remove-btn" style="visibility: hidden;">×</button>
+      </td>
+    </tr>
+    <tr class="document-row">
+      <td>
+        <input type="text" name="file_description[]" placeholder="e.g., Executive Summary (not required)" maxlength="30" />
+      </td>
+      <td>
+        <div class="file-input-wrapper">
+          <div class="file-input-button">Choose File</div>
+          <input type="file" name="document_file[]" />
+          <span class="file-name"></span>
+        </div>
+      </td>
+      <td>
+        <button type="button" class="remove-btn" style="visibility: hidden;">×</button>
+      </td>
+    </tr>
+    <tr class="document-row">
+      <td>
+        <input type="text" name="file_description[]" placeholder="e.g., Your Resume (not required)" maxlength="30" />
+      </td>
+      <td>
+        <div class="file-input-wrapper">
+          <div class="file-input-button">Choose File</div>
+          <input type="file" name="document_file[]" />
+          <span class="file-name"></span>
+        </div>
+      </td>
+      <td>
+        <button type="button" class="remove-btn" style="visibility: hidden;">×</button>
+      </td>
+    </tr>
+    <tr class="document-row">
+      <td>
+        <input type="text" name="file_description[]" placeholder="e.g., Other - anything else you think we should know (not required)" maxlength="30" />
+      </td>
+      <td>
+        <div class="file-input-wrapper">
+          <div class="file-input-button">Choose File</div>
+          <input type="file" name="document_file[]" />
+          <span class="file-name"></span>
+        </div>
+      </td>
+      <td>
+        <button type="button" class="remove-btn" style="visibility: hidden;">×</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
           <div class="add-more">
             <button type="button" class="btn secondary" id="addMoreBtn">+ Add More Documents</button>
