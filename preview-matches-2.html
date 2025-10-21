@@ -427,7 +427,7 @@
     </div>
 
     <script>
-        // Parse URL parameters - получаем ВСЕ параметры включая submission_id, email, full_name
+        // Parse URL parameters - get ALL parameters including submission_id, email, full_name
         const urlParams = new URLSearchParams(window.location.search);
         const userData = {
             submission_id: urlParams.get('submission_id') || urlParams.get('sid'),
@@ -819,7 +819,7 @@
                 return;
             }
 
-            // ВАЖНО: Передаем ВСЕ данные пользователя на payment.html
+            // IMPORTANT: Pass ALL user data to payment.html
             const price = userData.total <= 2 ? 1000 : 2000;
             const params = new URLSearchParams({
                 submission_id: userData.submission_id,
@@ -834,7 +834,7 @@
 
         function goBack() {
             if (userData.submission_id) {
-                // Передаем данные обратно на upload-docs.html
+                // Pass data back to upload-docs.html
                 const params = new URLSearchParams({
                     submission_id: userData.submission_id,
                     ...(userData.email && { email: userData.email }),
@@ -848,7 +848,7 @@
         }
 
         function modifyRequirements() {
-            // Передаем данные на форму изменения
+            // Pass data to modification form
             const params = new URLSearchParams({
                 submission_id: userData.submission_id,
                 ...(userData.email && { email: userData.email }),
