@@ -46,6 +46,18 @@
             opacity: 0.95;
         }
 
+        .user-info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .user-info p {
+            font-size: 0.95em;
+            margin: 5px 0;
+        }
+
         .timer-badge {
             display: inline-block;
             background: rgba(255, 255, 255, 0.2);
@@ -408,6 +420,11 @@
         <div class="header">
             <h1>Your Funding Matches</h1>
             <p>Preview your potential lending partners</p>
+            <div class="user-info" id="userInfo" style="display: none;">
+                <p><strong>Application ID:</strong> <span id="displaySubmissionId"></span></p>
+                <p><strong>Applicant:</strong> <span id="displayFullName"></span></p>
+                <p><strong>Email:</strong> <span id="displayEmail"></span></p>
+            </div>
             <div class="timer-badge">
                 🕐 Preview expires in: <span class="timer" id="countdown">23:59:59</span>
             </div>
@@ -491,10 +508,13 @@
     </div>
 
     <script>
-        // Parse URL parameters
+        // Parse URL parameters - получаем ВСЕ параметры включая submission_id, email, full_name
         const urlParams = new URLSearchParams(window.location.search);
-        const data = {
+        const userData = {
             submission_id: urlParams.get('submission_id') || urlParams.get('sid'),
+            email: urlParams.get('email'),
+            full_name: urlParams.get('full_name'),
+            // Match data
             total: parseInt(urlParams.get('total') || urlParams.get('t') || '0'),
             excellent: parseInt(urlParams.get('excellent') || urlParams.get('e') || '0'),
             good: parseInt(urlParams.get('good') || urlParams.get('g') || '0'),
@@ -503,6 +523,20 @@
             token: urlParams.get('token'),
             generating: urlParams.get('generating') === 'true'
         };
+
+        // Display user info if available
+        if (userData.submission_id || userData.email || userData.full_name) {
+            document.getElementById('userInfo').style.display = 'block';
+            if (userData.submission_id) {
+                document.getElementById('displaySubmissionId').textContent = userData.submission_id;
+            }
+            if (userData.full_name) {
+                document.getElementById('displayFullName').textContent = decodeURIComponent(userData.full_name);
+            }
+            if (userData.email) {
+                document.getElementById('displayEmail').textContent = decodeURIComponent(userData.email);
+            }
+        }
 
         // Lender templates
         const lenderTemplates = {
@@ -547,14 +581,41 @@
         };
 
         // Initialize on load
-        if (data.generating && data.submission_id) {
+        if (userData.generating && userData.submission_id) {
             showLoading();
             setTimeout(() => {
-                // Simulate API call - in production, this would fetch real data
-                window.location.href = `preview-matches.html?sid=${data.submission_id}&t=18&e=3&g=8&f=7&exp=${Date.now() + 24*60*60*1000}`;
+                // Simulate API call - generate random matches
+                const matchData = generateRandomMatches();
+                
+                // Build URL with all user data AND match data
+                const params = new URLSearchParams({
+                    submission_id: userData.submission_id,
+                    ...(userData.email && { email: userData.email }),
+                    ...(userData.full_name && { full_name: userData.full_name }),
+                    total: matchData.total,
+                    excellent: matchData.excellent,
+                    good: matchData.good,
+                    fair: matchData.fair,
+                    expires: Date.now() + 24*60*60*1000
+                });
+                
+                window.location.href = `preview-matches.html?${params.toString()}`;
             }, 3000);
         } else {
             initializePreview();
+        }
+
+        function generateRandomMatches() {
+            // Generate realistic match distribution
+            const excellent = Math.floor(Math.random() * 4) + 1; // 1-4
+            const good = Math.floor(Math.random() * 8) + 3; // 3-10
+            const fair = Math.floor(Math.random() * 6) + 2; // 2-7
+            return {
+                excellent,
+                good,
+                fair,
+                total: excellent + good + fair
+            };
         }
 
         function showLoading() {
@@ -565,14 +626,23 @@
 
         function initializePreview() {
             // Check expiry
-            if (Date.now() > data.expires) {
+            if (Date.now() > userData.expires) {
                 alert('This preview has expired. Generating new results...');
-                window.location.href = `preview-matches.html?submission_id=${data.submission_id}&generating=true`;
+                
+                // Preserve user data when regenerating
+                const params = new URLSearchParams({
+                    submission_id: userData.submission_id,
+                    ...(userData.email && { email: userData.email }),
+                    ...(userData.full_name && { full_name: userData.full_name }),
+                    generating: 'true'
+                });
+                
+                window.location.href = `preview-matches.html?${params.toString()}`;
                 return;
             }
 
             // Handle no matches
-            if (data.total === 0) {
+            if (userData.total === 0) {
                 document.getElementById('noMatchesContent').style.display = 'block';
                 document.getElementById('mainContent').style.display = 'none';
                 document.getElementById('loadingSection').style.display = 'none';
@@ -586,7 +656,7 @@
 
             // Update success message
             document.getElementById('successTitle').textContent = 
-                `Great news! We found ${data.total} potential lenders for your funding request`;
+                `Great news! We found ${userData.total} potential lenders for your funding request`;
 
             // Start countdown
             startCountdown();
@@ -598,25 +668,34 @@
             generateLenderPreviews();
 
             // Update pricing for limited matches
-            if (data.total <= 2) {
+            if (userData.total <= 2) {
                 document.getElementById('priceAmount').innerHTML = '1000 <span style="text-decoration: line-through; opacity: 0.5;">2000</span>';
             }
 
             // Update button text
             document.getElementById('unlockButtonText').textContent = 
-                `Unlock All ${data.total} Lender Details`;
+                `Unlock All ${userData.total} Lender Details`;
         }
 
         function startCountdown() {
             const updateTimer = () => {
                 const now = Date.now();
-                const remaining = data.expires - now;
+                const remaining = userData.expires - now;
                 
                 if (remaining <= 0) {
                     document.getElementById('countdown').textContent = 'EXPIRED';
                     setTimeout(() => {
                         alert('Preview expired. Refreshing...');
-                        window.location.href = `preview-matches.html?submission_id=${data.submission_id}&generating=true`;
+                        
+                        // Preserve user data when regenerating
+                        const params = new URLSearchParams({
+                            submission_id: userData.submission_id,
+                            ...(userData.email && { email: userData.email }),
+                            ...(userData.full_name && { full_name: userData.full_name }),
+                            generating: 'true'
+                        });
+                        
+                        window.location.href = `preview-matches.html?${params.toString()}`;
                     }, 1000);
                     return;
                 }
@@ -641,17 +720,17 @@
             const totalCard = document.createElement('div');
             totalCard.className = 'stat-card';
             totalCard.innerHTML = `
-                <div class="stat-number">${data.total}</div>
+                <div class="stat-number">${userData.total}</div>
                 <div class="stat-label">Total Matches</div>
             `;
             statsGrid.appendChild(totalCard);
 
             // Excellent matches
-            if (data.excellent > 0) {
+            if (userData.excellent > 0) {
                 const excellentCard = document.createElement('div');
                 excellentCard.className = 'stat-card';
                 excellentCard.innerHTML = `
-                    <div class="stat-number">${data.excellent}</div>
+                    <div class="stat-number">${userData.excellent}</div>
                     <div class="stat-label">Excellent Matches</div>
                     <span class="match-quality quality-excellent">Best Fit</span>
                 `;
@@ -659,11 +738,11 @@
             }
 
             // Good matches
-            if (data.good > 0) {
+            if (userData.good > 0) {
                 const goodCard = document.createElement('div');
                 goodCard.className = 'stat-card';
                 goodCard.innerHTML = `
-                    <div class="stat-number">${data.good}</div>
+                    <div class="stat-number">${userData.good}</div>
                     <div class="stat-label">Strong Matches</div>
                     <span class="match-quality quality-good">Good Fit</span>
                 `;
@@ -671,11 +750,11 @@
             }
 
             // Fair matches
-            if (data.fair > 0) {
+            if (userData.fair > 0) {
                 const fairCard = document.createElement('div');
                 fairCard.className = 'stat-card';
                 fairCard.innerHTML = `
-                    <div class="stat-number">${data.fair}</div>
+                    <div class="stat-number">${userData.fair}</div>
                     <div class="stat-label">Potential Matches</div>
                     <span class="match-quality quality-fair">Fair Fit</span>
                 `;
@@ -690,21 +769,21 @@
             let previews = [];
 
             // Add samples from each category
-            for (let i = 0; i < Math.min(data.excellent, 2); i++) {
+            for (let i = 0; i < Math.min(userData.excellent, 2); i++) {
                 previews.push({
                     ...lenderTemplates.excellent[i % lenderTemplates.excellent.length],
                     match: 'Excellent Match'
                 });
             }
 
-            for (let i = 0; i < Math.min(data.good, 2); i++) {
+            for (let i = 0; i < Math.min(userData.good, 2); i++) {
                 previews.push({
                     ...lenderTemplates.good[i % lenderTemplates.good.length],
                     match: 'Strong Match'
                 });
             }
 
-            for (let i = 0; i < Math.min(data.fair, 1); i++) {
+            for (let i = 0; i < Math.min(userData.fair, 1); i++) {
                 previews.push({
                     ...lenderTemplates.fair[i % lenderTemplates.fair.length],
                     match: 'Good Match'
@@ -735,25 +814,49 @@
         }
 
         function proceedToPayment() {
-            if (!data.submission_id) {
+            if (!userData.submission_id) {
                 alert('Invalid session. Please start your application again.');
                 return;
             }
 
-            const price = data.total <= 2 ? 1000 : 2000;
-            window.location.href = `payment.html?submission_id=${data.submission_id}&expected_matches=${data.total}&price=${price}`;
+            // ВАЖНО: Передаем ВСЕ данные пользователя на payment.html
+            const price = userData.total <= 2 ? 1000 : 2000;
+            const params = new URLSearchParams({
+                submission_id: userData.submission_id,
+                ...(userData.email && { email: userData.email }),
+                ...(userData.full_name && { full_name: userData.full_name }),
+                expected_matches: userData.total,
+                price: price
+            });
+
+            window.location.href = `payment.html?${params.toString()}`;
         }
 
         function goBack() {
-            if (data.submission_id) {
-                window.location.href = `upload-docs.html?submission_id=${data.submission_id}`;
+            if (userData.submission_id) {
+                // Передаем данные обратно на upload-docs.html
+                const params = new URLSearchParams({
+                    submission_id: userData.submission_id,
+                    ...(userData.email && { email: userData.email }),
+                    ...(userData.full_name && { full_name: userData.full_name })
+                });
+                
+                window.location.href = `upload-docs.html?${params.toString()}`;
             } else {
                 window.history.back();
             }
         }
 
         function modifyRequirements() {
-            window.location.href = `application-form.html?submission_id=${data.submission_id}&modify=true`;
+            // Передаем данные на форму изменения
+            const params = new URLSearchParams({
+                submission_id: userData.submission_id,
+                ...(userData.email && { email: userData.email }),
+                ...(userData.full_name && { full_name: userData.full_name }),
+                modify: 'true'
+            });
+            
+            window.location.href = `application-form.html?${params.toString()}`;
         }
     </script>
 </body>
