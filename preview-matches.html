@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Funding Matches - Preview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .timer-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 25px;
+            margin-top: 20px;
+            font-size: 1.1em;
+        }
+
+        .timer {
+            font-weight: bold;
+            font-family: 'SF Mono', Monaco, monospace;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .success-message {
+            background: #f0fdf4;
+            border-left: 4px solid #22c55e;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+
+        .success-message h2 {
+            color: #15803d;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: #f9fafb;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #e5e7eb;
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-size: 0.95em;
+        }
+
+        .match-quality {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .quality-excellent {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .quality-good {
+            background: #e0e7ff;
+            color: #4338ca;
+        }
+
+        .quality-fair {
+            background: #fef3c7;
+            color: #a16207;
+        }
+
+        .preview-section {
+            background: #f9fafb;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .preview-header h3 {
+            color: #333;
+            font-size: 1.2em;
+        }
+
+        .locked-badge {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .lender-list {
+            display: grid;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .lender-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lender-item::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.7) 50%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .lender-type {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .lender-match {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .match-excellent {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .match-good {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .match-fair {
+            background: #fef3c7;
+            color: #a16207;
+        }
+
+        .lender-features {
+            color: #6b7280;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .lender-features li {
+            margin-left: 20px;
+            margin-top: 5px;
+        }
+
+        .fee-box {
+            background: #f3f4f6;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .price-display {
+            font-size: 3em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .price-display .currency {
+            font-size: 0.6em;
+            vertical-align: super;
+        }
+
+        .features-list {
+            text-align: left;
+            max-width: 400px;
+            margin: 0 auto 30px;
+        }
+
+        .features-list li {
+            list-style: none;
+            padding: 10px 0;
+            padding-left: 35px;
+            position: relative;
+            color: #4b5563;
+        }
+
+        .features-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 10px;
+            color: #22c55e;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: 1.1em;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            padding: 14px 30px;
+            font-size: 1em;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-block;
+            text-decoration: none;
+            margin-left: 15px;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .footer-note {
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.95em;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #6b7280;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #e5e7eb;
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .no-matches-message {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .no-matches-message h2 {
+            color: #991b1b;
+            margin-bottom: 15px;
+        }
+
+        .no-matches-message p {
+            color: #7f1d1d;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 0;
+                border-radius: 0;
+            }
+
+            .header {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            .content {
+                padding: 30px 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-secondary {
+                margin-left: 0;
+                margin-top: 10px;
+                display: block;
+                text-align: center;
+            }
+
+            .price-display {
+                font-size: 2.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Your Funding Matches</h1>
+            <p>Preview your potential lending partners</p>
+            <div class="timer-badge">
+                🕐 Preview expires in: <span class="timer" id="countdown">23:59:59</span>
+            </div>
+        </div>
+
+        <div class="content" id="mainContent" style="display: none;">
+            <!-- Success Message -->
+            <div class="success-message">
+                <h2 id="successTitle">Great news! We found matches for your funding request</h2>
+                <p>Based on your requirements, we've identified potential lenders ready to review your application.</p>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid" id="statsGrid">
+                <!-- Populated by JavaScript -->
+            </div>
+
+            <!-- Preview Section -->
+            <div class="preview-section">
+                <div class="preview-header">
+                    <h3>Sample Matched Lenders</h3>
+                    <span class="locked-badge">🔒 Details Protected</span>
+                </div>
+                <p style="color: #6b7280; margin-bottom: 20px;">
+                    Below are anonymized examples of lenders that match your criteria. 
+                    Full details including names and contact information will be available after payment.
+                </p>
+                <div class="lender-list" id="lenderList">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Payment Section -->
+            <div class="fee-box">
+                <h2 class="section-title">Unlock Full Access</h2>
+                <div class="price-display">
+                    <span class="currency">CHF</span> <span id="priceAmount">2000</span>
+                </div>
+                
+                <ul class="features-list">
+                    <li>Complete lender profiles and names</li>
+                    <li>Direct contact information</li>
+                    <li>Specific loan terms and rates</li>
+                    <li>Application requirements</li>
+                    <li>Priority processing (48-72 hours)</li>
+                    <li>Direct communication with matched lenders</li>
+                </ul>
+
+                <button class="btn-primary" onclick="proceedToPayment()">
+                    <span id="unlockButtonText">Proceed to Secure Payment</span>
+                </button>
+                <a href="#" class="btn-secondary" onclick="goBack()">Go Back</a>
+            </div>
+
+            <div class="footer-note">
+                <strong>Secure Payment:</strong> Your payment is processed securely through Stripe. 
+                We never store your payment information.
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div class="loading" id="loadingSection" style="display: none;">
+            <div class="spinner"></div>
+            <h2>Analyzing your requirements...</h2>
+            <p>Searching our network of verified lenders</p>
+        </div>
+
+        <!-- No Matches State -->
+        <div class="content" id="noMatchesContent" style="display: none;">
+            <div class="no-matches-message">
+                <h2>No Matches Found</h2>
+                <p>Unfortunately, we couldn't find any lenders that match your current criteria.</p>
+                <p>This could be due to specific requirements that fall outside typical lending parameters.</p>
+            </div>
+            
+            <div style="text-align: center;">
+                <a href="#" class="btn-primary" onclick="modifyRequirements()">Modify Requirements</a>
+                <a href="mailto:support@loanmatchpro.com" class="btn-secondary">Contact Support</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Parse URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const data = {
+            submission_id: urlParams.get('submission_id') || urlParams.get('sid'),
+            total: parseInt(urlParams.get('total') || urlParams.get('t') || '0'),
+            excellent: parseInt(urlParams.get('excellent') || urlParams.get('e') || '0'),
+            good: parseInt(urlParams.get('good') || urlParams.get('g') || '0'),
+            fair: parseInt(urlParams.get('fair') || urlParams.get('f') || '0'),
+            expires: parseInt(urlParams.get('expires') || urlParams.get('exp') || (Date.now() + 24*60*60*1000)),
+            token: urlParams.get('token'),
+            generating: urlParams.get('generating') === 'true'
+        };
+
+        // Lender templates
+        const lenderTemplates = {
+            excellent: [
+                { 
+                    type: 'Major Swiss Bank', 
+                    features: ['Industry expertise in your sector', 'Competitive interest rates', 'Fast approval process']
+                },
+                { 
+                    type: 'International Banking Group', 
+                    features: ['Global presence', 'Large funding capacity', 'Dedicated relationship manager']
+                },
+                { 
+                    type: 'Digital Banking Platform', 
+                    features: ['Streamlined online process', 'Quick decisions', 'Flexible terms']
+                }
+            ],
+            good: [
+                { 
+                    type: 'Regional Banking Institution', 
+                    features: ['Local market knowledge', 'Personalized service', 'Various loan products']
+                },
+                { 
+                    type: 'Established Private Lender', 
+                    features: ['Alternative financing options', 'Creative solutions', 'Fast funding']
+                },
+                { 
+                    type: 'Commercial Finance Company', 
+                    features: ['Asset-based lending', 'Working capital solutions', 'Industry focus']
+                }
+            ],
+            fair: [
+                { 
+                    type: 'Community Financial Institution', 
+                    features: ['Member benefits', 'Local focus', 'Competitive rates']
+                },
+                { 
+                    type: 'Alternative Finance Provider', 
+                    features: ['Flexible criteria', 'Quick decisions', 'Simple process']
+                }
+            ]
+        };
+
+        // Initialize on load
+        if (data.generating && data.submission_id) {
+            showLoading();
+            setTimeout(() => {
+                // Simulate API call - in production, this would fetch real data
+                window.location.href = `preview-matches.html?sid=${data.submission_id}&t=18&e=3&g=8&f=7&exp=${Date.now() + 24*60*60*1000}`;
+            }, 3000);
+        } else {
+            initializePreview();
+        }
+
+        function showLoading() {
+            document.getElementById('loadingSection').style.display = 'block';
+            document.getElementById('mainContent').style.display = 'none';
+            document.getElementById('noMatchesContent').style.display = 'none';
+        }
+
+        function initializePreview() {
+            // Check expiry
+            if (Date.now() > data.expires) {
+                alert('This preview has expired. Generating new results...');
+                window.location.href = `preview-matches.html?submission_id=${data.submission_id}&generating=true`;
+                return;
+            }
+
+            // Handle no matches
+            if (data.total === 0) {
+                document.getElementById('noMatchesContent').style.display = 'block';
+                document.getElementById('mainContent').style.display = 'none';
+                document.getElementById('loadingSection').style.display = 'none';
+                return;
+            }
+
+            // Show main content
+            document.getElementById('mainContent').style.display = 'block';
+            document.getElementById('loadingSection').style.display = 'none';
+            document.getElementById('noMatchesContent').style.display = 'none';
+
+            // Update success message
+            document.getElementById('successTitle').textContent = 
+                `Great news! We found ${data.total} potential lenders for your funding request`;
+
+            // Start countdown
+            startCountdown();
+
+            // Populate stats
+            populateStats();
+
+            // Generate lender previews
+            generateLenderPreviews();
+
+            // Update pricing for limited matches
+            if (data.total <= 2) {
+                document.getElementById('priceAmount').innerHTML = '1000 <span style="text-decoration: line-through; opacity: 0.5;">2000</span>';
+            }
+
+            // Update button text
+            document.getElementById('unlockButtonText').textContent = 
+                `Unlock All ${data.total} Lender Details`;
+        }
+
+        function startCountdown() {
+            const updateTimer = () => {
+                const now = Date.now();
+                const remaining = data.expires - now;
+                
+                if (remaining <= 0) {
+                    document.getElementById('countdown').textContent = 'EXPIRED';
+                    setTimeout(() => {
+                        alert('Preview expired. Refreshing...');
+                        window.location.href = `preview-matches.html?submission_id=${data.submission_id}&generating=true`;
+                    }, 1000);
+                    return;
+                }
+                
+                const hours = Math.floor(remaining / (1000 * 60 * 60));
+                const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+                
+                document.getElementById('countdown').textContent = 
+                    `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            };
+            
+            updateTimer();
+            setInterval(updateTimer, 1000);
+        }
+
+        function populateStats() {
+            const statsGrid = document.getElementById('statsGrid');
+            statsGrid.innerHTML = '';
+
+            // Total card
+            const totalCard = document.createElement('div');
+            totalCard.className = 'stat-card';
+            totalCard.innerHTML = `
+                <div class="stat-number">${data.total}</div>
+                <div class="stat-label">Total Matches</div>
+            `;
+            statsGrid.appendChild(totalCard);
+
+            // Excellent matches
+            if (data.excellent > 0) {
+                const excellentCard = document.createElement('div');
+                excellentCard.className = 'stat-card';
+                excellentCard.innerHTML = `
+                    <div class="stat-number">${data.excellent}</div>
+                    <div class="stat-label">Excellent Matches</div>
+                    <span class="match-quality quality-excellent">Best Fit</span>
+                `;
+                statsGrid.appendChild(excellentCard);
+            }
+
+            // Good matches
+            if (data.good > 0) {
+                const goodCard = document.createElement('div');
+                goodCard.className = 'stat-card';
+                goodCard.innerHTML = `
+                    <div class="stat-number">${data.good}</div>
+                    <div class="stat-label">Strong Matches</div>
+                    <span class="match-quality quality-good">Good Fit</span>
+                `;
+                statsGrid.appendChild(goodCard);
+            }
+
+            // Fair matches
+            if (data.fair > 0) {
+                const fairCard = document.createElement('div');
+                fairCard.className = 'stat-card';
+                fairCard.innerHTML = `
+                    <div class="stat-number">${data.fair}</div>
+                    <div class="stat-label">Potential Matches</div>
+                    <span class="match-quality quality-fair">Fair Fit</span>
+                `;
+                statsGrid.appendChild(fairCard);
+            }
+        }
+
+        function generateLenderPreviews() {
+            const lenderList = document.getElementById('lenderList');
+            lenderList.innerHTML = '';
+
+            let previews = [];
+
+            // Add samples from each category
+            for (let i = 0; i < Math.min(data.excellent, 2); i++) {
+                previews.push({
+                    ...lenderTemplates.excellent[i % lenderTemplates.excellent.length],
+                    match: 'Excellent Match'
+                });
+            }
+
+            for (let i = 0; i < Math.min(data.good, 2); i++) {
+                previews.push({
+                    ...lenderTemplates.good[i % lenderTemplates.good.length],
+                    match: 'Strong Match'
+                });
+            }
+
+            for (let i = 0; i < Math.min(data.fair, 1); i++) {
+                previews.push({
+                    ...lenderTemplates.fair[i % lenderTemplates.fair.length],
+                    match: 'Good Match'
+                });
+            }
+
+            // Limit to 5 previews
+            previews = previews.slice(0, 5);
+
+            // Create preview cards
+            previews.forEach(lender => {
+                const item = document.createElement('div');
+                item.className = 'lender-item';
+                
+                const matchClass = lender.match.includes('Excellent') ? 'match-excellent' :
+                                  lender.match.includes('Strong') ? 'match-good' : 'match-fair';
+                
+                item.innerHTML = `
+                    <div class="lender-type">${lender.type}</div>
+                    <span class="lender-match ${matchClass}">${lender.match}</span>
+                    <ul class="lender-features">
+                        ${lender.features.map(f => `<li>${f}</li>`).join('')}
+                    </ul>
+                `;
+                
+                lenderList.appendChild(item);
+            });
+        }
+
+        function proceedToPayment() {
+            if (!data.submission_id) {
+                alert('Invalid session. Please start your application again.');
+                return;
+            }
+
+            const price = data.total <= 2 ? 1000 : 2000;
+            window.location.href = `payment.html?submission_id=${data.submission_id}&expected_matches=${data.total}&price=${price}`;
+        }
+
+        function goBack() {
+            if (data.submission_id) {
+                window.location.href = `upload-docs.html?submission_id=${data.submission_id}`;
+            } else {
+                window.history.back();
+            }
+        }
+
+        function modifyRequirements() {
+            window.location.href = `application-form.html?submission_id=${data.submission_id}&modify=true`;
+        }
+    </script>
+</body>
+</html>
