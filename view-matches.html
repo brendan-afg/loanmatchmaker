@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Lender Matches - Alt Funds Global</title>
+    <meta name="color-scheme" content="light">
+    <style>
+        :root {
+            --primary: #2EA3F2;
+            --primary-600: #1f83c5;
+            --primary-100: #e8f5ff;
+            --secondary: #A7144C;
+            --text: #333333;
+            --text-muted: #666666;
+            --bg: #ffffff;
+            --card: #ffffff;
+            --border: #bbbbbb;
+            --border-soft: #eeeeee;
+            --shadow: 0 8px 24px rgba(0,0,0,.08);
+            --radius: 12px;
+            --radius-sm: 10px;
+            --success: #16a34a;
+            --danger: #d92d20;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Open Sans", system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Noto Sans", sans-serif;
+            background: linear-gradient(135deg, #AED6F1 0%, #D6EAF8 100%);
+            min-height: 100vh;
+            color: var(--text);
+            line-height: 1.55;
+        }
+
+        /* Loading State */
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(46, 163, 242, 0.2);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: var(--text);
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        /* Error State */
+        .error-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .error-card {
+            background: white;
+            padding: 40px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .error-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .error-title {
+            color: var(--danger);
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .error-message {
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .retry-button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: var(--radius-sm);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .retry-button:hover {
+            background: var(--primary-600);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+            opacity: 0;
+            animation: fadeIn 0.5s ease-in forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* Card Base */
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+        }
+
+        /* Header */
+        .header {
+            padding: 24px;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .logo img {
+            max-width: 200px;
+            height: auto;
+        }
+
+        .header-meta {
+            text-align: right;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .header h1 {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .welcome-message {
+            color: var(--text-muted);
+            font-size: 16px;
+            margin-bottom: 24px;
+        }
+
+        .welcome-name {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Summary Grid */
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .summary-item {
+            background: #f9fafb;
+            padding: 18px;
+            border-radius: var(--radius-sm);
+            border-left: 4px solid var(--primary);
+        }
+
+        .summary-label {
+            color: var(--text-muted);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .summary-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        /* Match Stats Banner */
+        .match-stats {
+            background: var(--primary-100);
+            padding: 16px 20px;
+            border-radius: var(--radius-sm);
+            border-left: 4px solid var(--primary);
+            color: #0b2942;
+        }
+
+        .stats-title {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stats-bar {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .stat-segment {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            background: white;
+            border: 1px solid var(--border-soft);
+        }
+
+        .stat-excellent {
+            color: var(--success);
+            border-color: var(--success);
+            background: #f0fdf4;
+        }
+
+        .stat-good {
+            color: #ea580c;
+            border-color: #ea580c;
+            background: #fff7ed;
+        }
+
+        .stat-fair {
+            color: var(--primary);
+            border-color: var(--primary);
+            background: var(--primary-100);
+        }
+
+        /* Filters */
+        .filters {
+            padding: 20px 24px;
+        }
+
+        .filters-row {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .filter-select, .search-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg);
+            color: var(--text);
+            font-size: 14px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .filter-select:focus, .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-100);
+        }
+
+        /* Lender Cards Grid */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            padding: 24px;
+        }
+
+        .lender-card {
+            background: var(--card);
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .lender-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0,0,0,.12);
+        }
+
+        .card-header {
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+            border-bottom: 1px solid var(--border-soft);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .lender-name {
+            color: var(--text);
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0;
+            flex: 1;
+        }
+
+        .match-score {
+            font-size: 24px;
+            font-weight: bold;
+            padding: 8px 14px;
+            border-radius: 8px;
+            color: white;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .score-high {
+            background: linear-gradient(135deg, var(--success), #10b981);
+        }
+
+        .score-medium {
+            background: linear-gradient(135deg, #ea580c, #f97316);
+        }
+
+        .score-low {
+            background: linear-gradient(135deg, var(--danger), #ef4444);
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        /* Score Breakdown */
+        .score-breakdown {
+            margin-bottom: 18px;
+        }
+
+        .score-title {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .score-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .score-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: #f9fafb;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .score-item-label {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .score-item-value {
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        /* Match Reasons */
+        .match-reasons {
+            background: var(--primary-100);
+            padding: 14px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            border-left: 3px solid var(--primary);
+        }
+
+        .match-reasons-title {
+            color: var(--primary-600);
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .match-reasons-text {
+            color: var(--text);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        /* Priority */
+        .priority {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+            color: var(--text-muted);
+            padding: 10px 0;
+        }
+
+        .priority-stars {
+            color: #fbbf24;
+            font-size: 18px;
+            letter-spacing: 1px;
+        }
+
+        .priority-5 .priority-stars { color: var(--success); }
+        .priority-4 .priority-stars { color: var(--primary); }
+        .priority-3 .priority-stars { color: #fbbf24; }
+
+        /* Contact Button */
+        .contact-button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 16px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .contact-button:hover {
+            background: var(--primary-600);
+        }
+
+        /* No Matches State */
+        .no-matches {
+            text-align: center;
+            padding: 60px 40px;
+        }
+
+        .no-matches-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .no-matches-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 10px;
+        }
+
+        .no-matches-text {
+            color: var(--text-muted);
+            font-size: 15px;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 32px 24px;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .footer-text {
+            margin-bottom: 8px;
+        }
+
+        .footer-submission {
+            font-size: 12px;
+            font-family: monospace;
+            opacity: 0.8;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .summary {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .cards-container {
+                grid-template-columns: 1fr;
+            }
+
+            .score-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filters-row {
+                flex-direction: column;
+            }
+
+            .filter-group {
+                width: 100%;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+            }
+
+            .filters, .contact-button {
+                display: none;
+            }
+
+            .lender-card {
+                break-inside: avoid;
+                box-shadow: none;
+                border: 1px solid var(--border);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading State -->
+    <div id="loading" class="loading-container">
+        <div class="loader"></div>
+        <div class="loading-text">Loading your matches...</div>
+    </div>
+
+    <!-- Error State -->
+    <div id="error" class="error-container" style="display: none;">
+        <div class="error-card">
+            <div class="error-icon">⚠️</div>
+            <h2 class="error-title">Unable to Load Matches</h2>
+            <p class="error-message" id="errorMessage">
+                We couldn't retrieve your matches. Please check your link or try again later.
+            </p>
+            <button class="retry-button" onclick="location.reload()">Try Again</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="content" class="container" style="display: none;">
+        <!-- Content will be dynamically inserted here -->
+    </div>
+
+    <script>
+        // Configuration
+        const API_ENDPOINT = 'https://altfundsglobal.app.n8n.cloud/webhook/view-matches';
+
+        // State
+        let matchesData = null;
+        let filteredMatches = [];
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadMatches();
+        });
+
+        // Get submission ID from URL
+        function getSubmissionId() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('submission_id');
+        }
+
+        // Load matches from API
+        async function loadMatches() {
+            const submissionId = getSubmissionId();
+
+            if (!submissionId) {
+                showError('No submission ID provided in the URL');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_ENDPOINT}?submission_id=${submissionId}&format=json`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                if (!result.success || !result.data) {
+                    throw new Error('Invalid response format');
+                }
+
+                matchesData = result.data;
+                filteredMatches = [...matchesData.matches];
+
+                renderContent();
+                hideLoading();
+                showContent();
+
+            } catch (error) {
+                console.error('Error loading matches:', error);
+                showError(`Failed to load matches: ${error.message}`);
+            }
+        }
+
+        // Render main content
+        function renderContent() {
+            const container = document.getElementById('content');
+            const borrower = matchesData.borrower;
+            const metadata = matchesData.metadata;
+
+            // Count match categories
+            const excellentCount = matchesData.matches.filter(m => m.overall_match_score >= 80).length;
+            const goodCount = matchesData.matches.filter(m => m.overall_match_score >= 60 && m.overall_match_score < 80).length;
+            const fairCount = matchesData.matches.filter(m => m.overall_match_score >= 40 && m.overall_match_score < 60).length;
+
+            container.innerHTML = `
+                <div class="card header">
+                    <div class="header-top">
+                        <a href="https://altfundsglobal.com/" aria-label="Alt Funds Global Homepage">
+                            <img src="https://brendan-afg.github.io/loanmatchmaker/afg-logo-secondary-reverse-m.png"
+                                 alt="Alt Funds Global Logo" class="logo">
+                        </a>
+                        <div class="header-meta">
+                            Generated: ${new Date(metadata.generated_at).toLocaleDateString()}
+                        </div>
+                    </div>
+
+                    <h1>Your Personalized Lender Matches</h1>
+                    <p class="welcome-message">
+                        Hello <span class="welcome-name">${borrower.full_name}</span>,
+                        we've analyzed your funding requirements and found the best matches for you.
+                    </p>
+
+                    <div class="summary">
+                        <div class="summary-item">
+                            <div class="summary-label">Unique Lenders</div>
+                            <div class="summary-value">${metadata.unique_lenders}</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">Funding Amount</div>
+                            <div class="summary-value">CHF ${parseInt(borrower.funding_amount || 0).toLocaleString()}</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">Industry</div>
+                            <div class="summary-value">${borrower.industry}</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">Loan Term</div>
+                            <div class="summary-value">${borrower.loan_term}</div>
+                        </div>
+                    </div>
+
+                    ${metadata.unique_lenders > 0 ? `
+                        <div class="match-stats">
+                            <div class="stats-title">Match Quality Distribution</div>
+                            <div class="stats-bar">
+                                ${excellentCount > 0 ? `<div class="stat-segment stat-excellent">🎯 ${excellentCount} Excellent (80%+)</div>` : ''}
+                                ${goodCount > 0 ? `<div class="stat-segment stat-good">✨ ${goodCount} Good (60-79%)</div>` : ''}
+                                ${fairCount > 0 ? `<div class="stat-segment stat-fair">👍 ${fairCount} Fair (40-59%)</div>` : ''}
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+
+                ${metadata.unique_lenders > 0 ? `
+                    <div class="card filters">
+                        <div class="filters-row">
+                            <div class="filter-group">
+                                <label class="filter-label">Search Lenders</label>
+                                <input type="text" class="search-input" id="searchInput"
+                                       placeholder="Search lender names..." onkeyup="filterMatches()">
+                            </div>
+                            <div class="filter-group">
+                                <label class="filter-label">Match Score</label>
+                                <select class="filter-select" id="scoreFilter" onchange="filterMatches()">
+                                    <option value="all">All Matches</option>
+                                    <option value="excellent">Excellent (80%+)</option>
+                                    <option value="good">Good (60-79%)</option>
+                                    <option value="fair">Fair (40-59%)</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label class="filter-label">Sort By</label>
+                                <select class="filter-select" id="sortBy" onchange="sortMatches(this.value)">
+                                    <option value="score">Match Score (High to Low)</option>
+                                    <option value="name">Lender Name (A-Z)</option>
+                                    <option value="priority">Priority Level</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="matchCards" class="cards-container">
+                        ${renderMatchCards(filteredMatches)}
+                    </div>
+                ` : `
+                    <div class="card no-matches">
+                        <div class="no-matches-icon">🔍</div>
+                        <h2 class="no-matches-title">No Matches Found</h2>
+                        <p class="no-matches-text">
+                            We couldn't find any lenders matching your criteria at this time.
+                            Please contact our support team for assistance.
+                        </p>
+                    </div>
+                `}
+
+                <div class="footer">
+                    <p class="footer-text">
+                        This confidential report was generated for ${borrower.email}
+                    </p>
+                    <p class="footer-submission">
+                        Submission ID: ${matchesData.submission_id}
+                    </p>
+                    <p class="footer-text" style="margin-top: 16px;">
+                        © 2025 Alt Funds Global. All rights reserved.
+                    </p>
+                </div>
+            `;
+        }
+
+        // Render match cards
+        function renderMatchCards(matches) {
+            if (matches.length === 0) {
+                return '<p style="text-align: center; color: var(--text-muted); padding: 40px; grid-column: 1/-1;">No matches found with current filters.</p>';
+            }
+
+            return matches.map(match => {
+                const scoreClass = match.overall_match_score >= 80 ? 'score-high' :
+                                  match.overall_match_score >= 60 ? 'score-medium' : 'score-low';
+
+                return `
+                    <div class="lender-card">
+                        <div class="card-header">
+                            <h3 class="lender-name">${match.lender_name}</h3>
+                            <div class="match-score ${scoreClass}">
+                                ${Math.round(match.overall_match_score)}%
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="score-breakdown">
+                                <div class="score-title">Compatibility Breakdown</div>
+                                <div class="score-grid">
+                                    <div class="score-item">
+                                        <span class="score-item-label">Industry</span>
+                                        <span class="score-item-value">${Math.round(match.industry_match_score)}%</span>
+                                    </div>
+                                    <div class="score-item">
+                                        <span class="score-item-label">Funding</span>
+                                        <span class="score-item-value">${Math.round(match.funding_amount_score)}%</span>
+                                    </div>
+                                    <div class="score-item">
+                                        <span class="score-item-label">Terms</span>
+                                        <span class="score-item-value">${Math.round(match.loan_term_score)}%</span>
+                                    </div>
+                                    <div class="score-item">
+                                        <span class="score-item-label">Location</span>
+                                        <span class="score-item-value">${Math.round(match.geographic_score)}%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            ${match.match_reasons ? `
+                                <div class="match-reasons">
+                                    <div class="match-reasons-title">Why this match?</div>
+                                    <div class="match-reasons-text">${match.match_reasons}</div>
+                                </div>
+                            ` : ''}
+
+                            <div class="priority priority-${match.contact_priority}">
+                                <span>Contact Priority:</span>
+                                <span class="priority-stars">
+                                    ${'★'.repeat(match.contact_priority)}${'☆'.repeat(5 - match.contact_priority)}
+                                </span>
+                            </div>
+
+                            <button class="contact-button" onclick="initiateContact('${match.lender_id}', '${match.lender_name}')">
+                                Request Introduction
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Filter matches
+        function filterMatches() {
+            const searchInput = document.getElementById('searchInput');
+            const scoreFilter = document.getElementById('scoreFilter');
+
+            const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+            const scoreRange = scoreFilter ? scoreFilter.value : 'all';
+
+            filteredMatches = matchesData.matches.filter(match => {
+                // Search filter
+                if (searchTerm && !match.lender_name.toLowerCase().includes(searchTerm)) {
+                    return false;
+                }
+
+                // Score filter
+                if (scoreRange === 'excellent' && match.overall_match_score < 80) return false;
+                if (scoreRange === 'good' && (match.overall_match_score < 60 || match.overall_match_score >= 80)) return false;
+                if (scoreRange === 'fair' && (match.overall_match_score < 40 || match.overall_match_score >= 60)) return false;
+
+                return true;
+            });
+
+            const cardsContainer = document.getElementById('matchCards');
+            if (cardsContainer) {
+                cardsContainer.innerHTML = renderMatchCards(filteredMatches);
+            }
+        }
+
+        // Sort matches
+        function sortMatches(sortBy) {
+            filteredMatches.sort((a, b) => {
+                switch(sortBy) {
+                    case 'name':
+                        return a.lender_name.localeCompare(b.lender_name);
+                    case 'priority':
+                        return b.contact_priority - a.contact_priority;
+                    case 'score':
+                    default:
+                        return b.overall_match_score - a.overall_match_score;
+                }
+            });
+
+            const cardsContainer = document.getElementById('matchCards');
+            if (cardsContainer) {
+                cardsContainer.innerHTML = renderMatchCards(filteredMatches);
+            }
+        }
+
+        // Initiate contact
+        function initiateContact(lenderId, lenderName) {
+            alert(`Thank you for your interest in ${lenderName}!\n\nOur team will facilitate an introduction within 24 hours.\n\nYou'll receive an email with next steps shortly.`);
+
+            // Track contact initiation (optional - implement as needed)
+            // fetch('/api/track-contact', { method: 'POST', body: JSON.stringify({ lenderId, submissionId: matchesData.submission_id }) });
+        }
+
+        // UI State Management
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        function showContent() {
+            document.getElementById('content').style.display = 'block';
+        }
+
+        function showError(message) {
+            hideLoading();
+            document.getElementById('errorMessage').textContent = message;
+            document.getElementById('error').style.display = 'flex';
+        }
+
+        // Print functionality
+        window.addEventListener('beforeprint', function() {
+            const cards = document.querySelectorAll('.lender-card');
+            cards.forEach(card => {
+                card.style.pageBreakInside = 'avoid';
+            });
+        });
+    </script>
+</body>
+</html>
