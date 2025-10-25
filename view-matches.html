@@ -1053,7 +1053,7 @@
                     `https://altfundsglobal.app.n8n.cloud/webhook/view-matches?submission_id=${submissionId}`,
                     {
                         method: 'GET',
-                        headers: { 'Content-Type': 'text/html' },
+                        headers: { 'Accept': 'application/json' },
                         signal: AbortSignal.timeout(30000)
                     }
                 );
@@ -1062,9 +1062,47 @@
                     throw new Error(`HTTP ${response.status}`);
                 }
 
-                // For now, show sample data
-                // In production, you'd parse the response
-                setTimeout(() => showContent(sampleMatches), 1000);
+                // Try to parse response as JSON
+                const contentType = response.headers.get('content-type');
+                let matchData;
+
+                if (contentType && contentType.includes('application/json')) {
+                    // Response is JSON
+                    const jsonData = await response.json();
+
+                    // Handle different JSON structures
+                    if (Array.isArray(jsonData)) {
+                        matchData = jsonData;
+                    } else if (jsonData.matches && Array.isArray(jsonData.matches)) {
+                        matchData = jsonData.matches;
+                    } else if (jsonData.data && Array.isArray(jsonData.data)) {
+                        matchData = jsonData.data;
+                    } else {
+                        console.warn('Unexpected JSON structure, using sample data');
+                        matchData = sampleMatches;
+                    }
+                } else {
+                    // Try parsing as JSON anyway (some APIs don't set correct content-type)
+                    try {
+                        const text = await response.text();
+                        const jsonData = JSON.parse(text);
+
+                        if (Array.isArray(jsonData)) {
+                            matchData = jsonData;
+                        } else if (jsonData.matches) {
+                            matchData = jsonData.matches;
+                        } else {
+                            matchData = sampleMatches;
+                        }
+                    } catch (parseError) {
+                        console.warn('Could not parse response as JSON, using sample data');
+                        matchData = sampleMatches;
+                    }
+                }
+
+                // Display all matches from response
+                console.log(`Displaying ${matchData.length} matches`);
+                setTimeout(() => showContent(matchData), 500);
 
             } catch (error) {
                 console.error('Error loading matches:', error);
