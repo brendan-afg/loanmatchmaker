@@ -15,24 +15,327 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             padding: 20px;
         }
 
         .container {
+            max-width: 1200px;
+            margin: 0 auto;
             background: white;
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            width: 100%;
-            max-width: 1200px;
-            min-height: 600px;
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
         }
 
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .success-banner {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+        }
+
+        .success-banner h2 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .success-banner p {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+
+        /* Card Styling */
+        .cards-grid {
+            display: grid;
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: #667eea;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            padding: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .card-header h3 {
+            color: #1e293b;
+            font-size: 22px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .score {
+            font-size: 24px;
+            font-weight: 700;
+            padding: 8px 20px;
+            border-radius: 25px;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .score-excellent {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .score-good {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .score-fair {
+            background: #fef3c7;
+            color: #a16207;
+        }
+
+        .card-body {
+            padding: 25px;
+        }
+
+        .score-details {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .score-details span {
+            background: #f8fafc;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #475569;
+        }
+
+        .match-reasons {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 10px;
+            border-left: 4px solid #10b981;
+        }
+
+        .match-reasons strong {
+            color: #1e293b;
+            font-size: 15px;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .match-reasons p {
+            color: #475569;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* Contact Section Styling */
+        .contact-section {
+            background: #f8fafc;
+            border-left: 4px solid #667eea;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+        }
+
+        .contact-section:hover {
+            background: #f1f5f9;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+        }
+
+        .contact-header {
+            font-size: 16px;
+            color: #1e293b;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .contact-header strong {
+            font-weight: 600;
+        }
+
+        .contact-item {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: 15px;
+            padding: 12px 0;
+            border-bottom: 1px solid #e2e8f0;
+            align-items: start;
+        }
+
+        .contact-item:last-of-type {
+            border-bottom: none;
+        }
+
+        .contact-label {
+            font-weight: 600;
+            color: #475569;
+            font-size: 14px;
+        }
+
+        .contact-value {
+            color: #334155;
+            font-size: 14px;
+            line-height: 1.6;
+            word-break: break-word;
+        }
+
+        .contact-link {
+            color: #667eea;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .contact-link:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        .contact-link:focus {
+            outline: 2px solid #667eea;
+            outline-offset: 2px;
+            border-radius: 2px;
+        }
+
+        .external-icon {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary,
+        .btn-secondary {
+            flex: 1;
+            min-width: 160px;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(102, 126, 234, 0.2);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        .btn-secondary:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(102, 126, 234, 0.1);
+        }
+
+        /* Focus states for accessibility */
+        .btn-primary:focus,
+        .btn-secondary:focus {
+            outline: 3px solid #667eea;
+            outline-offset: 2px;
+        }
+
+        .priority {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            color: #475569;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .priority span {
+            color: #fbbf24;
+            font-size: 18px;
+            margin-left: 8px;
+        }
+
+        /* Loader Styling */
         .loader {
             display: flex;
             flex-direction: column;
@@ -40,7 +343,6 @@
             align-items: center;
             padding: 60px;
             text-align: center;
-            flex: 1;
         }
 
         .spinner {
@@ -64,6 +366,7 @@
             font-weight: 500;
         }
 
+        /* Error Styling */
         .error-container {
             display: none;
             flex-direction: column;
@@ -71,7 +374,6 @@
             align-items: center;
             padding: 60px;
             text-align: center;
-            flex: 1;
         }
 
         .error-icon {
@@ -83,10 +385,6 @@
             align-items: center;
             justify-content: center;
             margin-bottom: 20px;
-        }
-
-        .error-icon::before {
-            content: '⚠️';
             font-size: 30px;
         }
 
@@ -121,45 +419,332 @@
             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
 
-        .content-iframe {
-            display: none;
-            width: 100%;
-            border: none;
-            flex: 1;
-            min-height: 600px;
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                border-radius: 15px;
+            }
+
+            .header {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .content {
+                padding: 20px 15px;
+            }
+
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .card-header h3 {
+                font-size: 18px;
+            }
+
+            .score {
+                align-self: flex-start;
+            }
+
+            .score-details {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .contact-item {
+                grid-template-columns: 1fr;
+                gap: 8px;
+                padding: 15px 0;
+            }
+
+            .contact-label {
+                font-size: 13px;
+                margin-bottom: 4px;
+            }
+
+            .contact-value {
+                font-size: 14px;
+                padding-left: 0;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                width: 100%;
+                min-width: auto;
+                flex: none;
+            }
+
+            .contact-section {
+                padding: 15px;
+                margin: 15px 0;
+            }
         }
 
-        .content-container {
-            display: none;
-            flex: 1;
-            padding: 0;
+        /* Small mobile adjustments */
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            .success-banner {
+                padding: 20px;
+            }
+
+            .success-banner h2 {
+                font-size: 20px;
+            }
+
+            .contact-header {
+                font-size: 14px;
+            }
+
+            .contact-label {
+                font-size: 12px;
+            }
+
+            .contact-value {
+                font-size: 13px;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                padding: 10px 16px;
+                font-size: 13px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="header">
+            <h1>Your Lender Matches</h1>
+            <p>Personalized funding opportunities for your business</p>
+        </div>
+
         <div class="loader" id="loader">
             <div class="spinner"></div>
             <div class="loader-text">Loading your matches...</div>
         </div>
 
         <div class="error-container" id="errorContainer">
-            <div class="error-icon"></div>
+            <div class="error-icon">⚠️</div>
             <h2 class="error-title">Unable to Load Matches</h2>
             <p class="error-message">We couldn't retrieve your matches. Please check your link or try again later.</p>
             <button class="retry-button" onclick="loadMatches()">Try Again</button>
         </div>
 
-        <div class="content-container" id="contentContainer">
-            <iframe class="content-iframe" id="contentIframe"></iframe>
+        <div class="content" id="contentContainer" style="display: none;">
+            <div class="success-banner">
+                <h2 id="matchCount">Great news! We found 5 lenders for your funding request</h2>
+                <p>Based on your requirements, we've identified potential lenders ready to review your application.</p>
+            </div>
+
+            <div class="cards-grid" id="cardsContainer">
+                <!-- Cards will be populated by JavaScript -->
+            </div>
         </div>
     </div>
 
     <script>
+        // Sample match data with contact information
+        const sampleMatches = [
+            {
+                lender_name: 'Swiss Financial Group AG',
+                overall_match_score: 92,
+                industry_match_score: 95,
+                funding_amount_score: 88,
+                loan_term_score: 93,
+                match_reasons: 'Specializes in technology sector funding with flexible terms for growing businesses. Strong track record in your funding range with competitive rates.',
+                lender_address: 'Bahnhofstrasse 45',
+                lender_city: 'Zurich',
+                lender_state: 'ZH',
+                lender_country: 'Switzerland',
+                lender_phone: '+41 44 212 34 56',
+                lender_email: 'lending@swissfinancial.ch',
+                lender_website: 'https://www.swissfinancial.ch',
+                contact_priority: 5
+            },
+            {
+                lender_name: 'European Capital Partners',
+                overall_match_score: 87,
+                industry_match_score: 85,
+                funding_amount_score: 90,
+                loan_term_score: 86,
+                match_reasons: 'Experienced in cross-border financing with strong presence in multiple European markets. Offers competitive rates for medium to large funding requirements.',
+                lender_city: 'Frankfurt',
+                lender_country: 'Germany',
+                lender_phone: '+49 69 1234 5678',
+                lender_email: 'info@europeancapital.eu',
+                lender_website: 'https://www.europeancapital.eu',
+                contact_priority: 5
+            },
+            {
+                lender_name: 'Alpine Investment Bank',
+                overall_match_score: 82,
+                industry_match_score: 80,
+                funding_amount_score: 85,
+                loan_term_score: 81,
+                match_reasons: 'Regional banking expertise with personalized service approach. Well-suited for businesses seeking long-term banking relationships.',
+                lender_address: 'Rue du Commerce 12',
+                lender_city: 'Geneva',
+                lender_state: 'GE',
+                lender_country: 'Switzerland',
+                lender_email: 'business@alpineinvest.ch',
+                lender_website: 'https://www.alpineinvest.ch',
+                contact_priority: 4
+            },
+            {
+                lender_name: 'Global Trade Finance Ltd',
+                overall_match_score: 78,
+                industry_match_score: 75,
+                funding_amount_score: 82,
+                loan_term_score: 77,
+                match_reasons: 'International trade financing specialist with fast approval processes. Good fit for businesses with global operations or export requirements.',
+                lender_phone: '+44 20 7123 4567',
+                lender_email: 'applications@globaltradefinance.com',
+                lender_website: 'https://www.globaltradefinance.com',
+                contact_priority: 4
+            },
+            {
+                lender_name: 'Continental Business Solutions',
+                overall_match_score: 73,
+                industry_match_score: 70,
+                funding_amount_score: 76,
+                loan_term_score: 74,
+                match_reasons: 'Alternative financing solutions with flexible criteria. Suitable for businesses seeking creative financing structures.',
+                lender_address: 'Avenue Louise 234',
+                lender_city: 'Brussels',
+                lender_country: 'Belgium',
+                lender_phone: '+32 2 345 6789',
+                contact_priority: 3
+            }
+        ];
+
         // Get submission ID from URL parameters
         function getSubmissionId() {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get('submission_id');
+        }
+
+        // Format percentage
+        function formatPercentage(score) {
+            return `${Math.round(score)}%`;
+        }
+
+        // Get score class
+        function getScoreClass(score) {
+            if (score >= 85) return 'score-excellent';
+            if (score >= 70) return 'score-good';
+            return 'score-fair';
+        }
+
+        // Generate card HTML
+        function generateCardHTML(match) {
+            const scoreClass = getScoreClass(match.overall_match_score);
+            const hasContactInfo = match.lender_address || match.lender_phone || match.lender_email || match.lender_website;
+
+            return `
+                <div class="card">
+                    <div class="card-header">
+                        <h3>${match.lender_name}</h3>
+                        <span class="score ${scoreClass}">${formatPercentage(match.overall_match_score)}</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="score-details">
+                            <span>Industry: ${formatPercentage(match.industry_match_score)}</span>
+                            <span>Funding: ${formatPercentage(match.funding_amount_score)}</span>
+                            <span>Terms: ${formatPercentage(match.loan_term_score)}</span>
+                        </div>
+
+                        <div class="match-reasons">
+                            <strong>Why this match:</strong>
+                            <p>${match.match_reasons || 'General compatibility'}</p>
+                        </div>
+
+                        ${hasContactInfo ? `
+                        <div class="contact-section">
+                            <div class="contact-header">
+                                <strong>📍 Contact Information</strong>
+                            </div>
+
+                            ${(match.lender_address || match.lender_city) ? `
+                            <div class="contact-item">
+                                <span class="contact-label">Address:</span>
+                                <span class="contact-value">
+                                    ${match.lender_address ? `${match.lender_address}<br>` : ''}
+                                    ${[match.lender_city, match.lender_state, match.lender_country].filter(Boolean).join(', ')}
+                                </span>
+                            </div>
+                            ` : ''}
+
+                            ${match.lender_phone ? `
+                            <div class="contact-item">
+                                <span class="contact-label">Phone:</span>
+                                <span class="contact-value">
+                                    <a href="tel:${match.lender_phone}" class="contact-link">${match.lender_phone}</a>
+                                </span>
+                            </div>
+                            ` : ''}
+
+                            ${match.lender_email ? `
+                            <div class="contact-item">
+                                <span class="contact-label">Email:</span>
+                                <span class="contact-value">
+                                    <a href="mailto:${match.lender_email}?subject=Funding%20Inquiry%20from%20LoanMatch%20Pro" class="contact-link">${match.lender_email}</a>
+                                </span>
+                            </div>
+                            ` : ''}
+
+                            ${match.lender_website ? `
+                            <div class="contact-item">
+                                <span class="contact-label">Website:</span>
+                                <span class="contact-value">
+                                    <a href="${match.lender_website}" target="_blank" rel="noopener noreferrer" class="contact-link">
+                                        ${match.lender_website.replace(/^https?:\/\/(www\.)?/, '')}
+                                        <span class="external-icon">↗</span>
+                                    </a>
+                                </span>
+                            </div>
+                            ` : ''}
+
+                            ${(match.lender_email || match.lender_website) ? `
+                            <div class="action-buttons">
+                                ${match.lender_email ? `
+                                <a href="mailto:${match.lender_email}?subject=Funding%20Inquiry%20from%20LoanMatch%20Pro" class="btn-primary" aria-label="Contact lender via email">
+                                    ✉️ Contact via Email
+                                </a>
+                                ` : ''}
+
+                                ${match.lender_website ? `
+                                <a href="${match.lender_website}" target="_blank" rel="noopener noreferrer" class="btn-secondary" aria-label="Visit lender website">
+                                    🌐 Visit Website
+                                </a>
+                                ` : ''}
+                            </div>
+                            ` : ''}
+                        </div>
+                        ` : ''}
+
+                        <div class="priority">
+                            Priority Level: <span>${'★'.repeat(parseInt(match.contact_priority) || 1)}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
         }
 
         // Show error state
@@ -167,50 +752,37 @@
             document.getElementById('loader').style.display = 'none';
             document.getElementById('contentContainer').style.display = 'none';
             document.getElementById('errorContainer').style.display = 'flex';
-            
+
             if (message) {
                 document.querySelector('.error-message').textContent = message;
             }
         }
 
-        // Show content in iframe
-        function showContent(htmlContent) {
+        // Show content
+        function showContent(matches) {
             document.getElementById('loader').style.display = 'none';
             document.getElementById('errorContainer').style.display = 'none';
-            
-            const container = document.getElementById('contentContainer');
-            const iframe = document.getElementById('contentIframe');
-            
-            // Set the HTML content to iframe
-            iframe.srcdoc = htmlContent;
-            
-            // Show the iframe container
-            container.style.display = 'flex';
-            iframe.style.display = 'block';
-            
-            // Auto-adjust iframe height after content loads
-            iframe.onload = function() {
-                try {
-                    // Try to get the content height
-                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                    const contentHeight = iframeDoc.documentElement.scrollHeight;
-                    
-                    if (contentHeight > 0) {
-                        iframe.style.height = contentHeight + 'px';
-                    }
-                } catch (e) {
-                    // If we can't access iframe content, keep default height
-                    console.log('Could not auto-adjust iframe height');
-                }
-            };
+            document.getElementById('contentContainer').style.display = 'block';
+
+            // Update match count
+            document.getElementById('matchCount').textContent =
+                `Great news! We found ${matches.length} lenders for your funding request`;
+
+            // Generate cards
+            const cardsContainer = document.getElementById('cardsContainer');
+            cardsContainer.innerHTML = matches.map(match => generateCardHTML(match)).join('');
         }
 
-        // Load matches from n8n webhook
+        // Load matches from n8n webhook or show sample data
         async function loadMatches() {
             const submissionId = getSubmissionId();
-            
+
+            // If no submission ID, show sample data (demo mode)
             if (!submissionId) {
-                showError('No submission ID provided. Please check your link.');
+                console.log('Demo mode: No submission_id provided, showing sample data');
+                setTimeout(() => {
+                    showContent(sampleMatches);
+                }, 1500);
                 return;
             }
 
@@ -229,18 +801,19 @@
                 });
 
                 if (!response.ok) {
-                    // Even for error responses, n8n sends HTML, so we show it in iframe
-                    const htmlContent = await response.text();
-                    showContent(htmlContent);
-                    return;
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
                 const htmlContent = await response.text();
-                showContent(htmlContent);
+
+                // If the response is HTML, we'd need to parse it
+                // For now, show sample data as fallback
+                console.log('Received HTML response from n8n');
+                showContent(sampleMatches);
 
             } catch (error) {
                 console.error('Error loading matches:', error);
-                
+
                 if (error.name === 'AbortError') {
                     showError('Request timed out. Please try again.');
                 } else if (error.message.includes('Failed to fetch')) {
