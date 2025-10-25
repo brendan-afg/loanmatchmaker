@@ -287,13 +287,14 @@
         .details-content {
             padding: 0 20px 20px 20px;
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
             gap: 30px;
         }
 
         .details-section {
             border: 1px solid var(--border-color);
             background: var(--bg-primary);
+            min-width: 0;
         }
 
         .details-header {
@@ -333,6 +334,8 @@
         .detail-value {
             color: var(--text-primary);
             font-weight: 500;
+            word-break: break-word;
+            overflow-wrap: break-word;
         }
 
         .detail-value a {
