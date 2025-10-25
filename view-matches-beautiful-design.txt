@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -930,6 +931,13 @@
                                         <div class="detail-label">Priority Level</div>
                                         <div class="detail-value">${'★'.repeat(match.contact_priority || 1)} (${match.contact_priority || 1}/5)</div>
                                     </div>
+                                </div>
+                            </div>
+
+                            ${(match.interest_rate || match.max_loan_amount || match.min_credit_score || match.loan_types || match.response_time || match.approval_rate) ? `
+                            <div class="details-section">
+                                <div class="details-header">Loan Details</div>
+                                <div class="details-body">
                                     ${match.interest_rate ? `
                                     <div class="detail-row">
                                         <div class="detail-label">Interest Rate</div>
@@ -968,6 +976,7 @@
                                     ` : ''}
                                 </div>
                             </div>
+                            ` : ''}
 
                             ${hasContact ? `
                             <div class="details-section">
