@@ -448,6 +448,98 @@
             margin-bottom: 20px;
         }
 
+        /* Borrower Info Panel */
+        .borrower-info-panel {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            margin-bottom: 30px;
+        }
+
+        .panel-header {
+            background: var(--bg-tertiary);
+            border-bottom: 2px solid var(--border-color);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .panel-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+        }
+
+        .panel-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent-green);
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-green);
+            border: 1px solid var(--bg-primary);
+        }
+
+        .panel-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 25px;
+        }
+
+        .panel-column {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .info-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .info-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+        }
+
+        .info-value {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .info-value.large {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-green);
+        }
+
+        .info-value.mono {
+            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+            color: var(--accent-blue);
+        }
+
+        .info-value.highlight {
+            background: var(--bg-primary);
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+        }
+
         /* Mobile Responsive */
         @media (max-width: 1024px) {
             .terminal-header {
@@ -488,6 +580,12 @@
 
             .header-stats {
                 grid-template-columns: 1fr 1fr;
+            }
+
+            .panel-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 20px;
             }
         }
 
@@ -555,6 +653,20 @@
 
         <!-- Content -->
         <div id="contentContainer" style="display: none;">
+            <!-- Borrower Info Panel -->
+            <div class="borrower-info-panel">
+                <div class="panel-header">
+                    <div class="panel-title">Application Details</div>
+                    <div class="panel-status">
+                        <div class="status-indicator"></div>
+                        <span>MATCHES READY</span>
+                    </div>
+                </div>
+                <div class="panel-grid" id="borrowerInfoGrid">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+
             <div class="section-header">
                 <div class="section-title">Matched Lenders</div>
                 <div class="section-subtitle">Click any row to expand details</div>
@@ -663,6 +775,70 @@
         function getSubmissionId() {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get('submission_id');
+        }
+
+        // Get borrower data from URL parameters
+        function getBorrowerData() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return {
+                submission_id: urlParams.get('submission_id') || 'DEMO-2024-001',
+                full_name: urlParams.get('full_name') || 'John Smith',
+                email: urlParams.get('email') || 'john.smith@techstartup.com',
+                company: urlParams.get('company') || 'TechStartup Solutions AG',
+                funding_amount: urlParams.get('funding_amount') || 'CHF 500,000',
+                industry: urlParams.get('industry') || 'Technology / SaaS',
+                timestamp: urlParams.get('timestamp') || new Date().toISOString()
+            };
+        }
+
+        // Format timestamp for display
+        function formatTimestamp(isoString) {
+            const date = new Date(isoString);
+            const dateStr = date.toLocaleDateString('en-GB', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric'
+            });
+            const timeStr = date.toTimeString().split(' ')[0];
+            return `${dateStr.toUpperCase()} ${timeStr}`;
+        }
+
+        // Generate borrower info panel HTML
+        function generateBorrowerInfo(data) {
+            return `
+                <div class="panel-column">
+                    <div class="info-field">
+                        <div class="info-label">Application ID</div>
+                        <div class="info-value mono highlight">${data.submission_id}</div>
+                    </div>
+                    <div class="info-field">
+                        <div class="info-label">Applicant Name</div>
+                        <div class="info-value">${data.full_name}</div>
+                    </div>
+                    <div class="info-field">
+                        <div class="info-label">Email Address</div>
+                        <div class="info-value">${data.email}</div>
+                    </div>
+                    <div class="info-field">
+                        <div class="info-label">Company</div>
+                        <div class="info-value">${data.company}</div>
+                    </div>
+                </div>
+                <div class="panel-column">
+                    <div class="info-field">
+                        <div class="info-label">Funding Requested</div>
+                        <div class="info-value large">${data.funding_amount}</div>
+                    </div>
+                    <div class="info-field">
+                        <div class="info-label">Industry Sector</div>
+                        <div class="info-value">${data.industry}</div>
+                    </div>
+                    <div class="info-field">
+                        <div class="info-label">Submitted</div>
+                        <div class="info-value mono">${formatTimestamp(data.timestamp)}</div>
+                    </div>
+                </div>
+            `;
         }
 
         // Get score class
@@ -843,6 +1019,10 @@
             document.getElementById('loadingContainer').style.display = 'none';
             document.getElementById('errorContainer').style.display = 'none';
             document.getElementById('contentContainer').style.display = 'block';
+
+            // Generate borrower info panel
+            const borrowerData = getBorrowerData();
+            document.getElementById('borrowerInfoGrid').innerHTML = generateBorrowerInfo(borrowerData);
 
             // Generate header stats
             document.getElementById('headerStats').innerHTML = generateHeaderStats(matches);
