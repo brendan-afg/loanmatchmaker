@@ -794,10 +794,9 @@
         // Initialize on load
         if (userData.generating && userData.submission_id) {
             showLoading();
-            setTimeout(() => {
-                // Simulate API call - generate random matches
-                const matchData = generateRandomMatches();
 
+            // Call webhook to generate matches
+            fetchMatchPreview().then(matchData => {
                 // Build URL with all user data AND match data
                 const params = new URLSearchParams({
                     submission_id: userData.submission_id,
@@ -807,11 +806,16 @@
                     excellent: matchData.excellent,
                     good: matchData.good,
                     fair: matchData.fair,
-                    expires: Date.now() + 24*60*60*1000
+                    expires: matchData.expires
                 });
 
                 window.location.href = `preview-matches.html?${params.toString()}`;
-            }, 3000);
+            }).catch(error => {
+                console.error('Failed to fetch preview:', error);
+                alert('Failed to generate preview. Please try again.');
+                // Go back to previous page
+                window.history.back();
+            });
         } else {
             initializePreview();
         }
@@ -827,6 +831,63 @@
                 fair,
                 total: excellent + good + fair
             };
+        }
+
+        // Fetch match preview from webhook
+        async function fetchMatchPreview() {
+            if (!userData.submission_id) {
+                throw new Error('Missing submission_id');
+            }
+
+            // Build query parameters
+            const params = new URLSearchParams({
+                submission_id: userData.submission_id
+            });
+
+            if (userData.email) {
+                params.append('email', userData.email);
+            }
+
+            if (userData.full_name) {
+                params.append('full_name', userData.full_name);
+            }
+
+            // Call webhook
+            const webhookUrl = `https://altfundsglobal.app.n8n.cloud/webhook/generate-preview?${params.toString()}`;
+
+            try {
+                const response = await fetch(webhookUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+
+                // Validate response
+                if (!data.success) {
+                    throw new Error(data.message || 'Failed to generate preview');
+                }
+
+                return {
+                    excellent: data.excellent || 0,
+                    good: data.good || 0,
+                    fair: data.fair || 0,
+                    total: data.total || 0,
+                    expires: data.expires || (Date.now() + 24*60*60*1000)
+                };
+
+            } catch (error) {
+                console.error('Webhook error:', error);
+                // Fallback to random generation on error
+                console.warn('Falling back to client-side generation');
+                return generateRandomMatches();
+            }
         }
 
         function showLoading() {
