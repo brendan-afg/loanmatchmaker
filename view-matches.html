@@ -703,7 +703,7 @@
             const hasContact = match.lender_address || match.lender_phone || match.lender_email || match.lender_website;
 
             return `
-                <div class="lender-row" data-index="${index}">
+                <div class="lender-row${index < 5 ? ' expanded' : ''}" data-index="${index}">
                     <div class="row-header" onclick="toggleRow(${index})">
                         <div class="rank">#${index + 1}</div>
                         <div class="lender-info">
