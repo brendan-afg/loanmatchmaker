@@ -933,6 +933,50 @@
                                 </div>
                             </div>
 
+                            ${(match.interest_rate || match.max_loan_amount || match.min_credit_score || match.loan_types || match.response_time || match.approval_rate) ? `
+                            <div class="details-section">
+                                <div class="details-header">Loan Details</div>
+                                <div class="details-body">
+                                    ${match.interest_rate ? `
+                                    <div class="detail-row">
+                                        <div class="detail-label">Interest Rate</div>
+                                        <div class="detail-value mono">${match.interest_rate}</div>
+                                    </div>
+                                    ` : ''}
+                                    ${match.max_loan_amount ? `
+                                    <div class="detail-row">
+                                        <div class="detail-label">Max Loan Amount</div>
+                                        <div class="detail-value mono">${formatCurrency(match.max_loan_amount)}</div>
+                                    </div>
+                                    ` : ''}
+                                    ${match.min_credit_score ? `
+                                    <div class="detail-row">
+                                        <div class="detail-label">Min Credit Score</div>
+                                        <div class="detail-value mono">${match.min_credit_score}</div>
+                                    </div>
+                                    ` : ''}
+                                    ${match.loan_types ? `
+                                    <div class="detail-row">
+                                        <div class="detail-label">Loan Types</div>
+                                        <div class="detail-value">${match.loan_types}</div>
+                                    </div>
+                                    ` : ''}
+                                    ${match.response_time ? `
+                                    <div class="detail-row">
+                                        <div class="detail-label">Response Time</div>
+                                        <div class="detail-value">${match.response_time}</div>
+                                    </div>
+                                    ` : ''}
+                                    ${match.approval_rate ? `
+                                    <div class="detail-row">
+                                        <div class="detail-label">Approval Rate</div>
+                                        <div class="detail-value mono">${match.approval_rate}%</div>
+                                    </div>
+                                    ` : ''}
+                                </div>
+                            </div>
+                            ` : ''}
+
                             ${hasContact ? `
                             <div class="details-section">
                                 <div class="details-header">Contact Information</div>
@@ -1072,7 +1116,14 @@
                 industry_match_score: match.match_score || 0,
                 funding_amount_score: match.match_score || 0,
                 loan_term_score: match.match_score || 0,
-                match_reasons: `Interest rate: ${match.interest_rate || 'N/A'}. Max loan: ${match.max_loan_amount ? formatCurrency(match.max_loan_amount) : 'N/A'}. Min credit score: ${match.min_credit_score || 'N/A'}. Loan types: ${match.loan_types || 'Various'}. Response time: ${match.response_time || 'Standard'}. Approval rate: ${match.approval_rate || 'N/A'}%`,
+                match_reasons: match.match_reasons || 'This lender has been matched to your funding requirements based on compatibility across multiple factors including industry focus, funding capacity, and lending criteria.',
+                // Add individual n8n fields for structured display
+                interest_rate: match.interest_rate,
+                max_loan_amount: match.max_loan_amount,
+                min_credit_score: match.min_credit_score,
+                loan_types: match.loan_types,
+                response_time: match.response_time,
+                approval_rate: match.approval_rate,
                 lender_email: match.lender_email,
                 lender_phone: match.lender_phone,
                 lender_website: match.lender_website,
