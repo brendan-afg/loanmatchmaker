@@ -1,4 +1,4 @@
-page <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -1017,28 +1017,29 @@ page <!DOCTYPE html>
 
                 card.innerHTML = `
                     <h4>${lender.type}</h4>
-                    <div class="match-badge" style="color: ${lender.matchColor}; border-color: ${lender.matchColor}; background: ${lender.matchColor}10;">
+                    <div style="display: inline-block; padding: 4px 12px; background: ${lender.matchColor}20; color: ${lender.matchColor}; border-radius: 12px; font-size: 13px; font-weight: 600; margin-bottom: 15px;">
                         ${lender.match}
                     </div>
                     <div class="lender-detail">
-                        <span class="label">Loan Amount</span>
+                        <span class="label">Loan Amount:</span>
                         <span class="value">${lender.details.amount}</span>
                     </div>
                     <div class="lender-detail">
-                        <span class="label">Interest Rate</span>
+                        <span class="label">Interest Rate:</span>
                         <span class="value">${lender.details.rate}</span>
                     </div>
                     <div class="lender-detail">
-                        <span class="label">Term</span>
+                        <span class="label">Term:</span>
                         <span class="value">${lender.details.term}</span>
                     </div>
                     <div class="lender-detail">
-                        <span class="label">Response Time</span>
+                        <span class="label">Response Time:</span>
                         <span class="value">${lender.details.response}</span>
                     </div>
-                    <div class="lender-features">
+                    <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e2e8f0;">
                         ${lender.features.map(f => `
-                            <div class="feature-item" style="color: var(--text-secondary);">
+                            <div style="font-size: 13px; color: #64748b; margin: 6px 0; padding-left: 20px; position: relative;">
+                                <span style="position: absolute; left: 0; color: ${lender.matchColor};">✓</span>
                                 ${f}
                             </div>
                         `).join('')}
