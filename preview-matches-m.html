@@ -5,20 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Funding Matches - Preview</title>
     <style>
-        :root {
-            --bg-primary: #F8FAFC;
-            --bg-secondary: #F1F5F9;
-            --bg-tertiary: #E2E8F0;
-            --text-primary: #0F172A;
-            --text-secondary: #475569;
-            --text-muted: #64748B;
-            --border-color: #CBD5E1;
-            --accent-green: #10B981;
-            --accent-amber: #F59E0B;
-            --accent-red: #EF4444;
-            --accent-blue: #3B82F6;
-        }
-
         * {
             margin: 0;
             padding: 0;
@@ -26,1005 +12,723 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.5;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            padding: 20px;
         }
 
-        /* Typography */
-        .mono {
-            font-family: 'SF Mono', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', monospace;
-        }
-
-        /* Terminal Header */
-        .terminal-header {
-            background: var(--bg-secondary);
-            border-bottom: 2px solid var(--border-color);
-            padding: 20px 40px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .header-title {
-            font-size: 14px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            color: var(--text-secondary);
-        }
-
-        .header-status {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-
-        .status-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background: var(--accent-amber);
-            border: 1px solid var(--bg-primary);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .header-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
-        }
-
-        .stat-box {
-            border: 1px solid var(--border-color);
-            padding: 12px 16px;
-            background: var(--bg-primary);
-        }
-
-        .stat-label {
-            font-size: 11px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 4px;
-        }
-
-        .stat-value {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--text-primary);
-            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
-        }
-
-        /* Container */
         .container {
-            max-width: 1600px;
+            max-width: 900px;
             margin: 0 auto;
-            padding: 30px 40px;
         }
 
-        /* Section Styling */
-        .section-header {
-            border-left: 3px solid var(--accent-green);
-            padding-left: 15px;
-            margin-bottom: 20px;
-        }
-
-        .section-title {
-            font-size: 13px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-secondary);
-            margin-bottom: 4px;
-        }
-
-        .section-subtitle {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        /* Info Panel */
-        .info-panel {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
+        .header {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
             margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
         }
 
-        .panel-header {
-            background: var(--bg-tertiary);
-            border-bottom: 2px solid var(--border-color);
-            padding: 12px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .header h1 {
+            color: #1f2937;
+            font-size: 32px;
+            margin-bottom: 10px;
         }
 
-        .panel-title {
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text-muted);
+        .header p {
+            color: #6b7280;
+            font-size: 16px;
         }
 
-        .panel-status {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--accent-amber);
+        .info-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
         }
 
-        .panel-grid {
+        .info-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
-            padding: 25px;
+            margin-bottom: 20px;
         }
 
-        .info-field {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
+        .info-item {
+            padding: 15px;
+            background: #f9fafb;
+            border-radius: 8px;
         }
 
         .info-label {
-            font-size: 10px;
-            font-weight: 700;
+            font-size: 12px;
+            color: #6b7280;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            color: var(--text-muted);
+            margin-bottom: 5px;
         }
 
         .info-value {
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--text-primary);
-        }
-
-        .info-value.mono {
-            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
-            color: var(--accent-blue);
-        }
-
-        .info-value.highlight {
-            background: var(--bg-primary);
-            padding: 8px 12px;
-            border: 1px solid var(--border-color);
-        }
-
-        /* Success Banner */
-        .success-banner {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-left: 4px solid var(--accent-green);
-            padding: 20px 25px;
-            margin-bottom: 30px;
-        }
-
-        .success-banner h2 {
             font-size: 16px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .success-banner p {
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-
-        /* Content Section */
-        .content-section {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            padding: 30px;
-            margin-bottom: 30px;
-        }
-
-        .content-section h3 {
-            color: var(--text-primary);
-            font-size: 13px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 15px;
-        }
-
-        .content-section .subtitle {
-            color: var(--text-muted);
-            font-size: 12px;
-            margin-bottom: 30px;
-        }
-
-        /* Lenders Grid */
-        .lenders-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .lender-card {
-            background: var(--bg-primary);
-            border: 1px solid var(--border-color);
-            padding: 20px;
-            transition: all 0.2s ease;
-        }
-
-        .lender-card:hover {
-            border-color: var(--text-muted);
-            background: var(--bg-secondary);
-        }
-
-        .lender-card h4 {
-            color: var(--text-primary);
-            font-size: 15px;
-            margin-bottom: 12px;
+            color: #1f2937;
             font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
         }
 
-        .match-badge {
-            display: inline-block;
-            padding: 4px 10px;
-            font-size: 10px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 15px;
-            border: 1px solid;
-        }
-
-        .lender-detail {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border-color);
-            font-size: 13px;
-        }
-
-        .lender-detail:last-child {
-            border-bottom: none;
-        }
-
-        .lender-detail .label {
-            color: var(--text-muted);
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
-
-        .lender-detail .value {
-            color: var(--text-primary);
-            font-weight: 600;
-            font-family: 'SF Mono', monospace;
-        }
-
-        .lender-features {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .feature-item {
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin: 6px 0;
-            padding-left: 16px;
-            position: relative;
-        }
-
-        .feature-item::before {
-            content: "✓";
-            position: absolute;
-            left: 0;
-            font-weight: bold;
-        }
-
-        /* Pricing Section */
-        .pricing-section {
-            background: var(--bg-secondary);
-            border: 2px solid var(--border-color);
-            border-left: 4px solid var(--accent-green);
-            padding: 40px;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .pricing-section h3 {
-            font-size: 14px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 30px;
-            color: var(--text-primary);
-        }
-
-        .price-tag {
-            font-size: 56px;
-            font-weight: 700;
-            margin-bottom: 20px;
+        .timer {
             display: flex;
             align-items: center;
-            justify-content: center;
             gap: 10px;
-            font-family: 'SF Mono', monospace;
-            color: var(--text-primary);
+            padding: 15px;
+            background: #fef3c7;
+            border-radius: 8px;
+            border-left: 4px solid #f59e0b;
         }
 
-        .currency {
-            font-size: 28px;
-            color: var(--text-muted);
+        .timer-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #92400e;
+            font-family: 'Courier New', monospace;
         }
 
-        .features-list {
-            text-align: left;
-            max-width: 600px;
-            margin: 30px auto;
-            border: 1px solid var(--border-color);
-            background: var(--bg-primary);
-            padding: 20px;
-        }
-
-        .features-list .feature-item {
-            padding: 12px 0;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-
-        .features-list .feature-item:last-child {
-            border-bottom: none;
-        }
-
-        .features-list .feature-item::before {
-            content: "✓";
-            background: var(--accent-green);
-            color: white;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            font-weight: bold;
-            font-size: 12px;
-        }
-
-        /* Buttons */
-        .cta-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 30px;
-        }
-
-        .btn {
-            padding: 12px 30px;
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            cursor: pointer;
-            border: 1px solid var(--border-color);
-            transition: all 0.15s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .btn-primary {
-            background: var(--accent-green);
-            border-color: var(--accent-green);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #059669;
-            border-color: #059669;
-        }
-
-        .btn-secondary {
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
-        }
-
-        .btn-secondary:hover {
-            background: var(--bg-tertiary);
-            border-color: var(--text-muted);
-        }
-
-        /* Footer */
-        .footer-note {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            padding: 20px;
+        /* Loading State */
+        .loading-section {
+            background: white;
+            border-radius: 12px;
+            padding: 60px 30px;
             text-align: center;
-            color: var(--text-secondary);
-            font-size: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
         }
 
-        .footer-note strong {
-            color: var(--text-primary);
-        }
-
-        /* Loading Spinner */
-        .loading-spinner {
-            width: 40px;
-            height: 40px;
-            border: 2px solid var(--border-color);
-            border-top-color: var(--accent-green);
-            animation: spin 0.8s linear infinite;
-            margin-bottom: 20px;
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #e5e7eb;
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 30px;
         }
 
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
 
-        /* Mobile Responsive */
-        @media (max-width: 1024px) {
-            .terminal-header {
-                padding: 15px 20px;
-            }
-
-            .container {
-                padding: 20px;
-            }
-
-            .panel-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 15px;
-                padding: 20px;
-            }
-
-            .header-stats {
-                grid-template-columns: 1fr 1fr;
-            }
+        .loading-text {
+            color: #6b7280;
+            font-size: 16px;
+            margin-bottom: 10px;
         }
 
-        @media (max-width: 640px) {
-            .terminal-header {
-                padding: 15px;
+        /* Error State */
+        .error-section {
+            background: white;
+            border-radius: 12px;
+            padding: 50px 30px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            display: none;
+        }
+
+        .error-section h2 {
+            color: #dc2626;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .error-section p {
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        /* Success State */
+        .success-section {
+            display: none;
+        }
+
+        .success-header {
+            background: white;
+            border-radius: 12px;
+            padding: 40px 30px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+        }
+
+        .success-header h2 {
+            color: #059669;
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+
+        .success-header p {
+            color: #6b7280;
+            font-size: 16px;
+        }
+
+        /* Matches Summary */
+        .matches-summary {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+        }
+
+        .total-matches {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .total-matches h3 {
+            color: #1f2937;
+            font-size: 24px;
+        }
+
+        .total-matches .big-number {
+            font-size: 48px;
+            font-weight: 700;
+            color: #667eea;
+            margin: 0 10px;
+        }
+
+        .match-category {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
+            border-radius: 8px;
+            border-left: 4px solid;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .match-category:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .match-category.best {
+            border-left-color: #10b981;
+        }
+
+        .match-category.good {
+            border-left-color: #3b82f6;
+        }
+
+        .match-category.potential {
+            border-left-color: #8b5cf6;
+        }
+
+        .category-icon {
+            font-size: 32px;
+            margin-right: 15px;
+        }
+
+        .category-content {
+            flex: 1;
+        }
+
+        .category-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1f2937;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .category-count {
+            font-size: 24px;
+            font-weight: 700;
+            color: #667eea;
+            margin-right: 5px;
+        }
+
+        .category-range {
+            font-size: 14px;
+            color: #6b7280;
+            margin-left: 10px;
+        }
+
+        /* Sample Section */
+        .sample-section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+        }
+
+        .sample-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .sample-header h3 {
+            color: #1f2937;
+            font-size: 22px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .sample-header p {
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Pricing Card */
+        .pricing-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            padding: 40px;
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        .pricing-header h3 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .price {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+
+        .price-currency {
+            font-size: 24px;
+            font-weight: 400;
+            margin-right: 5px;
+        }
+
+        .features-list {
+            text-align: left;
+            max-width: 500px;
+            margin: 0 auto 40px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .feature-item:last-child {
+            border-bottom: none;
+        }
+
+        .feature-check {
+            color: #10b981;
+            font-size: 20px;
+            margin-right: 15px;
+            background: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .feature-text {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: white;
+            color: #667eea;
+            padding: 18px 50px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .back-button {
+            display: inline-block;
+            background: transparent;
+            color: white;
+            padding: 12px 30px;
+            border: 2px solid white;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            margin-top: 20px;
+            transition: all 0.2s;
+        }
+
+        .back-button:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        .security-note {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+            margin-top: 20px;
+        }
+
+        .security-note strong {
+            font-weight: 700;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #f9fafb;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 24px;
             }
 
-            .container {
-                padding: 15px;
-            }
-
-            .header-stats,
-            .panel-grid {
+            .info-grid {
                 grid-template-columns: 1fr;
             }
 
-            .stat-box {
-                padding: 10px 12px;
+            .total-matches .big-number {
+                font-size: 36px;
             }
 
-            .pricing-section {
-                padding: 30px 20px;
-            }
-
-            .price-tag {
-                font-size: 42px;
-            }
-
-            .currency {
-                font-size: 22px;
-            }
-
-            .cta-buttons {
+            .match-category {
                 flex-direction: column;
+                text-align: center;
             }
 
-            .btn {
-                width: 100%;
+            .category-icon {
+                margin-right: 0;
+                margin-bottom: 10px;
             }
 
-            .lenders-grid {
-                grid-template-columns: 1fr;
+            .price {
+                font-size: 36px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Terminal Header -->
-    <div class="terminal-header">
-        <div class="header-top">
-            <div class="header-title">AFG Match Preview System</div>
-            <div class="header-status">
-                <div class="status-item">
-                    <div class="status-dot"></div>
-                    <span class="mono">PREVIEW</span>
-                </div>
-                <div class="status-item">
-                    <span class="mono">⏱ </span>
-                    <span class="mono" id="countdown">23:59:59</span>
-                </div>
-            </div>
-        </div>
-        <div class="header-stats" id="headerStats">
-            <!-- Populated by JavaScript -->
-        </div>
-    </div>
-
-    <!-- Main Container -->
     <div class="container">
-        <!-- Borrower Info Panel -->
-        <div class="info-panel">
-            <div class="panel-header">
-                <div class="panel-title">Application Details</div>
-                <div class="panel-status">
-                    <span>PREVIEW MODE</span>
+        <!-- Header -->
+        <div class="header">
+            <h1>Your Funding Matches</h1>
+            <p>Preview your potential lending partners</p>
+        </div>
+
+        <!-- Info Card -->
+        <div class="info-card">
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Application ID:</div>
+                    <div class="info-value" id="app-id">Loading...</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Applicant:</div>
+                    <div class="info-value" id="applicant-name">Loading...</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Email:</div>
+                    <div class="info-value" id="applicant-email">Loading...</div>
                 </div>
             </div>
-            <div class="panel-grid">
-                <div class="info-field">
-                    <div class="info-label">Application ID</div>
-                    <div class="info-value mono highlight" id="displaySubmissionId">APP-2024-001</div>
+            <div class="timer">
+                <span>🕐 Preview expires in:</span>
+                <span class="timer-value" id="countdown">23:59:59</span>
+            </div>
+        </div>
+
+        <!-- Loading Section -->
+        <div class="loading-section" id="loading-section">
+            <div class="spinner"></div>
+            <p class="loading-text">Analyzing your requirements...</p>
+            <p class="loading-text">Searching our network of verified lenders</p>
+        </div>
+
+        <!-- Error Section -->
+        <div class="error-section" id="error-section">
+            <h2>No Matches Found</h2>
+            <p>Unfortunately, we couldn't find any lenders that match your current criteria.</p>
+            <p>This could be due to specific requirements that fall outside typical lending parameters.</p>
+            <div class="action-buttons">
+                <a href="#" class="btn btn-primary">Modify Requirements</a>
+                <a href="#" class="btn btn-secondary">Contact Support</a>
+            </div>
+        </div>
+
+        <!-- Success Section -->
+        <div class="success-section" id="success-section">
+            <!-- Success Header -->
+            <div class="success-header">
+                <h2>Great news! We found matches for your funding request</h2>
+                <p>Based on your requirements, we've identified potential lenders ready to review your application.</p>
+            </div>
+
+            <!-- Matches Summary -->
+            <div class="matches-summary">
+                <div class="total-matches">
+                    <h3>We found <span class="big-number" id="total-matches">0</span> lenders</h3>
                 </div>
-                <div class="info-field">
-                    <div class="info-label">Applicant Name</div>
-                    <div class="info-value" id="displayFullName">John Smith</div>
+
+                <div class="match-category best">
+                    <span class="category-icon">🌟</span>
+                    <div class="category-content">
+                        <span class="category-name">Best Matches</span>
+                        <div>
+                            <span class="category-count" id="best-count">0</span>
+                            <span>lenders</span>
+                            <span class="category-range">(85-95% match)</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="info-field">
-                    <div class="info-label">Email Address</div>
-                    <div class="info-value" id="displayEmail">john@example.com</div>
+
+                <div class="match-category good">
+                    <span class="category-icon">✨</span>
+                    <div class="category-content">
+                        <span class="category-name">Good Matches</span>
+                        <div>
+                            <span class="category-count" id="good-count">0</span>
+                            <span>lenders</span>
+                            <span class="category-range">(70-84% match)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="match-category potential">
+                    <span class="category-icon">💼</span>
+                    <div class="category-content">
+                        <span class="category-name">Potential Matches</span>
+                        <div>
+                            <span class="category-count" id="potential-count">0</span>
+                            <span>lenders</span>
+                            <span class="category-range">(60-69% match)</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Loading State -->
-        <div class="content-section" id="loadingSection" style="display: none; text-align: center; padding: 60px;">
-            <div class="loading-spinner" style="margin: 0 auto;"></div>
-            <h2 style="color: var(--text-primary); margin-bottom: 10px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">Analyzing Requirements</h2>
-            <p style="color: var(--text-muted); font-size: 12px;">Searching network of verified lenders...</p>
-        </div>
-
-        <!-- No Matches State -->
-        <div class="content-section" id="noMatchesContent" style="display: none;">
-            <div style="background: var(--bg-primary); border: 2px solid var(--accent-red); border-left: 4px solid var(--accent-red); padding: 40px; text-align: center;">
-                <h2 style="color: var(--accent-red); margin-bottom: 15px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">No Matches Found</h2>
-                <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 13px;">Unfortunately, we couldn't find any lenders that match your current criteria.</p>
-                <p style="color: var(--text-muted); margin-bottom: 30px; font-size: 12px;">This could be due to specific requirements that fall outside typical lending parameters.</p>
-                <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
-                    <button class="btn btn-primary" onclick="modifyRequirements()">Modify Requirements</button>
-                    <a href="mailto:support@loanmatchpro.com" class="btn btn-secondary">Contact Support</a>
+            <!-- Sample Section -->
+            <div class="sample-section">
+                <div class="sample-header">
+                    <h3>🔒 Sample Matched Lenders</h3>
+                    <p>Below are anonymized examples of lenders that match your criteria. Full details including names and contact information will be available after payment.</p>
                 </div>
             </div>
-        </div>
 
-        <div class="success-banner" id="successBanner">
-            <h2 id="successTitle">Great news! We found matches for your funding request</h2>
-            <p>Based on your requirements, we've identified potential lenders ready to review your application.</p>
-        </div>
-
-        <div class="content-section" id="lendersSection">
-            <h3>🔒 Sample Matched Lenders</h3>
-            <p class="subtitle">Below are anonymized examples of lenders that match your criteria. Full details including names and contact information will be available after payment.</p>
-
-            <div class="lenders-grid" id="lenderList">
-                <!-- Populated by JavaScript -->
+            <!-- Pricing Card -->
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <h3>Unlock Full Access</h3>
+                </div>
+                <div class="price">
+                    <span class="price-currency">CHF</span>2000
+                </div>
+                <div class="features-list">
+                    <div class="feature-item">
+                        <span class="feature-check">✓</span>
+                        <span class="feature-text">Complete lender profiles and names</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-check">✓</span>
+                        <span class="feature-text">Direct contact information</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-check">✓</span>
+                        <span class="feature-text">Specific loan terms and rates</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-check">✓</span>
+                        <span class="feature-text">Application requirements</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-check">✓</span>
+                        <span class="feature-text">Priority processing (48-72 hours)</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-check">✓</span>
+                        <span class="feature-text">Direct communication with matched lenders</span>
+                    </div>
+                </div>
+                <a href="#" class="cta-button" id="payment-button">Proceed to Secure Payment</a>
+                <br>
+                <a href="#" class="back-button">Go Back</a>
+                <div class="security-note">
+                    <strong>Secure Payment:</strong> Your payment is processed securely through Stripe. We never store your payment information.
+                </div>
             </div>
-        </div>
-
-        <div class="pricing-section" id="pricingSection">
-            <h3>Unlock Full Access</h3>
-            <div class="price-tag">
-                <span class="currency">CHF</span>
-                <span id="priceAmount">2000</span>
-            </div>
-
-            <div class="features-list">
-                <div class="feature-item">Complete lender profiles and names</div>
-                <div class="feature-item">Direct contact information</div>
-                <div class="feature-item">Specific loan terms and rates</div>
-                <div class="feature-item">Application requirements</div>
-                <div class="feature-item">Priority processing (48-72 hours)</div>
-                <div class="feature-item">Direct communication with matched lenders</div>
-            </div>
-
-            <div class="cta-buttons">
-                <button class="btn btn-primary" onclick="proceedToPayment()">
-                    <span id="unlockButtonText">Proceed to Secure Payment</span>
-                </button>
-                <button class="btn btn-secondary" onclick="goBack()">Go Back</button>
-            </div>
-        </div>
-
-        <div class="footer-note">
-            <strong>Secure Payment:</strong> Your payment is processed securely through Stripe. We never store your payment information.
         </div>
     </div>
 
     <script>
-        // Parse URL parameters - only need submission_id, email, full_name
+        // Get URL parameters
         const urlParams = new URLSearchParams(window.location.search);
-        const userData = {
-            submission_id: urlParams.get('submission_id') || urlParams.get('sid'),
-            email: urlParams.get('email'),
-            full_name: urlParams.get('full_name')
-        };
+        const submissionId = urlParams.get('id');
+        const email = urlParams.get('email');
+        const fullName = urlParams.get('name');
 
-        // Display user info if available
-        if (userData.submission_id) {
-            document.getElementById('displaySubmissionId').textContent = userData.submission_id;
-        }
-        if (userData.full_name) {
-            document.getElementById('displayFullName').textContent = decodeURIComponent(userData.full_name);
-        }
-        if (userData.email) {
-            document.getElementById('displayEmail').textContent = decodeURIComponent(userData.email);
-        }
+        // Update info card
+        document.getElementById('app-id').textContent = submissionId || 'N/A';
+        document.getElementById('applicant-name').textContent = fullName || 'N/A';
+        document.getElementById('applicant-email').textContent = email || 'N/A';
 
-        // Store match data globally
-        let matchData = null;
+        // Countdown timer (24 hours)
+        let timeLeft = 24 * 60 * 60; // 24 hours in seconds
 
-        // Initialize on load - always fetch from webhook
-        if (!userData.submission_id) {
-            alert('Missing submission ID. Please start your application again.');
-            window.location.href = 'index.html';
-        } else {
-            showLoading();
+        function updateCountdown() {
+            const hours = Math.floor(timeLeft / 3600);
+            const minutes = Math.floor((timeLeft % 3600) / 60);
+            const seconds = timeLeft % 60;
 
-            // Call webhook to fetch real matches
-            fetchMatchPreview().then(data => {
-                console.log('[Preview] Received match data:', data);
+            document.getElementById('countdown').textContent = 
+                `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 
-                // Store match data globally
-                matchData = data;
-
-                // Check if we have matches
-                if (!data.matches || data.matches.length === 0) {
-                    console.log('[Preview] No matches found');
-                    showNoMatches();
-                } else {
-                    console.log('[Preview] Found', data.matches.length, 'matches');
-                    showMatches(data);
-                }
-            }).catch(error => {
-                console.error('[Preview] Failed to fetch preview:', error);
-                // Already showed alert in fetchMatchPreview, just go back
-                setTimeout(() => {
-                    window.history.back();
-                }, 2000);
-            });
+            if (timeLeft > 0) {
+                timeLeft--;
+            }
         }
 
-        // Fetch match preview from webhook
-        async function fetchMatchPreview() {
-            if (!userData.submission_id) {
-                throw new Error('Missing submission_id');
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Fetch matches data
+        async function fetchMatches() {
+            if (!submissionId || !email || !fullName) {
+                showError('Missing required parameters. Please check your link.');
+                return;
             }
 
-            console.log('[Preview] Fetching matches from webhook...');
-            console.log('[Preview] Parameters:', {
-                submission_id: userData.submission_id,
-                email: userData.email,
-                full_name: userData.full_name
-            });
-
-            // Build request payload
-            const payload = {
-                submission_id: userData.submission_id,
-                email: userData.email || '',
-                full_name: userData.full_name || ''
-            };
-
-            // Call webhook with POST method
-            const webhookUrl = 'https://contentlabs.app.n8n.cloud/webhook/generate-preview';
-
             try {
-                const response = await fetch(webhookUrl, {
+                const response = await fetch('https://contentlabs.app.n8n.cloud/webhook/generate-preview', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Accept': 'application/json'
                     },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify({
+                        submission_id: submissionId,
+                        email: email,
+                        full_name: fullName
+                    })
                 });
-
-                console.log('[Preview] Webhook response status:', response.status);
 
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
 
                 const data = await response.json();
-                console.log('[Preview] Webhook response data:', data);
+                console.log('Received data:', data);
 
-                // Validate response format
-                if (!data.matches) {
-                    console.warn('[Preview] No matches array in response');
-                    throw new Error('Invalid response format: missing matches array');
+                // Check if we have matches
+                if (data.total_matches === 0) {
+                    showError('No matches found for your criteria.');
+                    return;
                 }
 
-                // Store the full response for later use
-                return {
-                    matches: data.matches || [],
-                    total: data.total_matches || 0,
-                    price: data.price || 2000,
-                    expires: Date.now() + 24*60*60*1000 // 24 hours from now
-                };
+                // Update the UI with match data
+                displayMatches(data);
 
             } catch (error) {
-                console.error('[Preview] Webhook error:', error);
-                // Show error to user
-                alert('Failed to fetch matches from server. Please try again or contact support if the problem persists.');
-                throw error; // Re-throw to trigger error handling in caller
+                console.error('Error fetching matches:', error);
+                showError('Failed to load matches. Please try again or contact support.');
             }
         }
 
-        function showLoading() {
-            document.getElementById('loadingSection').style.display = 'block';
-            document.getElementById('successBanner').style.display = 'none';
-            document.getElementById('lendersSection').style.display = 'none';
-            document.getElementById('pricingSection').style.display = 'none';
-            document.getElementById('noMatchesContent').style.display = 'none';
-        }
+        function displayMatches(data) {
+            // Hide loading, show success
+            document.getElementById('loading-section').style.display = 'none';
+            document.getElementById('success-section').style.display = 'block';
 
-        function showNoMatches() {
-            console.log('[Preview] Displaying no matches state');
-            document.getElementById('loadingSection').style.display = 'none';
-            document.getElementById('successBanner').style.display = 'none';
-            document.getElementById('lendersSection').style.display = 'none';
-            document.getElementById('pricingSection').style.display = 'none';
-            document.getElementById('noMatchesContent').style.display = 'block';
-        }
+            // Update total matches
+            document.getElementById('total-matches').textContent = data.total_matches || 0;
 
-        function showMatches(data) {
-            console.log('[Preview] Displaying matches:', data);
-
-            // Hide loading
-            document.getElementById('loadingSection').style.display = 'none';
-            document.getElementById('noMatchesContent').style.display = 'none';
-
-            // Show success sections
-            document.getElementById('successBanner').style.display = 'block';
-            document.getElementById('lendersSection').style.display = 'block';
-            document.getElementById('pricingSection').style.display = 'block';
-
-            // Update success title
-            document.getElementById('successTitle').textContent =
-                `Great news! We found ${data.total} potential lenders for your funding request`;
-
-            // Update pricing
-            document.getElementById('priceAmount').textContent = data.price.toLocaleString();
-
-            // Update button text
-            document.getElementById('unlockButtonText').textContent =
-                `Unlock All ${data.total} Lender Details`;
-
-            // Display lender cards from real data
-            displayRealLenders(data.matches);
-
-            // Update header stats
-            updateHeaderStats(data);
-        }
-
-
-
-
-        function displayRealLenders(matches) {
-            const lenderList = document.getElementById('lenderList');
-            lenderList.innerHTML = '';
-
-            // Safety check
-            if (!matches || !Array.isArray(matches) || matches.length === 0) {
-                console.warn('[Preview] No valid matches to display');
-                lenderList.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 40px;">No lender previews available</p>';
-                return;
-            }
-
-            console.log('[Preview] Displaying', matches.length, 'lender cards');
-
-            // Display up to 5 matches as preview
-            const displayMatches = matches.slice(0, 5);
-
-            displayMatches.forEach((match, index) => {
-                try {
-                    const card = document.createElement('div');
-                    card.className = 'lender-card';
-
-                    // Determine match badge color based on score
-                    let matchBadge = '';
-                    let matchColor = '';
-                    const score = match.match_score || 0;
-
-                    if (score >= 85) {
-                        matchBadge = 'Excellent Match';
-                        matchColor = '#667eea';
-                    } else if (score >= 70) {
-                        matchBadge = 'Strong Match';
-                        matchColor = '#764ba2';
-                    } else {
-                        matchBadge = 'Good Match';
-                        matchColor = '#f59e0b';
-                    }
-
-                    // Create anonymized lender name
-                    const lenderName = `Lender ${String.fromCharCode(65 + index)}`; // A, B, C, etc.
-
-                    card.innerHTML = `
-                        <h4>${lenderName}</h4>
-                        <div style="display: inline-block; padding: 4px 12px; background: ${matchColor}20; color: ${matchColor}; border-radius: 12px; font-size: 13px; font-weight: 600; margin-bottom: 15px;">
-                            ${matchBadge} (${score}%)
-                        </div>
-                        <div class="lender-detail">
-                            <span class="label">Loan Range:</span>
-                            <span class="value">${match.loan_range || 'Not specified'}</span>
-                        </div>
-                        <div class="lender-detail">
-                            <span class="label">Industry Focus:</span>
-                            <span class="value">${match.industry || 'Multiple industries'}</span>
-                        </div>
-                        <div class="lender-detail">
-                            <span class="label">Processing Time:</span>
-                            <span class="value">${match.processing_time || 'Varies'}</span>
-                        </div>
-                        <div class="lender-detail">
-                            <span class="label">Interest Rate:</span>
-                            <span class="value">${match.interest_rate || 'Contact for rates'}</span>
-                        </div>
-                        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e2e8f0; text-align: center; color: #94a3b8; font-size: 12px; font-style: italic;">
-                            Full lender details available after payment
-                        </div>
-                    `;
-
-                    lenderList.appendChild(card);
-                } catch (error) {
-                    console.error('[Preview] Error rendering lender card:', error, match);
-                }
-            });
-
-            console.log('[Preview] Displayed', displayMatches.length, 'lender cards successfully');
-        }
-
-        function updateHeaderStats(data) {
-            const headerStats = document.getElementById('headerStats');
-            headerStats.innerHTML = '';
-
-            // Total matches
-            const totalBox = document.createElement('div');
-            totalBox.className = 'stat-box';
-            totalBox.innerHTML = `
-                <div class="stat-label">Total Matches</div>
-                <div class="stat-value">${data.total}</div>
-            `;
-            headerStats.appendChild(totalBox);
-
-            // Count matches by score
-            let excellentCount = 0;
-            let goodCount = 0;
-            let fairCount = 0;
-
-            data.matches.forEach(match => {
-                if (match.match_score >= 85) excellentCount++;
-                else if (match.match_score >= 70) goodCount++;
-                else fairCount++;
-            });
-
-            // Excellent matches
-            if (excellentCount > 0) {
-                const excellentBox = document.createElement('div');
-                excellentBox.className = 'stat-box';
-                excellentBox.innerHTML = `
-                    <div class="stat-label">Excellent (85+)</div>
-                    <div class="stat-value">${excellentCount}</div>
-                `;
-                headerStats.appendChild(excellentBox);
-            }
-
-            // Good matches
-            if (goodCount > 0) {
-                const goodBox = document.createElement('div');
-                goodBox.className = 'stat-box';
-                goodBox.innerHTML = `
-                    <div class="stat-label">Strong (70-84)</div>
-                    <div class="stat-value">${goodCount}</div>
-                `;
-                headerStats.appendChild(goodBox);
-            }
-
-            // Fair matches
-            if (fairCount > 0) {
-                const fairBox = document.createElement('div');
-                fairBox.className = 'stat-box';
-                fairBox.innerHTML = `
-                    <div class="stat-label">Potential (50-69)</div>
-                    <div class="stat-value">${fairCount}</div>
-                `;
-                headerStats.appendChild(fairBox);
-            }
-        }
-
-
-        function proceedToPayment() {
-            if (!userData.submission_id) {
-                alert('Invalid session. Please start your application again.');
-                return;
-            }
-
-            console.log('[Preview] Proceeding to payment with match data:', matchData);
-
-            // Use price from webhook response if available, otherwise default to 2000
-            const price = matchData ? matchData.price : 2000;
-            const totalMatches = matchData ? matchData.total : userData.total;
-
-            const params = new URLSearchParams({
-                submission_id: userData.submission_id,
-                ...(userData.email && { email: userData.email }),
-                ...(userData.full_name && { full_name: userData.full_name }),
-                expected_matches: totalMatches,
-                price: price
-            });
-
-            console.log('[Preview] Redirecting to payment with params:', params.toString());
-            window.location.href = `payment.html?${params.toString()}`;
-        }
-
-        function goBack() {
-            if (userData.submission_id) {
-                // Передаем данные обратно на upload-docs.html
-                const params = new URLSearchParams({
-                    submission_id: userData.submission_id,
-                    ...(userData.email && { email: userData.email }),
-                    ...(userData.full_name && { full_name: userData.full_name })
-                });
-
-                window.location.href = `upload-docs.html?${params.toString()}`;
+            // Update category counts
+            if (data.breakdown) {
+                document.getElementById('best-count').textContent = data.breakdown.best_matches || 0;
+                document.getElementById('good-count').textContent = data.breakdown.good_matches || 0;
+                document.getElementById('potential-count').textContent = data.breakdown.potential_matches || 0;
             } else {
-                window.history.back();
+                // If no breakdown provided, show total only
+                document.getElementById('best-count').textContent = '—';
+                document.getElementById('good-count').textContent = '—';
+                document.getElementById('potential-count').textContent = '—';
+            }
+
+            // Update payment button with submission ID
+            const paymentButton = document.getElementById('payment-button');
+            paymentButton.href = `https://your-payment-page.com?submission_id=${submissionId}`;
+        }
+
+        function showError(message) {
+            document.getElementById('loading-section').style.display = 'none';
+            document.getElementById('error-section').style.display = 'block';
+            
+            const errorSection = document.getElementById('error-section');
+            const errorText = errorSection.querySelector('p');
+            if (errorText && message) {
+                errorText.textContent = message;
             }
         }
 
-        function modifyRequirements() {
-            // Передаем данные на форму изменения
-            const params = new URLSearchParams({
-                submission_id: userData.submission_id,
-                ...(userData.email && { email: userData.email }),
-                ...(userData.full_name && { full_name: userData.full_name }),
-                modify: 'true'
-            });
-
-            window.location.href = `application-form.html?${params.toString()}`;
-        }
+        // Start fetching data on page load
+        window.addEventListener('DOMContentLoaded', fetchMatches);
     </script>
 </body>
 </html>
