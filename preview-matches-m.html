@@ -614,8 +614,8 @@
                     price: data.price
                 }));
                 
-                // Redirect to payment page
-                window.location.href = 'payment.html';
+                // Redirect to payment page with URL parameters
+                window.location.href = `https://loanmatchpro.altfundsglobal.com/payment.html?submission_id=${encodeURIComponent(submissionId)}&email=${encodeURIComponent(email)}&full_name=${encodeURIComponent(fullName)}`;
             };
         }
 
