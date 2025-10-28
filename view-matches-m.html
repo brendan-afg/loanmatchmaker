@@ -976,6 +976,14 @@
                             <div class="details-section">
                                 <div class="details-header">Contact Information</div>
                                 <div class="details-body">
+                                    ${match.contact_name ? `
+                                    <div class="detail-row">
+                                        <div class="detail-label">Contact</div>
+                                        <div class="detail-value">
+                                            ${match.contact_name}${match.contact_title ? `, ${match.contact_title}` : ''}
+                                        </div>
+                                    </div>
+                                    ` : ''}
                                     ${(match.lender_address || match.lender_city) ? `
                                     <div class="detail-row">
                                         <div class="detail-label">Address</div>
@@ -1119,13 +1127,15 @@
                 loan_types: match.loan_types,
                 response_time: match.response_time,
                 approval_rate: match.approval_rate,
-                lender_email: match.lender_email,
-                lender_phone: match.lender_phone,
-                lender_website: match.lender_website,
-                lender_city: null,
-                lender_state: null,
-                lender_country: null,
-                lender_address: null,
+                lender_email: match.contact_info?.email || match.lender_email,
+                lender_phone: match.contact_info?.phone || match.lender_phone,
+                lender_website: match.contact_info?.website || match.lender_website,
+                lender_city: match.contact_info?.city,
+                lender_state: match.contact_info?.state,
+                lender_country: match.contact_info?.country,
+                lender_address: match.contact_info?.address,
+                contact_name: match.contact_info?.contact_name,
+                contact_title: match.contact_info?.contact_title,
                 contact_priority: match.priority === 'high' ? 5 : match.priority === 'medium' ? 3 : 1
             }));
 
