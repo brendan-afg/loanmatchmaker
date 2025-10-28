@@ -4,591 +4,395 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Funding Matches - Preview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
         }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
+        .shimmer {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 1000px 100%;
+            animation: shimmer 2s infinite;
         }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
-        .header {
-            background: white;
-            border-radius: 16px;
-            padding: 40px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
         }
-
-        .header h1 {
-            color: #1a202c;
-            font-size: 32px;
-            margin-bottom: 10px;
-        }
-
-        .header p {
-            color: #718096;
-            font-size: 16px;
-        }
-
-        .info-card {
-            background: #f7fafc;
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 30px;
-            border: 1px solid #e2e8f0;
-        }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
-        .info-item {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .info-label {
-            font-size: 12px;
-            text-transform: uppercase;
-            color: #718096;
-            margin-bottom: 5px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-
-        .info-value {
-            font-size: 16px;
-            color: #2d3748;
-            font-weight: 500;
-        }
-
-        .timer-banner {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-            border-radius: 12px;
-            padding: 20px 30px;
-            margin-bottom: 30px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            border-left: 4px solid #f59e0b;
-        }
-
-        .timer-icon {
-            font-size: 24px;
-        }
-
-        .timer-text {
-            flex: 1;
-        }
-
-        .timer-text strong {
-            color: #92400e;
-            font-size: 18px;
-        }
-
-        .timer-text span {
-            display: block;
-            color: #78350f;
-            font-size: 14px;
-            margin-top: 2px;
-        }
-
-        .timer {
-            font-family: 'Courier New', monospace;
-            font-size: 24px;
-            font-weight: bold;
-            color: #92400e;
-        }
-
-        .results-card {
-            background: white;
-            border-radius: 16px;
-            padding: 40px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-
-        .loading {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-            padding: 40px;
-        }
-
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid #e2e8f0;
-            border-top-color: #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .loading-text {
-            color: #718096;
-            font-size: 16px;
-        }
-
-        .success-header {
-            margin-bottom: 30px;
-        }
-
-        .success-header h2 {
-            color: #10b981;
-            font-size: 28px;
-            margin-bottom: 10px;
-        }
-
-        .success-header .match-count {
-            font-size: 48px;
-            font-weight: bold;
-            color: #667eea;
-            margin: 20px 0;
-        }
-
-        .match-breakdown {
-            display: grid;
-            gap: 15px;
-            margin: 30px 0;
-            text-align: left;
-        }
-
-        .match-tier {
-            background: #f7fafc;
-            border-radius: 12px;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            border-left: 4px solid;
-        }
-
-        .match-tier.best {
-            border-color: #10b981;
-        }
-
-        .match-tier.good {
-            border-color: #3b82f6;
-        }
-
-        .match-tier.potential {
-            border-color: #8b5cf6;
-        }
-
-        .match-tier-icon {
-            font-size: 32px;
-        }
-
-        .match-tier-info {
-            flex: 1;
-        }
-
-        .match-tier-title {
-            font-weight: 600;
-            color: #1a202c;
-            font-size: 18px;
-            margin-bottom: 4px;
-        }
-
-        .match-tier-subtitle {
-            color: #718096;
-            font-size: 14px;
-        }
-
-        .match-tier-count {
-            font-size: 32px;
-            font-weight: bold;
-            color: #667eea;
-        }
-
-        .no-matches {
-            padding: 40px;
-            text-align: center;
-        }
-
-        .no-matches h2 {
-            color: #ef4444;
-            font-size: 28px;
-            margin-bottom: 15px;
-        }
-
-        .no-matches p {
-            color: #718096;
-            font-size: 16px;
-            line-height: 1.6;
-            margin-bottom: 10px;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 40px;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 15px 30px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
+        .match-card {
             transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
         }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-        }
-
-        .btn-secondary {
-            background: white;
-            color: #667eea;
-            border: 2px solid #667eea;
-        }
-
-        .btn-secondary:hover {
-            background: #f7fafc;
-        }
-
-        .price-tag {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 12px;
-            margin: 30px 0;
-            font-size: 18px;
-        }
-
-        .price-tag .amount {
-            font-size: 36px;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-
-        .error-message {
-            background: #fee2e2;
-            color: #991b1b;
-            padding: 20px;
-            border-radius: 12px;
-            border-left: 4px solid #ef4444;
-        }
-
-        @media (max-width: 768px) {
-            .header {
-                padding: 30px 20px;
-            }
-
-            .header h1 {
-                font-size: 24px;
-            }
-
-            .results-card {
-                padding: 30px 20px;
-            }
-
-            .action-buttons {
-                flex-direction: column;
-            }
-
-            .btn {
-                width: 100%;
-                justify-content: center;
-            }
+        .match-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
         }
     </style>
 </head>
-<body>
-    <div class="container">
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
         <!-- Header -->
-        <div class="header">
-            <h1>Your Funding Matches</h1>
-            <p>Preview your potential lending partners</p>
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Your Funding Matches</h1>
+            <p class="text-gray-600">Preview your potential lending partners</p>
+            
+            <!-- Application Info -->
+            <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <p class="text-sm text-gray-600 mb-1">APPLICATION ID:</p>
+                    <p id="app-id" class="font-semibold text-gray-800">Loading...</p>
+                </div>
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <p class="text-sm text-gray-600 mb-1">APPLICANT:</p>
+                    <p id="applicant-name" class="font-semibold text-gray-800">Loading...</p>
+                </div>
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <p class="text-sm text-gray-600 mb-1">EMAIL:</p>
+                    <p id="applicant-email" class="font-semibold text-gray-800">Loading...</p>
+                </div>
+            </div>
+
+            <!-- Timer -->
+            <div class="mt-4 bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
+                <div class="flex items-center">
+                    <span class="text-2xl mr-2">🕐</span>
+                    <div>
+                        <p class="text-sm text-gray-600">Preview expires in:</p>
+                        <p id="timer" class="text-xl font-bold text-gray-800">23:59:59</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- Info Card -->
-        <div class="info-card">
-            <div class="info-grid">
-                <div class="info-item">
-                    <div class="info-label">APPLICATION ID:</div>
-                    <div class="info-value" id="applicationId">Loading...</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">APPLICANT:</div>
-                    <div class="info-value" id="applicantName">Loading...</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">EMAIL:</div>
-                    <div class="info-value" id="applicantEmail">Loading...</div>
+        <!-- Loading State -->
+        <div id="loading-state" class="bg-white rounded-lg shadow-lg p-8">
+            <div class="text-center">
+                <div class="inline-block animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mb-4"></div>
+                <h3 class="text-xl font-semibold text-gray-800 mb-2">Analyzing your requirements...</h3>
+                <p class="text-gray-600">Searching our network of verified lenders</p>
+            </div>
+        </div>
+
+        <!-- Error State -->
+        <div id="error-state" class="bg-white rounded-lg shadow-lg p-8 hidden">
+            <div class="text-center">
+                <div class="text-6xl mb-4">⚠️</div>
+                <h3 class="text-xl font-semibold text-gray-800 mb-2">Error Loading Matches</h3>
+                <button onclick="loadMatches()" class="mt-4 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
+                    Try Again
+                </button>
+            </div>
+        </div>
+
+        <!-- No Matches State -->
+        <div id="no-matches-state" class="bg-white rounded-lg shadow-lg p-8 hidden">
+            <div class="text-center">
+                <div class="text-6xl mb-4">😔</div>
+                <h3 class="text-xl font-semibold text-gray-800 mb-2">No Matches Found</h3>
+                <p class="text-gray-600 mb-6">Unfortunately, we couldn't find any lenders that match your current criteria.</p>
+                <p class="text-gray-500 text-sm mb-6">This could be due to specific requirements that fall outside typical lending parameters.</p>
+                <div class="flex gap-4 justify-center">
+                    <button class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
+                        Modify Requirements
+                    </button>
+                    <button class="bg-gray-200 text-gray-800 px-6 py-2 rounded-lg hover:bg-gray-300 transition">
+                        Contact Support
+                    </button>
                 </div>
             </div>
         </div>
 
-        <!-- Timer Banner -->
-        <div class="timer-banner">
-            <div class="timer-icon">🕐</div>
-            <div class="timer-text">
-                <strong>Preview expires in:</strong>
-                <span id="timer" class="timer">23:59:59</span>
-            </div>
-        </div>
-
-        <!-- Results Card -->
-        <div class="results-card" id="resultsCard">
-            <!-- Loading State (shown initially) -->
-            <div class="loading" id="loadingState">
-                <div class="spinner"></div>
-                <div class="loading-text">Analyzing your requirements...</div>
-                <div class="loading-text">Searching our network of verified lenders</div>
-            </div>
-
-            <!-- Error State (shown if error) -->
-            <div id="errorState" style="display: none;">
-                <div class="error-message">
-                    <h3>Error Loading Matches</h3>
-                    <p id="errorMessage"></p>
-                </div>
-                <div class="action-buttons">
-                    <a href="#" class="btn btn-secondary" onclick="location.reload()">Try Again</a>
+        <!-- Matches Found State -->
+        <div id="matches-state" class="hidden">
+            <!-- Success Message -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-6 fade-in">
+                <div class="flex items-start">
+                    <div class="text-4xl mr-4">🎉</div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800 mb-2">Great news! We found matches for your funding request</h2>
+                        <p class="text-gray-600">Based on your requirements, we've identified potential lenders ready to review your application.</p>
+                    </div>
                 </div>
             </div>
 
-            <!-- No Matches State -->
-            <div id="noMatchesState" style="display: none;">
-                <div class="no-matches">
-                    <h2>No Matches Found</h2>
-                    <p>Unfortunately, we couldn't find any lenders that match your current criteria.</p>
-                    <p>This could be due to specific requirements that fall outside typical lending parameters.</p>
-                </div>
-                <div class="action-buttons">
-                    <a href="#" class="btn btn-primary">Modify Requirements</a>
-                    <a href="#" class="btn btn-secondary">Contact Support</a>
-                </div>
-            </div>
-
-            <!-- Success State -->
-            <div id="successState" style="display: none;">
-                <div class="success-header">
-                    <h2>Great news! We found matches for your funding request</h2>
-                    <p>Based on your requirements, we've identified potential lenders ready to review your application.</p>
-                    <div class="match-count">We found <span id="totalMatches">0</span> lenders</div>
-                </div>
-
-                <!-- Match Breakdown -->
-                <div class="match-breakdown">
-                    <div class="match-tier best">
-                        <div class="match-tier-icon">🌟</div>
-                        <div class="match-tier-info">
-                            <div class="match-tier-title">Best Matches</div>
-                            <div class="match-tier-subtitle">(85-95% match)</div>
+            <!-- Match Statistics -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-6 fade-in">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">We found <span id="total-matches" class="text-blue-600">0</span> lenders</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-lg border border-green-200">
+                        <div class="flex items-center mb-2">
+                            <span class="text-2xl mr-2">🌟</span>
+                            <h4 class="font-semibold text-gray-800">Best Matches</h4>
                         </div>
-                        <div class="match-tier-count" id="bestCount">0</div>
+                        <p class="text-sm text-gray-600 mb-2">(85-95% match)</p>
+                        <p id="best-matches" class="text-3xl font-bold text-green-600">0</p>
                     </div>
-
-                    <div class="match-tier good">
-                        <div class="match-tier-icon">✨</div>
-                        <div class="match-tier-info">
-                            <div class="match-tier-title">Good Matches</div>
-                            <div class="match-tier-subtitle">(70-84% match)</div>
+                    <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg border border-blue-200">
+                        <div class="flex items-center mb-2">
+                            <span class="text-2xl mr-2">✨</span>
+                            <h4 class="font-semibold text-gray-800">Good Matches</h4>
                         </div>
-                        <div class="match-tier-count" id="goodCount">0</div>
+                        <p class="text-sm text-gray-600 mb-2">(70-84% match)</p>
+                        <p id="good-matches" class="text-3xl font-bold text-blue-600">0</p>
                     </div>
-
-                    <div class="match-tier potential">
-                        <div class="match-tier-icon">💼</div>
-                        <div class="match-tier-info">
-                            <div class="match-tier-title">Potential Matches</div>
-                            <div class="match-tier-subtitle">(60-69% match)</div>
+                    <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-lg border border-purple-200">
+                        <div class="flex items-center mb-2">
+                            <span class="text-2xl mr-2">💼</span>
+                            <h4 class="font-semibold text-gray-800">Potential Matches</h4>
                         </div>
-                        <div class="match-tier-count" id="potentialCount">0</div>
+                        <p class="text-sm text-gray-600 mb-2">(60-69% match)</p>
+                        <p id="potential-matches" class="text-3xl font-bold text-purple-600">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sample Lenders -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-6 fade-in">
+                <div class="flex items-center mb-4">
+                    <span class="text-2xl mr-2">🔒</span>
+                    <h3 class="text-xl font-semibold text-gray-800">Sample Matched Lenders</h3>
+                </div>
+                <p class="text-gray-600 mb-6">Below are anonymized examples of lenders that match your criteria. Full details including names and contact information will be available after payment.</p>
+                
+                <div id="lenders-container" class="space-y-4">
+                    <!-- Lender cards will be inserted here -->
+                </div>
+            </div>
+
+            <!-- Payment CTA -->
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg shadow-lg p-8 text-white fade-in">
+                <div class="text-center mb-6">
+                    <h3 class="text-2xl font-bold mb-2">Unlock Full Access</h3>
+                    <div class="text-5xl font-bold mb-4">CHF <span>2000</span></div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6 text-sm">
+                    <div class="flex items-start">
+                        <span class="mr-2">✓</span>
+                        <span>Complete lender profiles and names</span>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="mr-2">✓</span>
+                        <span>Direct contact information</span>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="mr-2">✓</span>
+                        <span>Specific loan terms and rates</span>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="mr-2">✓</span>
+                        <span>Application requirements</span>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="mr-2">✓</span>
+                        <span>Priority processing (48-72 hours)</span>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="mr-2">✓</span>
+                        <span>Direct communication with matched lenders</span>
                     </div>
                 </div>
 
-                <!-- Sample Info -->
-                <div style="background: #eff6ff; padding: 20px; border-radius: 12px; margin: 30px 0; text-align: left;">
-                    <h3 style="color: #1e40af; margin-bottom: 10px;">🔒 Sample Matched Lenders</h3>
-                    <p style="color: #1e3a8a; margin-bottom: 10px;">Below are anonymized examples of lenders that match your criteria. Full details including names and contact information will be available after payment.</p>
+                <div class="text-center">
+                    <a id="payment-link" href="#" class="inline-block bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition shadow-lg">
+                        Proceed to Secure Payment
+                    </a>
+                    <p class="mt-4 text-sm text-blue-100">
+                        <span class="mr-2">🔒</span>
+                        Secure Payment: Your payment is processed securely through Stripe. We never store your payment information.
+                    </p>
                 </div>
+            </div>
 
-                <!-- Price and CTA -->
-                <div class="price-tag">
-                    <div>Unlock Full Access</div>
-                    <div class="amount">CHF <span id="priceAmount">2000</span></div>
-                    <div style="font-size: 14px; margin-top: 10px;">
-                        ✓ Complete lender profiles and names<br>
-                        ✓ Direct contact information<br>
-                        ✓ Specific loan terms and rates<br>
-                        ✓ Application requirements<br>
-                        ✓ Priority processing (48-72 hours)<br>
-                        ✓ Direct communication with matched lenders
-                    </div>
-                </div>
-
-                <div class="action-buttons">
-                    <a href="#" class="btn btn-primary" id="paymentBtn">Proceed to Secure Payment</a>
-                    <a href="#" class="btn btn-secondary">Go Back</a>
-                </div>
-
-                <div style="color: #718096; font-size: 14px; margin-top: 20px;">
-                    <strong>Secure Payment:</strong> Your payment is processed securely through Stripe. We never store your payment information.
-                </div>
+            <!-- Go Back Button -->
+            <div class="text-center mt-6">
+                <button onclick="window.history.back()" class="text-gray-600 hover:text-gray-800 transition">
+                    ← Go Back
+                </button>
             </div>
         </div>
     </div>
 
     <script>
         // Get URL parameters
-        function getUrlParams() {
-            const params = new URLSearchParams(window.location.search);
-            return {
-                submission_id: params.get('submission_id'),
-                email: params.get('email'),
-                full_name: params.get('full_name')
-            };
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            const results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
         }
 
-        // Display URL parameters
-        function displayUserInfo() {
-            const params = getUrlParams();
-            document.getElementById('applicationId').textContent = params.submission_id || 'N/A';
-            document.getElementById('applicantName').textContent = params.full_name || 'N/A';
-            document.getElementById('applicantEmail').textContent = params.email || 'N/A';
+        const submissionId = getUrlParameter('submission_id');
+        const email = getUrlParameter('email');
+        const fullName = getUrlParameter('full_name');
+
+        // Update payment link with parameters
+        function updatePaymentLink() {
+            const paymentLink = document.getElementById('payment-link');
+            const baseUrl = 'https://loanmatchpro.altfundsglobal.com/payment.html';
+            const params = new URLSearchParams({
+                submission_id: submissionId,
+                email: email,
+                full_name: fullName
+            });
+            paymentLink.href = `${baseUrl}?${params.toString()}`;
         }
 
-        // Call webhook and get matches
-    async function fetchMatches() {
-    const params = getUrlParams();
-    
-    if (!params.submission_id) {
-        showError('Missing submission_id parameter');
-        return;
-    }
-
-    try {
-        const response = await fetch('https://contentlabs.app.n8n.cloud/webhook/generate-preview', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                submission_id: params.submission_id,
-                email: params.email,
-                full_name: params.full_name
-            })
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+        // Update application info
+        function updateApplicationInfo() {
+            document.getElementById('app-id').textContent = submissionId || 'N/A';
+            document.getElementById('applicant-name').textContent = fullName || 'N/A';
+            document.getElementById('applicant-email').textContent = email || 'N/A';
         }
 
-        // Check if response is actually JSON
-        const contentType = response.headers.get('content-type');
-        if (!contentType || !contentType.includes('application/json')) {
-            throw new Error('Response is not JSON. Check webhook configuration.');
-        }
-
-        const data = await response.json();
-        
-        // Check for errors in response
-        if (data.error) {
-            throw new Error(data.message || 'Unknown error from server');
-        }
-        
-        displayResults(data);
-    } catch (error) {
-        console.error('Error fetching matches:', error);
-        showError(`Failed to load matches: ${error.message}`);
-    }
-}
-
-        // Display results
-        function displayResults(data) {
-            // Hide loading
-            document.getElementById('loadingState').style.display = 'none';
-
-            if (data.total_matches === 0) {
-                // Show no matches
-                document.getElementById('noMatchesState').style.display = 'block';
-            } else {
-                // Show success with stats
-                document.getElementById('successState').style.display = 'block';
-                document.getElementById('totalMatches').textContent = data.total_matches;
-                document.getElementById('bestCount').textContent = data.breakdown.best_matches;
-                document.getElementById('goodCount').textContent = data.breakdown.good_matches;
-                document.getElementById('potentialCount').textContent = data.breakdown.potential_matches;
-                
-                // Set price (if provided)
-                if (data.price) {
-                    document.getElementById('priceAmount').textContent = data.price;
-                }
-            }
-        }
-
-        // Show error
-        function showError(message) {
-            document.getElementById('loadingState').style.display = 'none';
-            document.getElementById('errorState').style.display = 'block';
-            document.getElementById('errorMessage').textContent = message;
-        }
-
-        // Timer countdown (24 hours from page load)
+        // Timer countdown
         function startTimer() {
-            const expiryTime = Date.now() + (24 * 60 * 60 * 1000);
+            let timeLeft = 24 * 60 * 60 - 1; // 23:59:59
+            const timerElement = document.getElementById('timer');
             
             setInterval(() => {
-                const now = Date.now();
-                const diff = expiryTime - now;
+                const hours = Math.floor(timeLeft / 3600);
+                const minutes = Math.floor((timeLeft % 3600) / 60);
+                const seconds = timeLeft % 60;
                 
-                if (diff <= 0) {
-                    document.getElementById('timer').textContent = '00:00:00';
-                    return;
+                timerElement.textContent = 
+                    String(hours).padStart(2, '0') + ':' + 
+                    String(minutes).padStart(2, '0') + ':' + 
+                    String(seconds).padStart(2, '0');
+                
+                if (timeLeft > 0) {
+                    timeLeft--;
                 }
-                
-                const hours = Math.floor(diff / (1000 * 60 * 60));
-                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-                
-                document.getElementById('timer').textContent = 
-                    `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
             }, 1000);
         }
 
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            displayUserInfo();
-            startTimer();
-            fetchMatches();
-        });
+        // Load matches from backend
+        async function loadMatches() {
+            const loadingState = document.getElementById('loading-state');
+            const errorState = document.getElementById('error-state');
+            const noMatchesState = document.getElementById('no-matches-state');
+            const matchesState = document.getElementById('matches-state');
+
+            // Show loading
+            loadingState.classList.remove('hidden');
+            errorState.classList.add('hidden');
+            noMatchesState.classList.add('hidden');
+            matchesState.classList.add('hidden');
+
+            try {
+                // Call n8n webhook
+                const response = await fetch(`https://brendanwenzel.app.n8n.cloud/webhook/lender-matches?submission_id=${submissionId}`);
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+
+                // Hide loading
+                loadingState.classList.add('hidden');
+
+                if (!data.matches || data.matches.length === 0) {
+                    noMatchesState.classList.remove('hidden');
+                } else {
+                    // Show matches
+                    matchesState.classList.remove('hidden');
+                    displayMatches(data.matches);
+                }
+            } catch (error) {
+                console.error('Error loading matches:', error);
+                loadingState.classList.add('hidden');
+                errorState.classList.remove('hidden');
+            }
+        }
+
+        // Display matches
+        function displayMatches(matches) {
+            // Count matches by tier
+            let bestCount = 0, goodCount = 0, potentialCount = 0;
+            
+            matches.forEach(match => {
+                if (match.matchScore >= 85) bestCount++;
+                else if (match.matchScore >= 70) goodCount++;
+                else if (match.matchScore >= 60) potentialCount++;
+            });
+
+            document.getElementById('total-matches').textContent = matches.length;
+            document.getElementById('best-matches').textContent = bestCount;
+            document.getElementById('good-matches').textContent = goodCount;
+            document.getElementById('potential-matches').textContent = potentialCount;
+
+            // Display lender cards
+            const container = document.getElementById('lenders-container');
+            container.innerHTML = '';
+
+            matches.forEach((match, index) => {
+                const card = createLenderCard(match, index);
+                container.appendChild(card);
+            });
+        }
+
+        // Create lender card
+        function createLenderCard(match, index) {
+            const div = document.createElement('div');
+            div.className = 'match-card bg-gray-50 border border-gray-200 rounded-lg p-6';
+            
+            let tierBadge = '';
+            let tierColor = '';
+            if (match.matchScore >= 85) {
+                tierBadge = '🌟 Best Match';
+                tierColor = 'bg-green-100 text-green-800';
+            } else if (match.matchScore >= 70) {
+                tierBadge = '✨ Good Match';
+                tierColor = 'bg-blue-100 text-blue-800';
+            } else {
+                tierBadge = '💼 Potential Match';
+                tierColor = 'bg-purple-100 text-purple-800';
+            }
+
+            div.innerHTML = `
+                <div class="flex justify-between items-start mb-4">
+                    <h4 class="text-lg font-semibold text-gray-800">Lender ${index + 1}</h4>
+                    <span class="px-3 py-1 rounded-full text-sm font-semibold ${tierColor}">${tierBadge}</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div>
+                        <p class="text-gray-600 mb-1">Match Score:</p>
+                        <div class="flex items-center">
+                            <div class="flex-1 bg-gray-200 rounded-full h-2 mr-2">
+                                <div class="bg-blue-600 h-2 rounded-full" style="width: ${match.matchScore}%"></div>
+                            </div>
+                            <span class="font-semibold text-gray-800">${match.matchScore}%</span>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-gray-600 mb-1">Loan Amount Range:</p>
+                        <p class="font-semibold text-gray-800">${match.loanAmountRange || 'Not specified'}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-600 mb-1">Interest Rate Range:</p>
+                        <p class="font-semibold text-gray-800">${match.interestRateRange || 'Not specified'}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-600 mb-1">Typical Processing Time:</p>
+                        <p class="font-semibold text-gray-800">${match.processingTime || 'Not specified'}</p>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-gray-300">
+                    <p class="text-xs text-gray-500 italic">🔒 Full lender details available after payment</p>
+                </div>
+            `;
+
+            return div;
+        }
+
+        // Initialize
+        updateApplicationInfo();
+        updatePaymentLink();
+        startTimer();
+        loadMatches();
     </script>
 </body>
 </html>
