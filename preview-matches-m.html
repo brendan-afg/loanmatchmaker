@@ -486,38 +486,50 @@
         }
 
         // Call webhook and get matches
-        async function fetchMatches() {
-            const params = getUrlParams();
-            
-            if (!params.submission_id) {
-                showError('Missing submission_id parameter');
-                return;
-            }
+    async function fetchMatches() {
+    const params = getUrlParams();
+    
+    if (!params.submission_id) {
+        showError('Missing submission_id parameter');
+        return;
+    }
 
-            try {
-                const response = await fetch('https://contentlabs.app.n8n.cloud/webhook/generate-preview', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        submission_id: params.submission_id,
-                        email: params.email,
-                        full_name: params.full_name
-                    })
-                });
+    try {
+        const response = await fetch('https://contentlabs.app.n8n.cloud/webhook/generate-preview', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                submission_id: params.submission_id,
+                email: params.email,
+                full_name: params.full_name
+            })
+        });
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const data = await response.json();
-                displayResults(data);
-            } catch (error) {
-                console.error('Error fetching matches:', error);
-                showError(error.message);
-            }
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
+
+        // Check if response is actually JSON
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            throw new Error('Response is not JSON. Check webhook configuration.');
+        }
+
+        const data = await response.json();
+        
+        // Check for errors in response
+        if (data.error) {
+            throw new Error(data.message || 'Unknown error from server');
+        }
+        
+        displayResults(data);
+    } catch (error) {
+        console.error('Error fetching matches:', error);
+        showError(`Failed to load matches: ${error.message}`);
+    }
+}
 
         // Display results
         function displayResults(data) {
