@@ -345,7 +345,7 @@
         <div id="errorSection" class="error-section hidden">
             <div class="error-icon">⚠️</div>
             <h2>Error Loading Matches</h2>
-            <p>We encountered an issue loading your matches. Please try again.</p>
+            <p id="errorMessage">We encountered an issue loading your matches. Please try again.</p>
             <button class="btn btn-primary" onclick="retryLoad()">Try Again</button>
         </div>
 
@@ -407,7 +407,7 @@
                 <div class="feature-item">Direct communication with matched lenders</div>
             </div>
 
-            <button class="btn btn-primary" style="font-size: 18px; padding: 15px 40px;">
+            <button class="btn btn-primary" style="font-size: 18px; padding: 15px 40px;" onclick="proceedToPayment()">
                 Proceed to Secure Payment
             </button>
 
@@ -421,12 +421,192 @@
     </div>
 
     <script>
-        // Simulate loading application data
-        setTimeout(() => {
-            document.getElementById('applicationId').textContent = 'APP-' + Math.floor(Math.random() * 100000);
-            document.getElementById('applicantName').textContent = 'John Smith';
-            document.getElementById('applicantEmail').textContent = 'john.smith@example.com';
-        }, 500);
+        // Configuration - ЗАМЕНИТЕ НА ВАШ РЕАЛЬНЫЙ WEBHOOK URL
+        const WEBHOOK_URL = 'YOUR_WEBHOOK_URL_HERE'; // например: 'https://hooks.zapier.com/hooks/catch/xxxxx/yyyyy/'
+        
+        let applicationData = null;
+        let matchData = null;
+
+        // Get URL parameters
+        function getUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                applicationId: params.get('applicationId') || params.get('app_id'),
+                name: params.get('name') || params.get('applicant_name'),
+                email: params.get('email'),
+                // Добавьте другие параметры которые вы передаете
+                loanAmount: params.get('loanAmount') || params.get('loan_amount'),
+                loanPurpose: params.get('loanPurpose') || params.get('loan_purpose'),
+                companyName: params.get('companyName') || params.get('company_name'),
+                // и т.д.
+            };
+        }
+
+        // Display application data from URL params
+        function displayApplicationData() {
+            const params = getUrlParams();
+            
+            if (params.applicationId) {
+                document.getElementById('applicationId').textContent = params.applicationId;
+            } else {
+                document.getElementById('applicationId').textContent = 'Not provided';
+            }
+            
+            if (params.name) {
+                document.getElementById('applicantName').textContent = params.name;
+            } else {
+                document.getElementById('applicantName').textContent = 'Not provided';
+            }
+            
+            if (params.email) {
+                document.getElementById('applicantEmail').textContent = params.email;
+            } else {
+                document.getElementById('applicantEmail').textContent = 'Not provided';
+            }
+
+            applicationData = params;
+        }
+
+        // Send webhook request to get matches
+        async function fetchMatches() {
+            try {
+                const params = getUrlParams();
+                
+                // Prepare webhook payload
+                const payload = {
+                    action: 'get_matches',
+                    applicationId: params.applicationId,
+                    applicantName: params.name,
+                    applicantEmail: params.email,
+                    loanAmount: params.loanAmount,
+                    loanPurpose: params.loanPurpose,
+                    companyName: params.companyName,
+                    timestamp: new Date().toISOString()
+                    // Добавьте все необходимые данные
+                };
+
+                console.log('Sending webhook request:', payload);
+
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('Received webhook response:', data);
+
+                return data;
+
+            } catch (error) {
+                console.error('Error fetching matches:', error);
+                throw error;
+            }
+        }
+
+        // Display matches from webhook response
+        function displayMatches(data) {
+            // Проверяем формат ответа от вашего webhook
+            // Адаптируйте эту часть под структуру вашего ответа
+            
+            if (data.status === 'no_matches' || data.totalMatches === 0) {
+                showNoMatches();
+                return;
+            }
+
+            const bestMatches = data.bestMatches || 0;
+            const goodMatches = data.goodMatches || 0;
+            const potentialMatches = data.potentialMatches || 0;
+            const total = data.totalMatches || (bestMatches + goodMatches + potentialMatches);
+
+            document.getElementById('bestMatchCount').textContent = bestMatches;
+            document.getElementById('goodMatchCount').textContent = goodMatches;
+            document.getElementById('potentialMatchCount').textContent = potentialMatches;
+            document.getElementById('totalMatches').textContent = total;
+            document.getElementById('matchCountText').textContent = total + ' lenders';
+
+            // Update price if provided
+            if (data.price) {
+                document.getElementById('price').textContent = data.price;
+            }
+
+            matchData = data;
+
+            document.getElementById('loadingSection').classList.add('hidden');
+            document.getElementById('successSection').classList.remove('hidden');
+            document.getElementById('paymentSection').classList.remove('hidden');
+        }
+
+        // Show error state
+        function showError(message) {
+            document.getElementById('loadingSection').classList.add('hidden');
+            document.getElementById('errorMessage').textContent = message || 'We encountered an issue loading your matches. Please try again.';
+            document.getElementById('errorSection').classList.remove('hidden');
+        }
+
+        // Show no matches state
+        function showNoMatches() {
+            document.getElementById('loadingSection').classList.add('hidden');
+            document.getElementById('noMatchesSection').classList.remove('hidden');
+        }
+
+        // Retry loading matches
+        async function retryLoad() {
+            document.getElementById('errorSection').classList.add('hidden');
+            document.getElementById('loadingSection').classList.remove('hidden');
+            await loadMatches();
+        }
+
+        // Load matches (main function)
+        async function loadMatches() {
+            try {
+                const data = await fetchMatches();
+                displayMatches(data);
+            } catch (error) {
+                showError('Failed to load matches. Please check your connection and try again.');
+            }
+        }
+
+        // Proceed to payment
+        async function proceedToPayment() {
+            try {
+                // Отправляем webhook с информацией о намерении оплатить
+                const payload = {
+                    action: 'initiate_payment',
+                    applicationId: applicationData.applicationId,
+                    email: applicationData.email,
+                    matchData: matchData,
+                    timestamp: new Date().toISOString()
+                };
+
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+                
+                // Если webhook возвращает URL для оплаты, перенаправляем туда
+                if (data.paymentUrl) {
+                    window.location.href = data.paymentUrl;
+                } else {
+                    alert('Payment processing initiated. You will be redirected shortly.');
+                }
+
+            } catch (error) {
+                console.error('Error initiating payment:', error);
+                alert('Failed to initiate payment. Please try again.');
+            }
+        }
 
         // Countdown timer
         let timeLeft = 24 * 60 * 60 - 1; // 23:59:59
@@ -441,47 +621,11 @@
             }
         }, 1000);
 
-        // Simulate loading matches
-        setTimeout(() => {
-            showMatches();
-        }, 3000);
-
-        function showMatches() {
-            document.getElementById('loadingSection').classList.add('hidden');
-            
-            // Simulate random match counts
-            const bestMatches = Math.floor(Math.random() * 5) + 3;
-            const goodMatches = Math.floor(Math.random() * 8) + 5;
-            const potentialMatches = Math.floor(Math.random() * 10) + 7;
-            const total = bestMatches + goodMatches + potentialMatches;
-
-            document.getElementById('bestMatchCount').textContent = bestMatches;
-            document.getElementById('goodMatchCount').textContent = goodMatches;
-            document.getElementById('potentialMatchCount').textContent = potentialMatches;
-            document.getElementById('totalMatches').textContent = total;
-            document.getElementById('matchCountText').textContent = total + ' lenders';
-
-            document.getElementById('successSection').classList.remove('hidden');
-            document.getElementById('paymentSection').classList.remove('hidden');
-        }
-
-        function retryLoad() {
-            document.getElementById('errorSection').classList.add('hidden');
-            document.getElementById('loadingSection').classList.remove('hidden');
-            setTimeout(showMatches, 2000);
-        }
-
-        // Uncomment to test error state:
-        // setTimeout(() => {
-        //     document.getElementById('loadingSection').classList.add('hidden');
-        //     document.getElementById('errorSection').classList.remove('hidden');
-        // }, 3000);
-
-        // Uncomment to test no matches state:
-        // setTimeout(() => {
-        //     document.getElementById('loadingSection').classList.add('hidden');
-        //     document.getElementById('noMatchesSection').classList.remove('hidden');
-        // }, 3000);
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            displayApplicationData();
+            loadMatches();
+        });
     </script>
 </body>
 </html>
