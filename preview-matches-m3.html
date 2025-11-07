@@ -292,6 +292,19 @@
             display: none;
         }
 
+        .debug-info {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            font-family: monospace;
+            font-size: 12px;
+            text-align: left;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 24px;
@@ -332,6 +345,12 @@
             <div class="timer">
                 🕐 <strong>Preview expires in:</strong> <span id="countdown">23:59:59</span>
             </div>
+
+            <!-- Debug Info (можно удалить после тестирования) -->
+            <div class="debug-info" id="debugInfo">
+                <strong>Debug Info:</strong><br>
+                Loading...
+            </div>
         </div>
 
         <!-- Loading State -->
@@ -345,7 +364,7 @@
         <div id="errorSection" class="error-section hidden">
             <div class="error-icon">⚠️</div>
             <h2>Error Loading Matches</h2>
-            <p id="errorMessage">We encountered an issue loading your matches. Please try again.</p>
+            <p id="errorMessage">Failed to load matches. Please check your connection and try again.</p>
             <button class="btn btn-primary" onclick="retryLoad()">Try Again</button>
         </div>
 
@@ -353,8 +372,7 @@
         <div id="noMatchesSection" class="no-matches-section hidden">
             <div class="error-icon">😔</div>
             <h2>No Matches Found</h2>
-            <p>Unfortunately, we couldn't find any lenders that match your current criteria. 
-                        This could be due to specific requirements that fall outside typical lending parameters.</p>
+            <p>Unfortunately, we couldn't find any lenders that match your current criteria.</p>
             <button class="btn btn-primary">Modify Requirements</button>
             <button class="btn btn-secondary">Contact Support</button>
         </div>
@@ -366,7 +384,7 @@
                 <h2>Great news! We found matches for your funding request</h2>
                 <p>Based on your requirements, we've identified potential lenders ready to review your application.</p>
                 <div class="match-count" id="totalMatches">0</div>
-                <p>We found <strong id="matchCountText">lenders</strong></p>
+                <p id="matchCountText">Total lenders found</p>
             </div>
 
             <div class="categories">
@@ -413,7 +431,7 @@
 
             <div class="security-note">
                 🔒 <strong>Secure Payment:</strong> Your payment is processed securely through Stripe. 
-                        We never store your payment information.
+                We never store your payment information.
             </div>
 
             <a href="#" class="back-link">← Go Back</a>
@@ -421,8 +439,8 @@
     </div>
 
     <script>
-        // Configuration - ЗАМЕНИТЕ НА ВАШ РЕАЛЬНЫЙ WEBHOOK URL
-        const WEBHOOK_URL = 'YOUR_WEBHOOK_URL_HERE'; // например: 'https://hooks.zapier.com/hooks/catch/xxxxx/yyyyy/'
+        // N8N Webhook URL
+        const WEBHOOK_URL = 'https://contentlabs.app.n8n.cloud/webhook/generate-preview';
         
         let applicationData = null;
         let matchData = null;
@@ -431,35 +449,49 @@
         function getUrlParams() {
             const params = new URLSearchParams(window.location.search);
             return {
-                applicationId: params.get('applicationId') || params.get('app_id'),
-                name: params.get('name') || params.get('applicant_name'),
+                submission_id: params.get('submission_id'),
                 email: params.get('email'),
-                // Добавьте другие параметры которые вы передаете
-                loanAmount: params.get('loanAmount') || params.get('loan_amount'),
-                loanPurpose: params.get('loanPurpose') || params.get('loan_purpose'),
-                companyName: params.get('companyName') || params.get('company_name'),
-                // и т.д.
+                full_name: params.get('full_name')
             };
+        }
+
+        // Update debug info
+        function updateDebugInfo(message, data = null) {
+            const debugDiv = document.getElementById('debugInfo');
+            const timestamp = new Date().toLocaleTimeString();
+            let debugText = `[${timestamp}] ${message}`;
+            
+            if (data) {
+                debugText += '\n' + JSON.stringify(data, null, 2);
+            }
+            
+            debugDiv.innerHTML = '<strong>Debug Info:</strong><br>' + debugText.replace(/\n/g, '<br>');
+            console.log(message, data);
         }
 
         // Display application data from URL params
         function displayApplicationData() {
             const params = getUrlParams();
             
-            if (params.applicationId) {
-                document.getElementById('applicationId').textContent = params.applicationId;
+            updateDebugInfo('URL Parameters received:', params);
+            
+            // Display submission ID
+            if (params.submission_id) {
+                document.getElementById('applicationId').textContent = params.submission_id;
             } else {
                 document.getElementById('applicationId').textContent = 'Not provided';
             }
             
-            if (params.name) {
-                document.getElementById('applicantName').textContent = params.name;
+            // Display full name
+            if (params.full_name) {
+                document.getElementById('applicantName').textContent = decodeURIComponent(params.full_name);
             } else {
                 document.getElementById('applicantName').textContent = 'Not provided';
             }
             
+            // Display email
             if (params.email) {
-                document.getElementById('applicantEmail').textContent = params.email;
+                document.getElementById('applicantEmail').textContent = decodeURIComponent(params.email);
             } else {
                 document.getElementById('applicantEmail').textContent = 'Not provided';
             }
@@ -472,20 +504,20 @@
             try {
                 const params = getUrlParams();
                 
+                // Validate required parameters
+                if (!params.submission_id) {
+                    throw new Error('Missing submission_id parameter');
+                }
+
                 // Prepare webhook payload
                 const payload = {
-                    action: 'get_matches',
-                    applicationId: params.applicationId,
-                    applicantName: params.name,
-                    applicantEmail: params.email,
-                    loanAmount: params.loanAmount,
-                    loanPurpose: params.loanPurpose,
-                    companyName: params.companyName,
+                    submission_id: params.submission_id,
+                    email: params.email,
+                    full_name: params.full_name,
                     timestamp: new Date().toISOString()
-                    // Добавьте все необходимые данные
                 };
 
-                console.log('Sending webhook request:', payload);
+                updateDebugInfo('Sending POST request to webhook:', payload);
 
                 const response = await fetch(WEBHOOK_URL, {
                     method: 'POST',
@@ -495,41 +527,71 @@
                     body: JSON.stringify(payload)
                 });
 
+                updateDebugInfo(`Response status: ${response.status} ${response.statusText}`);
+
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
                 const data = await response.json();
-                console.log('Received webhook response:', data);
+                updateDebugInfo('Received webhook response:', data);
 
                 return data;
 
             } catch (error) {
-                console.error('Error fetching matches:', error);
+                updateDebugInfo('Error in fetchMatches:', {
+                    message: error.message,
+                    stack: error.stack
+                });
                 throw error;
             }
         }
 
         // Display matches from webhook response
         function displayMatches(data) {
-            // Проверяем формат ответа от вашего webhook
-            // Адаптируйте эту часть под структуру вашего ответа
-            
-            if (data.status === 'no_matches' || data.totalMatches === 0) {
+            updateDebugInfo('Processing match data:', data);
+
+            // Проверяем различные варианты структуры ответа
+            let bestMatches = 0;
+            let goodMatches = 0;
+            let potentialMatches = 0;
+            let total = 0;
+
+            // Вариант 1: данные напрямую в корне объекта
+            if (data.bestMatches !== undefined) {
+                bestMatches = parseInt(data.bestMatches) || 0;
+                goodMatches = parseInt(data.goodMatches) || 0;
+                potentialMatches = parseInt(data.potentialMatches) || 0;
+                total = parseInt(data.totalMatches) || (bestMatches + goodMatches + potentialMatches);
+            }
+            // Вариант 2: данные в подобъекте matches
+            else if (data.matches) {
+                bestMatches = parseInt(data.matches.best) || 0;
+                goodMatches = parseInt(data.matches.good) || 0;
+                potentialMatches = parseInt(data.matches.potential) || 0;
+                total = parseInt(data.matches.total) || (bestMatches + goodMatches + potentialMatches);
+            }
+            // Вариант 3: только общее количество
+            else if (data.total) {
+                total = parseInt(data.total);
+                // Распределяем по категориям (например, 20% best, 50% good, 30% potential)
+                bestMatches = Math.floor(total * 0.2);
+                goodMatches = Math.floor(total * 0.5);
+                potentialMatches = total - bestMatches - goodMatches;
+            }
+
+            // Проверяем на отсутствие совпадений
+            if (data.status === 'no_matches' || total === 0) {
                 showNoMatches();
                 return;
             }
 
-            const bestMatches = data.bestMatches || 0;
-            const goodMatches = data.goodMatches || 0;
-            const potentialMatches = data.potentialMatches || 0;
-            const total = data.totalMatches || (bestMatches + goodMatches + potentialMatches);
-
+            // Обновляем UI
             document.getElementById('bestMatchCount').textContent = bestMatches;
             document.getElementById('goodMatchCount').textContent = goodMatches;
             document.getElementById('potentialMatchCount').textContent = potentialMatches;
             document.getElementById('totalMatches').textContent = total;
-            document.getElementById('matchCountText').textContent = total + ' lenders';
+            document.getElementById('matchCountText').textContent = `We found ${total} lender${total !== 1 ? 's' : ''}`;
 
             // Update price if provided
             if (data.price) {
@@ -538,6 +600,7 @@
 
             matchData = data;
 
+            // Show results
             document.getElementById('loadingSection').classList.add('hidden');
             document.getElementById('successSection').classList.remove('hidden');
             document.getElementById('paymentSection').classList.remove('hidden');
@@ -546,7 +609,7 @@
         // Show error state
         function showError(message) {
             document.getElementById('loadingSection').classList.add('hidden');
-            document.getElementById('errorMessage').textContent = message || 'We encountered an issue loading your matches. Please try again.';
+            document.getElementById('errorMessage').textContent = message || 'Failed to load matches. Please check your connection and try again.';
             document.getElementById('errorSection').classList.remove('hidden');
         }
 
@@ -567,20 +630,28 @@
         async function loadMatches() {
             try {
                 const data = await fetchMatches();
-                displayMatches(data);
+                
+                // Даем небольшую задержку для эффекта загрузки
+                setTimeout(() => {
+                    displayMatches(data);
+                }, 1000);
+                
             } catch (error) {
-                showError('Failed to load matches. Please check your connection and try again.');
+                updateDebugInfo('Error in loadMatches:', error);
+                showError(`Failed to load matches: ${error.message}`);
             }
         }
 
         // Proceed to payment
         async function proceedToPayment() {
             try {
-                // Отправляем webhook с информацией о намерении оплатить
+                updateDebugInfo('Initiating payment...');
+                
                 const payload = {
                     action: 'initiate_payment',
-                    applicationId: applicationData.applicationId,
+                    submission_id: applicationData.submission_id,
                     email: applicationData.email,
+                    full_name: applicationData.full_name,
                     matchData: matchData,
                     timestamp: new Date().toISOString()
                 };
@@ -594,16 +665,19 @@
                 });
 
                 const data = await response.json();
+                updateDebugInfo('Payment response:', data);
                 
-                // Если webhook возвращает URL для оплаты, перенаправляем туда
+                // Если webhook возвращает URL для оплаты
                 if (data.paymentUrl) {
                     window.location.href = data.paymentUrl;
+                } else if (data.redirectUrl) {
+                    window.location.href = data.redirectUrl;
                 } else {
-                    alert('Payment processing initiated. You will be redirected shortly.');
+                    alert('Payment processing initiated. Please check your email for further instructions.');
                 }
 
             } catch (error) {
-                console.error('Error initiating payment:', error);
+                updateDebugInfo('Payment error:', error);
                 alert('Failed to initiate payment. Please try again.');
             }
         }
@@ -623,6 +697,7 @@
 
         // Initialize on page load
         window.addEventListener('DOMContentLoaded', () => {
+            updateDebugInfo('Page loaded, initializing...');
             displayApplicationData();
             loadMatches();
         });
