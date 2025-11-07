@@ -19,78 +19,88 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 900px;
             margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
         }
 
         .header {
-            background: white;
-            border-radius: 16px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
         }
 
         .header h1 {
-            color: #667eea;
             font-size: 32px;
             margin-bottom: 10px;
         }
 
         .header p {
-            color: #666;
             font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .info-section {
+            padding: 30px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
         }
 
         .info-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
+            gap: 20px;
         }
 
         .info-item {
-            background: #f8f9fa;
-            padding: 15px;
+            background: white;
+            padding: 15px 20px;
             border-radius: 8px;
+            border-left: 4px solid #667eea;
         }
 
         .info-label {
             font-size: 12px;
-            color: #666;
+            color: #6c757d;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             margin-bottom: 5px;
         }
 
         .info-value {
             font-size: 16px;
-            color: #333;
             font-weight: 600;
+            color: #212529;
         }
 
         .timer {
             background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 15px;
+            color: #856404;
+            padding: 15px 20px;
+            text-align: center;
+            font-weight: 600;
+            border-bottom: 1px solid #ffeaa7;
         }
 
-        .loading-section {
-            background: white;
-            border-radius: 16px;
-            padding: 60px 30px;
+        .content {
+            padding: 40px 30px;
+        }
+
+        .loading-state {
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            padding: 60px 20px;
         }
 
         .spinner {
-            width: 50px;
-            height: 50px;
             border: 4px solid #f3f3f3;
             border-top: 4px solid #667eea;
             border-radius: 50%;
+            width: 50px;
+            height: 50px;
             animation: spin 1s linear infinite;
             margin: 0 auto 20px;
         }
@@ -100,185 +110,231 @@
             100% { transform: rotate(360deg); }
         }
 
-        .error-section, .no-matches-section {
-            background: white;
-            border-radius: 16px;
-            padding: 60px 30px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        .loading-text {
+            font-size: 18px;
+            color: #495057;
+            margin-bottom: 10px;
         }
 
-        .error-icon {
+        .loading-subtext {
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        .error-state, .no-matches-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .error-icon, .sad-icon {
             font-size: 64px;
             margin-bottom: 20px;
         }
 
-        .btn {
-            display: inline-block;
-            padding: 12px 30px;
-            margin: 10px;
-            border-radius: 8px;
-            text-decoration: none;
+        .error-title, .no-matches-title {
+            font-size: 24px;
+            color: #212529;
+            margin-bottom: 10px;
             font-weight: 600;
-            transition: all 0.3s;
-            border: none;
-            cursor: pointer;
+        }
+
+        .error-message, .no-matches-message {
+            font-size: 16px;
+            color: #6c757d;
+            margin-bottom: 30px;
+        }
+
+        .success-state {
+            text-align: center;
+            padding: 40px 20px 20px;
+        }
+
+        .success-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .success-title {
+            font-size: 28px;
+            color: #212529;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .success-message {
+            font-size: 16px;
+            color: #6c757d;
+            margin-bottom: 30px;
+        }
+
+        .total-count {
+            font-size: 48px;
+            font-weight: 700;
+            color: #667eea;
+            margin: 20px 0;
+        }
+
+        .matches-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .match-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .match-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .match-card.best {
+            border-color: #ffd700;
+            background: linear-gradient(135deg, #fff9e6 0%, #fff 100%);
+        }
+
+        .match-card.good {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #f0f2ff 0%, #fff 100%);
+        }
+
+        .match-card.potential {
+            border-color: #6c757d;
+        }
+
+        .match-icon {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .match-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #212529;
+            margin-bottom: 5px;
+        }
+
+        .match-range {
+            font-size: 14px;
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+
+        .match-count {
+            font-size: 32px;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .unlock-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            border-radius: 12px;
+            margin-top: 40px;
+        }
+
+        .unlock-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .price {
+            font-size: 48px;
+            font-weight: 700;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .price-currency {
+            font-size: 24px;
+            vertical-align: super;
+        }
+
+        .benefits-list {
+            list-style: none;
+            margin: 30px 0;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .benefits-list li {
+            padding: 12px 0;
+            padding-left: 30px;
+            position: relative;
             font-size: 16px;
         }
 
+        .benefits-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 16px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 8px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
         .btn-primary {
-            background: #667eea;
-            color: white;
+            background: white;
+            color: #667eea;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
         .btn-primary:hover {
-            background: #5568d3;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
         }
 
         .btn-secondary {
             background: #6c757d;
             color: white;
+            margin-right: 10px;
         }
 
         .btn-secondary:hover {
             background: #5a6268;
         }
 
-        .matches-section {
-            background: white;
-            border-radius: 16px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
         }
 
-        .success-header {
+        .secure-note {
             text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .success-icon {
-            font-size: 64px;
-            margin-bottom: 15px;
-        }
-
-        .match-count {
-            font-size: 48px;
-            color: #667eea;
-            font-weight: 700;
-            margin: 20px 0;
-        }
-
-        .categories {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
-        }
-
-        .category-card {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-radius: 12px;
-            padding: 25px;
-            text-align: center;
-            border: 2px solid transparent;
-            transition: all 0.3s;
-        }
-
-        .category-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        }
-
-        .category-card.best {
-            border-color: #ffd700;
-            background: linear-gradient(135deg, #fff9e6 0%, #fff3cd 100%);
-        }
-
-        .category-card.good {
-            border-color: #667eea;
-            background: linear-gradient(135deg, #e8ebff 0%, #d4d9ff 100%);
-        }
-
-        .category-card.potential {
-            border-color: #6c757d;
-            background: linear-gradient(135deg, #f1f3f5 0%, #e2e6ea 100%);
-        }
-
-        .category-icon {
-            font-size: 36px;
-            margin-bottom: 10px;
-        }
-
-        .category-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 5px;
-        }
-
-        .category-subtitle {
+            margin-top: 20px;
             font-size: 14px;
-            color: #666;
-            margin-bottom: 15px;
-        }
-
-        .category-count {
-            font-size: 42px;
-            font-weight: 700;
-            color: #667eea;
-        }
-
-        .payment-section {
-            background: white;
-            border-radius: 16px;
-            padding: 40px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .price {
-            font-size: 56px;
-            color: #667eea;
-            font-weight: 700;
-            margin: 20px 0;
-        }
-
-        .features-list {
-            text-align: left;
-            max-width: 500px;
-            margin: 30px auto;
-        }
-
-        .feature-item {
-            padding: 12px 0;
-            border-bottom: 1px solid #e9ecef;
-            font-size: 16px;
-            color: #333;
-        }
-
-        .feature-item:before {
-            content: "✓";
-            color: #28a745;
-            font-weight: bold;
-            margin-right: 10px;
-        }
-
-        .security-note {
-            background: #e8f5e9;
-            border-left: 4px solid #28a745;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 30px;
-            font-size: 14px;
-            color: #2d5f2e;
+            opacity: 0.9;
         }
 
         .back-link {
-            display: inline-block;
-            margin-top: 20px;
+            display: block;
+            text-align: center;
+            margin-top: 30px;
             color: #667eea;
             text-decoration: none;
             font-weight: 600;
@@ -286,10 +342,6 @@
 
         .back-link:hover {
             text-decoration: underline;
-        }
-
-        .hidden {
-            display: none;
         }
 
         .debug-info {
@@ -300,9 +352,8 @@
             margin-top: 20px;
             font-family: monospace;
             font-size: 12px;
-            text-align: left;
-            max-height: 200px;
-            overflow-y: auto;
+            color: #495057;
+            display: none;
         }
 
         @media (max-width: 768px) {
@@ -310,141 +361,143 @@
                 font-size: 24px;
             }
 
-            .categories {
+            .matches-grid {
                 grid-template-columns: 1fr;
             }
 
-            .price {
-                font-size: 42px;
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
         <div class="header">
             <h1>Your Funding Matches</h1>
             <p>Preview your potential lending partners</p>
-            
+        </div>
+
+        <div class="info-section">
             <div class="info-grid">
                 <div class="info-item">
                     <div class="info-label">Application ID:</div>
-                    <div class="info-value" id="applicationId">Loading...</div>
+                    <div class="info-value" id="submissionId">Loading...</div>
                 </div>
                 <div class="info-item">
                     <div class="info-label">Applicant:</div>
-                    <div class="info-value" id="applicantName">Loading...</div>
+                    <div class="info-value" id="fullName">Loading...</div>
                 </div>
                 <div class="info-item">
                     <div class="info-label">Email:</div>
-                    <div class="info-value" id="applicantEmail">Loading...</div>
+                    <div class="info-value" id="email">Loading...</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="timer">
+            🕐 Preview expires in: <span id="timer">23:59:59</span>
+        </div>
+
+        <div class="debug-info" id="debugInfo">
+            Debug Info: <span id="debugText">Loading...</span>
+        </div>
+
+        <div class="content">
+            <!-- Loading State -->
+            <div id="loadingState" class="loading-state">
+                <div class="spinner"></div>
+                <div class="loading-text">Analyzing your requirements...</div>
+                <div class="loading-subtext">Searching our network of verified lenders</div>
+            </div>
+
+            <!-- Error State -->
+            <div id="errorState" class="error-state" style="display: none;">
+                <div class="error-icon">⚠️</div>
+                <div class="error-title">Error Loading Matches</div>
+                <div class="error-message">Failed to load matches. Please check your connection and try again.</div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="location.reload()">Try Again</button>
                 </div>
             </div>
 
-            <div class="timer">
-                🕐 <strong>Preview expires in:</strong> <span id="countdown">23:59:59</span>
+            <!-- No Matches State -->
+            <div id="noMatchesState" class="no-matches-state" style="display: none;">
+                <div class="sad-icon">😔</div>
+                <div class="no-matches-title">No Matches Found</div>
+                <div class="no-matches-message">Unfortunately, we couldn't find any lenders that match your current criteria.</div>
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="history.back()">Modify Requirements</button>
+                    <button class="btn btn-primary" onclick="contactSupport()">Contact Support</button>
+                </div>
             </div>
 
-            <!-- Debug Info (можно удалить после тестирования) -->
-            <div class="debug-info" id="debugInfo">
-                <strong>Debug Info:</strong><br>
-                Loading...
-            </div>
-        </div>
-
-        <!-- Loading State -->
-        <div id="loadingSection" class="loading-section">
-            <div class="spinner"></div>
-            <h2>Analyzing your requirements...</h2>
-            <p>Searching our network of verified lenders</p>
-        </div>
-
-        <!-- Error State -->
-        <div id="errorSection" class="error-section hidden">
-            <div class="error-icon">⚠️</div>
-            <h2>Error Loading Matches</h2>
-            <p id="errorMessage">Failed to load matches. Please check your connection and try again.</p>
-            <button class="btn btn-primary" onclick="retryLoad()">Try Again</button>
-        </div>
-
-        <!-- No Matches State -->
-        <div id="noMatchesSection" class="no-matches-section hidden">
-            <div class="error-icon">😔</div>
-            <h2>No Matches Found</h2>
-            <p>Unfortunately, we couldn't find any lenders that match your current criteria.</p>
-            <button class="btn btn-primary">Modify Requirements</button>
-            <button class="btn btn-secondary">Contact Support</button>
-        </div>
-
-        <!-- Success State with Matches -->
-        <div id="successSection" class="matches-section hidden">
-            <div class="success-header">
+            <!-- Success State -->
+            <div id="successState" class="success-state" style="display: none;">
                 <div class="success-icon">🎉</div>
-                <h2>Great news! We found matches for your funding request</h2>
-                <p>Based on your requirements, we've identified potential lenders ready to review your application.</p>
-                <div class="match-count" id="totalMatches">0</div>
-                <p id="matchCountText">Total lenders found</p>
-            </div>
+                <div class="success-title">Great news! We found matches for your funding request</div>
+                <div class="success-message">Based on your requirements, we've identified potential lenders ready to review your application.</div>
+                
+                <div class="total-count" id="totalCount">0</div>
+                <div style="color: #6c757d; margin-bottom: 30px;">Total lenders found</div>
 
-            <div class="categories">
-                <div class="category-card best">
-                    <div class="category-icon">🌟</div>
-                    <div class="category-title">Best Matches</div>
-                    <div class="category-subtitle">(85-95% match)</div>
-                    <div class="category-count" id="bestMatchCount">0</div>
+                <div class="matches-grid">
+                    <div class="match-card best">
+                        <div class="match-icon">🌟</div>
+                        <div class="match-title">Best Matches</div>
+                        <div class="match-range">(85-95% match)</div>
+                        <div class="match-count" id="bestCount">0</div>
+                    </div>
+                    <div class="match-card good">
+                        <div class="match-icon">✨</div>
+                        <div class="match-title">Good Matches</div>
+                        <div class="match-range">(70-84% match)</div>
+                        <div class="match-count" id="goodCount">0</div>
+                    </div>
+                    <div class="match-card potential">
+                        <div class="match-icon">💼</div>
+                        <div class="match-title">Potential Matches</div>
+                        <div class="match-range">(60-69% match)</div>
+                        <div class="match-count" id="potentialCount">0</div>
+                    </div>
                 </div>
 
-                <div class="category-card good">
-                    <div class="category-icon">✨</div>
-                    <div class="category-title">Good Matches</div>
-                    <div class="category-subtitle">(70-84% match)</div>
-                    <div class="category-count" id="goodMatchCount">0</div>
-                </div>
-
-                <div class="category-card potential">
-                    <div class="category-icon">💼</div>
-                    <div class="category-title">Potential Matches</div>
-                    <div class="category-subtitle">(60-69% match)</div>
-                    <div class="category-count" id="potentialMatchCount">0</div>
+                <div class="unlock-section">
+                    <div class="unlock-title">Unlock Full Access</div>
+                    <div class="price">
+                        <span class="price-currency">CHF</span> 2000
+                    </div>
+                    <ul class="benefits-list">
+                        <li>Complete lender profiles and names</li>
+                        <li>Direct contact information</li>
+                        <li>Specific loan terms and rates</li>
+                        <li>Application requirements</li>
+                        <li>Priority processing (48-72 hours)</li>
+                        <li>Direct communication with matched lenders</li>
+                    </ul>
+                    <div style="text-align: center;">
+                        <a href="#" id="paymentButton" class="btn btn-primary">Proceed to Secure Payment</a>
+                    </div>
+                    <div class="secure-note">
+                        🔒 Secure Payment: Your payment is processed securely through Stripe. 
+                        We never store your payment information.
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Payment Section -->
-        <div id="paymentSection" class="payment-section hidden">
-            <h2>Unlock Full Access</h2>
-            <div class="price">CHF <span id="price">2000</span></div>
-
-            <div class="features-list">
-                <div class="feature-item">Complete lender profiles and names</div>
-                <div class="feature-item">Direct contact information</div>
-                <div class="feature-item">Specific loan terms and rates</div>
-                <div class="feature-item">Application requirements</div>
-                <div class="feature-item">Priority processing (48-72 hours)</div>
-                <div class="feature-item">Direct communication with matched lenders</div>
-            </div>
-
-            <button class="btn btn-primary" style="font-size: 18px; padding: 15px 40px;" onclick="proceedToPayment()">
-                Proceed to Secure Payment
-            </button>
-
-            <div class="security-note">
-                🔒 <strong>Secure Payment:</strong> Your payment is processed securely through Stripe. 
-                We never store your payment information.
-            </div>
-
-            <a href="#" class="back-link">← Go Back</a>
-        </div>
+        <a href="#" class="back-link" onclick="history.back(); return false;">← Go Back</a>
     </div>
 
     <script>
-        // N8N Webhook URL
-        const WEBHOOK_URL = 'https://contentlabs.app.n8n.cloud/webhook/generate-preview';
-        
-        let applicationData = null;
-        let matchData = null;
-
         // Get URL parameters
         function getUrlParams() {
             const params = new URLSearchParams(window.location.search);
@@ -455,252 +508,144 @@
             };
         }
 
-        // Update debug info
-        function updateDebugInfo(message, data = null) {
-            const debugDiv = document.getElementById('debugInfo');
-            const timestamp = new Date().toLocaleTimeString();
-            let debugText = `[${timestamp}] ${message}`;
+        // Display user info
+        function displayUserInfo(params) {
+            document.getElementById('submissionId').textContent = params.submission_id || 'N/A';
+            document.getElementById('fullName').textContent = params.full_name || 'N/A';
+            document.getElementById('email').textContent = params.email || 'N/A';
             
-            if (data) {
-                debugText += '\n' + JSON.stringify(data, null, 2);
-            }
-            
-            debugDiv.innerHTML = '<strong>Debug Info:</strong><br>' + debugText.replace(/\n/g, '<br>');
-            console.log(message, data);
+            // Debug info
+            document.getElementById('debugText').textContent = JSON.stringify(params, null, 2);
         }
 
-        // Display application data from URL params
-        function displayApplicationData() {
-            const params = getUrlParams();
-            
-            updateDebugInfo('URL Parameters received:', params);
-            
-            // Display submission ID
-            if (params.submission_id) {
-                document.getElementById('applicationId').textContent = params.submission_id;
-            } else {
-                document.getElementById('applicationId').textContent = 'Not provided';
-            }
-            
-            // Display full name
-            if (params.full_name) {
-                document.getElementById('applicantName').textContent = decodeURIComponent(params.full_name);
-            } else {
-                document.getElementById('applicantName').textContent = 'Not provided';
-            }
-            
-            // Display email
-            if (params.email) {
-                document.getElementById('applicantEmail').textContent = decodeURIComponent(params.email);
-            } else {
-                document.getElementById('applicantEmail').textContent = 'Not provided';
-            }
-
-            applicationData = params;
+        // Setup payment button
+        function setupPaymentButton(params) {
+            const paymentUrl = `https://loanmatchpro.altfundsglobal.com/payment.html?submission_id=${encodeURIComponent(params.submission_id)}&email=${encodeURIComponent(params.email)}&full_name=${encodeURIComponent(params.full_name)}`;
+            document.getElementById('paymentButton').href = paymentUrl;
         }
 
-        // Send webhook request to get matches
-        async function fetchMatches() {
+        // Send data to webhook
+        async function sendToWebhook(params) {
             try {
-                const params = getUrlParams();
-                
-                // Validate required parameters
-                if (!params.submission_id) {
-                    throw new Error('Missing submission_id parameter');
-                }
-
-                // Prepare webhook payload
-                const payload = {
-                    submission_id: params.submission_id,
-                    email: params.email,
-                    full_name: params.full_name,
-                    timestamp: new Date().toISOString()
-                };
-
-                updateDebugInfo('Sending POST request to webhook:', payload);
-
-                const response = await fetch(WEBHOOK_URL, {
+                const response = await fetch('https://contentlabs.app.n8n.cloud/webhook/generate-preview', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify({
+                        submission_id: params.submission_id,
+                        email: params.email,
+                        full_name: params.full_name
+                    })
                 });
-
-                updateDebugInfo(`Response status: ${response.status} ${response.statusText}`);
 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
                 const data = await response.json();
-                updateDebugInfo('Received webhook response:', data);
-
                 return data;
-
             } catch (error) {
-                updateDebugInfo('Error in fetchMatches:', {
-                    message: error.message,
-                    stack: error.stack
-                });
+                console.error('Error sending to webhook:', error);
                 throw error;
             }
         }
 
-        // Display matches from webhook response
+        // Display matches
         function displayMatches(data) {
-            updateDebugInfo('Processing match data:', data);
+            // Hide loading state
+            document.getElementById('loadingState').style.display = 'none';
 
-            // Проверяем различные варианты структуры ответа
-            let bestMatches = 0;
-            let goodMatches = 0;
-            let potentialMatches = 0;
-            let total = 0;
-
-            // Вариант 1: данные напрямую в корне объекта
-            if (data.bestMatches !== undefined) {
-                bestMatches = parseInt(data.bestMatches) || 0;
-                goodMatches = parseInt(data.goodMatches) || 0;
-                potentialMatches = parseInt(data.potentialMatches) || 0;
-                total = parseInt(data.totalMatches) || (bestMatches + goodMatches + potentialMatches);
-            }
-            // Вариант 2: данные в подобъекте matches
-            else if (data.matches) {
-                bestMatches = parseInt(data.matches.best) || 0;
-                goodMatches = parseInt(data.matches.good) || 0;
-                potentialMatches = parseInt(data.matches.potential) || 0;
-                total = parseInt(data.matches.total) || (bestMatches + goodMatches + potentialMatches);
-            }
-            // Вариант 3: только общее количество
-            else if (data.total) {
-                total = parseInt(data.total);
-                // Распределяем по категориям (например, 20% best, 50% good, 30% potential)
-                bestMatches = Math.floor(total * 0.2);
-                goodMatches = Math.floor(total * 0.5);
-                potentialMatches = total - bestMatches - goodMatches;
-            }
-
-            // Проверяем на отсутствие совпадений
-            if (data.status === 'no_matches' || total === 0) {
-                showNoMatches();
+            // Check if we have matches
+            if (!data.matches || data.matches.length === 0) {
+                document.getElementById('noMatchesState').style.display = 'block';
                 return;
             }
 
-            // Обновляем UI
-            document.getElementById('bestMatchCount').textContent = bestMatches;
-            document.getElementById('goodMatchCount').textContent = goodMatches;
-            document.getElementById('potentialMatchCount').textContent = potentialMatches;
-            document.getElementById('totalMatches').textContent = total;
-            document.getElementById('matchCountText').textContent = `We found ${total} lender${total !== 1 ? 's' : ''}`;
+            // Count matches by category
+            let bestCount = 0;
+            let goodCount = 0;
+            let potentialCount = 0;
 
-            // Update price if provided
-            if (data.price) {
-                document.getElementById('price').textContent = data.price;
-            }
+            data.matches.forEach(match => {
+                const score = match.match_score || 0;
+                if (score >= 85) {
+                    bestCount++;
+                } else if (score >= 70) {
+                    goodCount++;
+                } else if (score >= 60) {
+                    potentialCount++;
+                }
+            });
 
-            matchData = data;
+            const totalCount = bestCount + goodCount + potentialCount;
 
-            // Show results
-            document.getElementById('loadingSection').classList.add('hidden');
-            document.getElementById('successSection').classList.remove('hidden');
-            document.getElementById('paymentSection').classList.remove('hidden');
+            // Update counts
+            document.getElementById('totalCount').textContent = totalCount;
+            document.getElementById('bestCount').textContent = bestCount;
+            document.getElementById('goodCount').textContent = goodCount;
+            document.getElementById('potentialCount').textContent = potentialCount;
+
+            // Show success state
+            document.getElementById('successState').style.display = 'block';
         }
 
         // Show error state
-        function showError(message) {
-            document.getElementById('loadingSection').classList.add('hidden');
-            document.getElementById('errorMessage').textContent = message || 'Failed to load matches. Please check your connection and try again.';
-            document.getElementById('errorSection').classList.remove('hidden');
+        function showError() {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('errorState').style.display = 'block';
         }
 
-        // Show no matches state
-        function showNoMatches() {
-            document.getElementById('loadingSection').classList.add('hidden');
-            document.getElementById('noMatchesSection').classList.remove('hidden');
-        }
+        // Timer countdown
+        function startTimer() {
+            let timeLeft = 24 * 60 * 60 - 1; // 23:59:59
 
-        // Retry loading matches
-        async function retryLoad() {
-            document.getElementById('errorSection').classList.add('hidden');
-            document.getElementById('loadingSection').classList.remove('hidden');
-            await loadMatches();
-        }
-
-        // Load matches (main function)
-        async function loadMatches() {
-            try {
-                const data = await fetchMatches();
-                
-                // Даем небольшую задержку для эффекта загрузки
-                setTimeout(() => {
-                    displayMatches(data);
-                }, 1000);
-                
-            } catch (error) {
-                updateDebugInfo('Error in loadMatches:', error);
-                showError(`Failed to load matches: ${error.message}`);
-            }
-        }
-
-        // Proceed to payment
-        async function proceedToPayment() {
-            try {
-                updateDebugInfo('Initiating payment...');
-                
-                const payload = {
-                    action: 'initiate_payment',
-                    submission_id: applicationData.submission_id,
-                    email: applicationData.email,
-                    full_name: applicationData.full_name,
-                    matchData: matchData,
-                    timestamp: new Date().toISOString()
-                };
-
-                const response = await fetch(WEBHOOK_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(payload)
-                });
-
-                const data = await response.json();
-                updateDebugInfo('Payment response:', data);
-                
-                // Если webhook возвращает URL для оплаты
-                if (data.paymentUrl) {
-                    window.location.href = data.paymentUrl;
-                } else if (data.redirectUrl) {
-                    window.location.href = data.redirectUrl;
-                } else {
-                    alert('Payment processing initiated. Please check your email for further instructions.');
+            setInterval(() => {
+                if (timeLeft <= 0) {
+                    document.getElementById('timer').textContent = '00:00:00';
+                    return;
                 }
 
-            } catch (error) {
-                updateDebugInfo('Payment error:', error);
-                alert('Failed to initiate payment. Please try again.');
-            }
-        }
-
-        // Countdown timer
-        let timeLeft = 24 * 60 * 60 - 1; // 23:59:59
-        setInterval(() => {
-            if (timeLeft > 0) {
-                timeLeft--;
                 const hours = Math.floor(timeLeft / 3600);
                 const minutes = Math.floor((timeLeft % 3600) / 60);
                 const seconds = timeLeft % 60;
-                document.getElementById('countdown').textContent = 
-                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            }
-        }, 1000);
 
-        // Initialize on page load
-        window.addEventListener('DOMContentLoaded', () => {
-            updateDebugInfo('Page loaded, initializing...');
-            displayApplicationData();
-            loadMatches();
-        });
+                document.getElementById('timer').textContent = 
+                    `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+                timeLeft--;
+            }, 1000);
+        }
+
+        // Contact support function
+        function contactSupport() {
+            window.location.href = 'mailto:support@altfundsglobal.com';
+        }
+
+        // Initialize page
+        async function init() {
+            const params = getUrlParams();
+            
+            // Display user info
+            displayUserInfo(params);
+            
+            // Setup payment button
+            setupPaymentButton(params);
+            
+            // Start timer
+            startTimer();
+
+            // Send to webhook and display results
+            try {
+                const data = await sendToWebhook(params);
+                displayMatches(data);
+            } catch (error) {
+                showError();
+            }
+        }
+
+        // Run initialization when page loads
+        window.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
