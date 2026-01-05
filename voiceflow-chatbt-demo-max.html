@@ -70,12 +70,13 @@
                     verify: { projectID: '694d6ebba20f534a73cc3fb6' },
                     url: 'https://general-runtime.voiceflow.com',
                     versionID: 'production',
-                        assistant: {
-                                  persistence: 'memory' // This forces a new chat session on every page load
-                                   }
                     voice: {
                         url: "https://runtime-api.voiceflow.com"
                     }
+                    assistant: {
+                                 persistence: 'memory' // This forces a new chat session on every page load
+                    }
+
                 });
             }
             v.src = "https://cdn.voiceflow.com/widget-next/bundle.mjs";
